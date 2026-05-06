@@ -21,7 +21,7 @@ body{min-height:100vh;padding-bottom:120px;}
 @keyframes pulse{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(201,168,76,0.4);}50%{transform:scale(1.05);box-shadow:0 0 0 12px rgba(201,168,76,0);}}
 .loader-text{font-size:14px;color:var(--txt3);letter-spacing:1px;}
 
-/* ── BROADCAST BANNEER ── */
+/* ── BROADCAST BANNER ── */
 .broadcast{background:linear-gradient(135deg,rgba(201,168,76,0.15),rgba(201,168,76,0.05));border-bottom:1px solid rgba(201,168,76,0.2);padding:12px 20px;display:none;align-items:flex-start;gap:10px;}
 .broadcast.show{display:flex;}
 .bc-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
@@ -132,8 +132,8 @@ body{min-height:100vh;padding-bottom:120px;}
 // ══════════════════════════════════════════════
 // CONFIG — À NE PAS MODIFIER
 // ══════════════════════════════════════════════
-const ANTHROPIC_KEY = 'AIzaSyD0mcctzkIuSJBt8r00HGO1UIG3BfVsG2A'; // ← Remplace par ta clé Anthropic
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzYF6P3s_0-U7Q8Q2ZK1ibENtjhuT64bPV_B2HOZ4_nTxdOPTgP5FW1HodMtOFD_RbXpA/exec';
+const ANTHROPIC_KEY = 'VOTRE_CLE_API_ICI'; // ← Remplace par ta clé Anthropic
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxnsvcXaQERlcRKnwXzs0fMW34n68aMOB8IVmhtZZ256tNJMVRWcCjT3uJ82DjixlbJow/exec';
 
 // ══════════════════════════════════════════════
 // ÉTAT
@@ -203,7 +203,9 @@ async function init() {
     if (historique && historique.length > 0) {
       messages = historique;
       historique.forEach(function(m) {
-        afficherMessage(m.role, m.content, m.heure || '', false);
+        var heure = m.heure || '';
+        if (heure.indexOf('T') > -1) { try { heure = new Date(heure).toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'}); } catch(e) { heure = ''; } }
+        afficherMessage(m.role, m.content, heure, false);
       });
       // Scroll en bas
       window.scrollTo(0, document.body.scrollHeight);
@@ -391,32 +393,31 @@ async function sendMsg(txt) {
   showTyping();
 
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    // Appel via Apps Script (proxy) pour éviter CORS
+    const res = await fetch(APPS_SCRIPT_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': ANTHROPIC_KEY,
-        'anthropic-version': '2023-06-01'
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1500,
+        action: 'chat',
         system: systemPrompt,
-        messages: messages.slice(-20) // Garde les 20 derniers messages
+        messages: messages.slice(-20)
       })
     });
 
     const data = await res.json();
     hideTyping();
 
-    const reply = data.content?.[0]?.text || 'Erreur API';
+    if (!data.success) throw new Error(data.error || 'Erreur serveur');
+
+    const reply = data.reply || 'Pas de réponse';
     messages.push({role:'assistant', content:reply});
     afficherMessage('assistant', reply, formatHeure(new Date()), true);
     await sauvegarderMessage('assistant', reply);
 
   } catch(e) {
     hideTyping();
-    afficherMessage('assistant', '❌ Erreur de connexion. Vérifie ta connexion internet.', formatHeure(new Date()), true);
+    console.error('Erreur chat:', e);
+    afficherMessage('assistant', '❌ Erreur : ' + e.message, formatHeure(new Date()), true);
   }
 }
 
