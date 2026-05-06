@@ -228,24 +228,28 @@ async function init() {
 // ══════════════════════════════════════════════
 // APPS SCRIPT — LECTURE / ÉCRITURE
 // ══════════════════════════════════════════════
+async function safeJson(res) {
+  try { const t = await res.text(); return JSON.parse(t); } catch(e) { return {success:false}; }
+}
+
 async function chargerProfil() {
   const url = APPS_SCRIPT_URL + '?action=getAssistant&id=' + encodeURIComponent(clientId);
   const res = await fetch(url);
-  const data = await res.json();
+  const data = await safeJson(res);
   return data.success ? data.profil : null;
 }
 
 async function chargerHistorique() {
   const url = APPS_SCRIPT_URL + '?action=getConversation&id=' + encodeURIComponent(clientId);
   const res = await fetch(url);
-  const data = await res.json();
+  const data = await safeJson(res);
   return data.success ? data.messages : [];
 }
 
 async function chargerBroadcasts() {
   const url = APPS_SCRIPT_URL + '?action=getBroadcast';
   const res = await fetch(url);
-  const data = await res.json();
+  const data = await safeJson(res);
   return data.success ? data.broadcast : null;
 }
 
