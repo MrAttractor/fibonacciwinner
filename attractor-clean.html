@@ -430,47 +430,45 @@ function soumettreAudit(event) {
   showToast('✅ Analyse terminée');
 }
 
-function genererSysteme() {
-  if (!currentData) {
-    showToast('Aucun prospect');
-    return;
-  }
+async function genererSysteme() {
+  if (!currentData) { showToast('Aucun prospect'); return; }
+  if (!currentData.analyse) { showToast('Lance d\'abord l\'analyse'); return; }
 
-  const prenom = currentData.prenom;
-  const activite = currentData.activite;
-  const modules = currentData.analyse.modules;
-  const priorite = currentData.priorite || 'Organiser mon activité';
-  const objectif = currentData.objectif_finance || 'Développer mon activité';
+  const prenom    = currentData.prenom;
+  const activite  = currentData.activite;
+  const modules   = currentData.analyse.modules;
+  const priorite  = currentData.priorite || 'Organiser mon activité';
+  const objectif  = currentData.objectif_finance || 'Développer mon activité';
 
-  // ── Modules actifs ──
+  // ── Modules ──
   let modulesTexte = '';
   let commandesBtns = '';
 
   if (modules.indexOf('AGENDA & TÂCHES') >= 0) {
-    modulesTexte += '\n\n### MODULE AGENDA & TÂCHES\nTu aides à organiser les journées, RDV et tâches prioritaires. Tu rappelles ce qui est urgent.';
+    modulesTexte += '\n\n### MODULE AGENDA & TÂCHES\nTu aides à organiser les journées, RDV et tâches. Tu rappelles ce qui est urgent.';
     commandesBtns += '<button class="qb" onclick="sendMsg(\'Point du jour\')">📅 Point du jour</button>';
     commandesBtns += '<button class="qb" onclick="sendMsg(\'Mes priorités\')">⚡ Priorités</button>';
   }
   if (modules.indexOf('TABLEAU DE BORD FINANCES') >= 0) {
-    modulesTexte += '\n\n### MODULE FINANCES\nTu permets de suivre le CA, les paiements et les objectifs financiers. Tu alertes sur les impayés.';
+    modulesTexte += '\n\n### MODULE FINANCES\nTu permets de suivre le CA, les paiements et les objectifs. Tu alertes sur les impayés.';
     commandesBtns += '<button class="qb" onclick="sendMsg(\'CA ce mois\')">💰 CA du mois</button>';
     commandesBtns += '<button class="qb" onclick="sendMsg(\'Suivi objectif\')">📈 Objectif</button>';
   }
   if (modules.indexOf('SUIVI CLIENTS & RELANCES') >= 0) {
-    modulesTexte += '\n\n### MODULE CLIENTS & RELANCES\nTu aides à ne plus oublier les relances, à suivre les prospects et à convertir les contacts.';
+    modulesTexte += '\n\n### MODULE CLIENTS & RELANCES\nTu aides à ne plus oublier les relances, à suivre les prospects et à convertir.';
     commandesBtns += '<button class="qb" onclick="sendMsg(\'Relances dues\')">📬 Relances</button>';
     commandesBtns += '<button class="qb" onclick="sendMsg(\'Prospects chauds\')">🔥 Prospects</button>';
   }
   if (modules.indexOf('GESTION ASSISTANTES') >= 0) {
-    modulesTexte += '\n\n### MODULE ASSISTANTES\nTu aides à déléguer les tâches, à suivre l\'avancement et à coordonner l\'équipe.';
+    modulesTexte += '\n\n### MODULE ASSISTANTES\nTu aides à déléguer les tâches, suivre l\'avancement et coordonner l\'équipe.';
     commandesBtns += '<button class="qb" onclick="sendMsg(\'Tâches équipe\')">👥 Équipe</button>';
   }
   if (modules.indexOf('CONTENU RÉSEAUX SOCIAUX') >= 0) {
-    modulesTexte += '\n\n### MODULE RÉSEAUX SOCIAUX\nTu aides à créer du contenu régulier, à planifier les publications et à engager l\'audience.';
+    modulesTexte += '\n\n### MODULE RÉSEAUX SOCIAUX\nTu aides à créer du contenu, planifier les publications et engager l\'audience.';
     commandesBtns += '<button class="qb" onclick="sendMsg(\'Idée post\')">📱 Post</button>';
   }
 
-  // ── Prompt système ──
+  // ── Prompt ──
   const prompt = `# ASSISTANT PERSONNEL — ${prenom}
 
 ## QUI JE SUIS
@@ -486,12 +484,13 @@ ${priorite}
 - Tu me parles en français, ton direct et simple
 - Tout ce que je te dicte, tu le structures et tu agis
 - Si une info manque, tu me poses UNE seule question
-- Tu me rappelles mes relances et mes échéances sans que j'aie à le demander
+- Tu me rappelles mes relances et mes échéances sans que je le demande
 - Tu es mon bras droit — proactif, efficace, orienté résultats`;
 
-  // ── HTML du fichier client (template literal propre) ──
   const promptEscape = prompt.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$/g, '\\$');
+  const slugPrenom = prenom.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,'-');
 
+  // ── HTML client ──
   const html = `<!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -504,117 +503,159 @@ ${priorite}
 <style>
 :root{--or:#C9A84C;--or2:#E8C96A;--bg:#06060E;--s1:#141428;--s2:#1A1A32;--txt:#F2EEE6;--txt2:rgba(242,238,230,0.5);--txt3:rgba(242,238,230,0.22);}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-html,body{width:100%;overflow-x:hidden;}
 body{background:var(--bg);color:var(--txt);font-family:'Outfit',sans-serif;min-height:100vh;padding-bottom:120px;}
-.header{text-align:center;padding:52px 20px 20px;}
+.header{text-align:center;padding:52px 20px 24px;}
 .logo{width:56px;height:56px;background:linear-gradient(135deg,var(--or),var(--or2));border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-family:'Cormorant Garamond',serif;font-weight:700;font-size:18px;color:#06060E;box-shadow:0 8px 32px rgba(201,168,76,0.25);}
 h1{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;margin-bottom:4px;}
-.subtitle{color:var(--txt2);font-size:13px;letter-spacing:0.5px;}
-.chat{padding:16px 16px 0;display:flex;flex-direction:column;gap:12px;}
+.subtitle{color:var(--txt2);font-size:13px;}
+.chat{padding:0 16px;display:flex;flex-direction:column;gap:12px;}
 .msg{padding:12px 16px;border-radius:16px;line-height:1.6;font-size:14px;max-width:88%;}
 .msg.ai{background:var(--s1);border:1px solid rgba(255,255,255,0.05);border-bottom-left-radius:4px;align-self:flex-start;}
 .msg.user{background:linear-gradient(135deg,var(--or),var(--or2));color:#06060E;font-weight:500;border-bottom-right-radius:4px;align-self:flex-end;}
-.typing{display:flex;gap:4px;align-items:center;padding:14px 16px;}
+.typing{display:flex;gap:4px;align-items:center;padding:14px 16px;background:var(--s1);border-radius:16px;border-bottom-left-radius:4px;align-self:flex-start;width:fit-content;}
 .typing span{width:6px;height:6px;border-radius:50%;background:var(--or);animation:bounce 1.2s infinite;}
 .typing span:nth-child(2){animation-delay:0.2s;}
 .typing span:nth-child(3){animation-delay:0.4s;}
 @keyframes bounce{0%,80%,100%{transform:translateY(0);opacity:0.4;}40%{transform:translateY(-5px);opacity:1;}}
-.qb-row{display:flex;gap:8px;flex-wrap:wrap;padding:16px 16px 8px;}
-.qb{padding:8px 14px;background:var(--s1);border:1px solid rgba(201,168,76,0.25);border-radius:100px;color:var(--or);font-size:12px;font-weight:500;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.15s;}
-.qb:active{background:rgba(201,168,76,0.15);transform:scale(0.96);}
-.input-wrap{position:fixed;bottom:0;left:0;right:0;padding:12px 16px 28px;background:linear-gradient(to top,var(--bg) 70%,transparent);}
+.qb-row{display:flex;gap:8px;flex-wrap:wrap;padding:16px;}
+.qb{padding:8px 14px;background:var(--s1);border:1px solid rgba(201,168,76,0.25);border-radius:100px;color:var(--or);font-size:12px;font-weight:500;cursor:pointer;font-family:'Outfit',sans-serif;}
+.qb:active{background:rgba(201,168,76,0.15);}
+.input-wrap{position:fixed;bottom:0;left:0;right:0;padding:12px 16px 32px;background:linear-gradient(to top,var(--bg) 70%,transparent);}
 .input-row{display:flex;gap:8px;align-items:center;background:var(--s1);border:1px solid rgba(255,255,255,0.07);border-radius:100px;padding:8px 8px 8px 18px;}
 .input-row input{flex:1;background:none;border:none;outline:none;color:var(--txt);font-family:'Outfit',sans-serif;font-size:15px;}
 .input-row input::placeholder{color:var(--txt3);}
-.btn-send{width:38px;height:38px;border-radius:50%;border:none;background:linear-gradient(135deg,var(--or),var(--or2));color:#06060E;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.btn-send:active{transform:scale(0.92);}
+.btn-send{width:38px;height:38px;border-radius:50%;border:none;background:linear-gradient(135deg,var(--or),var(--or2));color:#06060E;font-size:16px;cursor:pointer;flex-shrink:0;}
 </style>
 </head>
 <body>
-
 <div class="header">
   <div class="logo">AA</div>
   <h1>Attractor Assists</h1>
   <div class="subtitle">Assistant personnel — ${prenom}</div>
 </div>
-
 <div class="chat" id="chat">
-  <div class="msg ai">Bonjour ${prenom} 👋<br><br>Je suis ton assistant, configuré pour t'aider avec <strong>${activite}</strong>.<br><br><strong>Priorité :</strong> ${priorite}<br><br>Utilise les commandes rapides ou pose-moi ta question directement.</div>
+  <div class="msg ai">Bonjour ${prenom} 👋<br><br>Je suis ton assistant, configuré pour <strong>${activite}</strong>.<br><br><strong>Priorité :</strong> ${priorite}<br><br>Utilise les commandes ou pose-moi ta question.</div>
 </div>
-
 <div class="qb-row">${commandesBtns}</div>
-
 <div class="input-wrap">
   <div class="input-row">
     <input type="text" id="inp" placeholder="Pose ta question..." onkeypress="if(event.key==='Enter')sendMsg()">
     <button class="btn-send" onclick="sendMsg()">➤</button>
   </div>
 </div>
-
 <script>
 const SYS = \`${promptEscape}\`;
 let msgs = [];
-
-function addMsg(role, text) {
-  const c = document.getElementById('chat');
-  const d = document.createElement('div');
-  d.className = 'msg ' + (role === 'user' ? 'user' : 'ai');
-  d.innerHTML = text.replace(/\\n/g, '<br>');
+function addMsg(role,text){
+  const c=document.getElementById('chat');
+  const d=document.createElement('div');
+  d.className='msg '+(role==='user'?'user':'ai');
+  d.innerHTML=text.replace(/\\n/g,'<br>');
   c.appendChild(d);
-  c.scrollTop = c.scrollHeight;
-  window.scrollTo(0, document.body.scrollHeight);
+  window.scrollTo(0,document.body.scrollHeight);
 }
-
-function showTyping() {
-  const c = document.getElementById('chat');
-  const d = document.createElement('div');
-  d.className = 'msg ai typing'; d.id = 'typing';
-  d.innerHTML = '<span></span><span></span><span></span>';
-  c.appendChild(d); c.scrollTop = c.scrollHeight;
+function showTyping(){
+  const c=document.getElementById('chat');
+  const d=document.createElement('div');
+  d.className='typing';d.id='typing';
+  d.innerHTML='<span></span><span></span><span></span>';
+  c.appendChild(d);window.scrollTo(0,document.body.scrollHeight);
 }
-
-function hideTyping() { const t = document.getElementById('typing'); if(t) t.remove(); }
-
-async function sendMsg(txt) {
-  const inp = document.getElementById('inp');
-  const msg = txt || inp.value.trim();
-  if (!msg) return;
-  inp.value = '';
-  addMsg('user', msg);
-  msgs.push({role:'user', content:msg});
+function hideTyping(){const t=document.getElementById('typing');if(t)t.remove();}
+async function sendMsg(txt){
+  const inp=document.getElementById('inp');
+  const msg=txt||inp.value.trim();
+  if(!msg)return;
+  inp.value='';
+  addMsg('user',msg);
+  msgs.push({role:'user',content:msg});
   showTyping();
-  try {
-    const r = await fetch('https://api.anthropic.com/v1/messages', {
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1500,system:SYS,messages:msgs})
     });
-    const d = await r.json();
+    const d=await r.json();
     hideTyping();
-    const rep = d.content?.[0]?.text || 'Erreur API';
-    msgs.push({role:'assistant', content:rep});
-    addMsg('assistant', rep);
-  } catch(e) {
+    const rep=d.content?.[0]?.text||'Erreur API';
+    msgs.push({role:'assistant',content:rep});
+    addMsg('assistant',rep);
+  }catch(e){
     hideTyping();
-    addMsg('assistant', '❌ Erreur de connexion. Vérifie ta clé API.');
+    addMsg('assistant','❌ Erreur de connexion.');
   }
 }
 <\/script>
-
 </body>
 </html>`;
 
-  // ── Déploiement iOS-compatible via data URI ──
-  const encoded = 'data:text/html;charset=utf-8,' + encodeURIComponent(html);
-  const a = document.createElement('a');
-  a.href = encoded;
-  a.download = 'attractor-' + prenom.toLowerCase().replace(/\s+/g, '-') + '.html';
-  a.target = '_blank';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+  // ── Construire le prompt modules pour le Sheet ──
+  const promptModules = modulesTexte.trim();
 
-  showToast('✅ Système généré pour ' + prenom + ' — ' + Math.round(html.length / 1024) + ' Ko');
+  // ── ID unique pour ce client ──
+  const clientId = 'AA-' + slugPrenom + '-' + Date.now().toString(36).toUpperCase();
+
+  // ── URL client — fichier central sur Netlify ──
+  const BASE_URL = 'https://fibonacciwinner.netlify.app/assistant-client.html';
+  const urlFinale = BASE_URL + '?id=' + clientId;
+
+  showToast('⏳ Création en cours...');
+
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzYF6P3s_0-U7Q8Q2ZK1ibENtjhuT64bPV_B2HOZ4_nTxdOPTgP5FW1HodMtOFD_RbXpA
+
+  try {
+    // Enregistrer le client dans l'onglet ASSISTANTS via Apps Script
+    const res = await fetch(APPS_SCRIPT_URL + '?action=saveMessage', {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'createAssistant',
+        id:            clientId,
+        prenom:        prenom,
+        activite:      activite,
+        modules:       currentData.analyse.modules.join('|'),
+        priorite:      priorite,
+        objectif:      objectif,
+        promptModules: promptModules,
+        url:           urlFinale
+      })
+    });
+
+    // Afficher l'URL finale
+    afficherURLClient(prenom, urlFinale, clientId);
+
+  } catch(err) {
+    console.error(err);
+    // Même en cas d'erreur réseau (no-cors), on affiche l'URL — le client est créé
+    afficherURLClient(prenom, urlFinale, clientId);
+  }
+}
+
+// ── Afficher URL finale ──
+function afficherURLClient(prenom, url, clientId) {
+  const existing = document.getElementById('modalURL');
+  if(existing) existing.remove();
+
+  const waMsg = encodeURIComponent('Bonjour ' + prenom + ' 👋\n\nTon assistant Attractor Assists est prêt !\n\nOuvre ce lien sur ton téléphone :\n' + url + '\n\nInstalle-le sur ton écran d\'accueil pour l\'avoir toujours à portée. 🚀');
+
+  const modal = document.createElement('div');
+  modal.id = 'modalURL';
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.92);backdrop-filter:blur(12px);z-index:500;display:flex;align-items:center;justify-content:center;padding:24px;';
+  modal.innerHTML = `
+    <div style="background:#141428;border:1px solid rgba(201,168,76,0.25);border-radius:20px;padding:28px;max-width:360px;width:100%;text-align:center;">
+      <div style="font-size:44px;margin-bottom:16px;">🚀</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:700;color:#C9A84C;margin-bottom:6px;">Assistant créé !</div>
+      <div style="font-size:13px;color:rgba(242,238,230,0.4);margin-bottom:6px;">ID : ${clientId}</div>
+      <div style="font-size:14px;color:rgba(242,238,230,0.5);margin-bottom:20px;"><strong style="color:#F2EEE6;">${prenom}</strong> peut ouvrir son assistant maintenant.</div>
+      <div style="background:#06060E;border:1px solid rgba(201,168,76,0.15);border-radius:10px;padding:14px;margin-bottom:20px;word-break:break-all;font-size:12px;color:#C9A84C;text-align:left;">${url}</div>
+      <button onclick="navigator.clipboard.writeText('${url}').then(()=>showToast('✅ URL copiée'))" style="width:100%;background:linear-gradient(135deg,#C9A84C,#E8C96A);color:#06060E;border:none;border-radius:12px;padding:14px;font-weight:700;font-size:15px;cursor:pointer;margin-bottom:10px;font-family:'Outfit',sans-serif;">📋 Copier l'URL</button>
+      <button onclick="window.open('https://wa.me/?text=${waMsg}')" style="width:100%;background:rgba(37,211,102,0.1);color:#25D366;border:1px solid rgba(37,211,102,0.3);border-radius:12px;padding:13px;font-weight:700;font-size:14px;cursor:pointer;margin-bottom:10px;font-family:'Outfit',sans-serif;">📲 Envoyer sur WhatsApp</button>
+      <button onclick="window.open('${url}', '_blank')" style="width:100%;background:rgba(201,168,76,0.08);color:#C9A84C;border:1px solid rgba(201,168,76,0.2);border-radius:12px;padding:12px;font-weight:600;font-size:13px;cursor:pointer;margin-bottom:10px;font-family:'Outfit',sans-serif;">👁️ Tester l'assistant</button>
+      <button onclick="document.getElementById('modalURL').remove()" style="width:100%;background:none;border:none;color:rgba(242,238,230,0.25);font-size:12px;cursor:pointer;padding:8px;font-family:'Outfit',sans-serif;">Fermer</button>
+    </div>`;
+  document.body.appendChild(modal);
 }
 
 const h = new Date().getHours();
