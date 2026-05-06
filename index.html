@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Attractor Assists">
 <meta name="theme-color" content="#06060E">
-<title>Attractor Assists</title>
+<title>Attractor Assists — Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--or:#C9A84C;--or2:#E8C96A;--bg:#06060E;--s1:#141428;--s2:#1A1A32;--s3:#20203C;--txt:#F2EEE6;--txt2:rgba(242,238,230,0.5);--txt3:rgba(242,238,230,0.22);--txt4:rgba(242,238,230,0.08);--green:#3DC98A;--red:#E85858;--amber:#F5A840;--r:18px;--r2:12px;}
@@ -39,18 +39,12 @@ body{min-height:100vh;padding-bottom:100px;position:relative;}
 .fc-m.current{background:rgba(201,168,76,0.12);border-color:rgba(201,168,76,0.3);box-shadow:0 0 12px rgba(201,168,76,0.15);transform:scale(1.05);}
 .fcm-label{font-size:9px;color:var(--txt3);font-weight:600;letter-spacing:0.8px;}
 .fcm-val{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:700;margin-top:2px;}
-.fcm-val.small{font-size:14px;}
 .fc-m.current .fcm-val{color:var(--or);}
 .fc-m.done .fcm-val{color:var(--green);}
 .fc-progress{height:6px;background:var(--s3);border-radius:100px;overflow:hidden;margin-top:10px;}
 .fc-bar{height:100%;background:linear-gradient(90deg,var(--or),var(--or2));border-radius:100px;transition:width 0.6s ease;}
 .btn-fib{width:100%;background:var(--s2);border:1px solid rgba(255,255,255,0.1);border-radius:var(--r2);padding:10px;color:var(--txt2);font-size:12px;font-weight:600;cursor:pointer;margin-top:12px;transition:all 0.2s;}
 .btn-fib:active{transform:scale(0.98);background:rgba(201,168,76,0.1);color:var(--or);}
-.whatsapp-teaser{background:linear-gradient(135deg,rgba(37,211,102,0.08),rgba(37,211,102,0.02));border:1px solid rgba(37,211,102,0.2);border-radius:var(--r);padding:16px;margin:0 20px 20px;display:flex;gap:14px;align-items:flex-start;}
-.wt-icon{font-size:32px;flex-shrink:0;}
-.wt-content{flex:1;}
-.wt-title{font-weight:700;font-size:14px;color:var(--txt);margin-bottom:6px;}
-.wt-desc{font-size:12px;line-height:1.5;color:var(--txt2);}
 .section{padding:0 20px;margin-bottom:20px;}
 .s-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--txt3);font-weight:600;margin-bottom:12px;}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
@@ -61,9 +55,11 @@ body{min-height:100vh;padding-bottom:100px;position:relative;}
 .qc-title{font-weight:600;font-size:14px;margin-bottom:2px;}
 .qc-sub{font-size:12px;color:var(--txt3);}
 .qc-badge{position:absolute;top:10px;right:10px;font-size:10px;font-weight:700;padding:2px 7px;border-radius:100px;background:var(--or);color:#06060E;}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;}
+
+/* MODAL */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);z-index:200;display:none;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto;}
 .modal.show{display:flex;}
-.modal-content{background:var(--s1);border:1px solid rgba(255,255,255,0.08);border-radius:var(--r);max-width:380px;width:100%;max-height:80vh;overflow-y:auto;padding:24px;}
+.modal-content{background:var(--s1);border:1px solid rgba(255,255,255,0.08);border-radius:var(--r);max-width:380px;width:100%;padding:24px;margin:auto;}
 .mc-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
 .mc-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:var(--or);}
 .mc-close{background:none;border:none;color:var(--txt3);font-size:26px;cursor:pointer;}
@@ -73,14 +69,34 @@ body{min-height:100vh;padding-bottom:100px;position:relative;}
 .ff-label{font-size:12px;color:var(--txt2);font-weight:600;margin-bottom:6px;display:block;}
 .ff-input{width:100%;background:var(--bg);border:1px solid rgba(255,255,255,0.08);border-radius:var(--r2);padding:12px 14px;color:var(--txt);font-family:'Outfit',sans-serif;font-size:14px;}
 .ff-input:focus{outline:none;border-color:rgba(201,168,76,0.3);}
-.btn-primary{width:100%;background:linear-gradient(135deg,var(--or),var(--or2));color:#06060E;border:none;border-radius:var(--r2);padding:16px;font-weight:700;font-size:15px;cursor:pointer;margin-top:16px;}
+.btn-primary{width:100%;background:linear-gradient(135deg,var(--or),var(--or2));color:#06060E;border:none;border-radius:var(--r2);padding:16px;font-weight:700;font-size:15px;cursor:pointer;margin-top:16px;font-family:'Outfit',sans-serif;}
 .btn-primary:active{transform:scale(0.97);}
+.btn-secondary{width:100%;background:var(--s2);border:1px solid rgba(255,255,255,0.1);border-radius:var(--r2);padding:14px;font-weight:600;font-size:14px;cursor:pointer;margin-top:10px;color:var(--txt2);font-family:'Outfit',sans-serif;}
+.btn-secondary:active{transform:scale(0.97);}
+
+/* ✅ LIEN CLIENT */
+.lien-client-box{background:linear-gradient(135deg,rgba(61,201,138,0.1),rgba(61,201,138,0.03));border:1px solid rgba(61,201,138,0.3);border-radius:var(--r2);padding:18px;margin-top:16px;}
+.lcb-label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--green);font-weight:700;margin-bottom:8px;}
+.lcb-id{font-size:11px;color:var(--txt3);margin-bottom:10px;}
+.lcb-url{background:var(--bg);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--or);word-break:break-all;margin-bottom:12px;font-family:monospace;}
+.btn-copy{width:100%;background:linear-gradient(135deg,var(--green),#2aa96d);color:#06060E;border:none;border-radius:10px;padding:12px;font-weight:700;font-size:14px;cursor:pointer;font-family:'Outfit',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;}
+.btn-copy:active{transform:scale(0.97);}
+.btn-wa{width:100%;background:linear-gradient(135deg,#25D366,#128C7E);color:white;border:none;border-radius:10px;padding:12px;font-weight:700;font-size:14px;cursor:pointer;font-family:'Outfit',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:8px;}
+.btn-wa:active{transform:scale(0.97);}
+
+/* SPINNER */
+.spinner{display:none;flex-direction:column;align-items:center;gap:14px;padding:24px 0;}
+.spinner.show{display:flex;}
+.spin-ring{width:44px;height:44px;border:3px solid rgba(201,168,76,0.2);border-top-color:var(--or);border-radius:50%;animation:spin 0.8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin-text{font-size:13px;color:var(--txt3);}
+
 .nav{position:fixed;bottom:0;left:0;right:0;background:var(--bg);border-top:1px solid var(--txt4);padding:8px 12px 22px;display:flex;justify-content:space-around;z-index:100;}
 .nav-item{background:none;border:none;color:var(--txt3);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 10px;border-radius:var(--r2);font-family:'Outfit',sans-serif;}
 .nav-item.active{color:var(--or);background:rgba(201,168,76,0.1);}
 .ni-icon{font-size:20px;}
 .ni-label{font-size:10px;font-weight:600;}
-.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:var(--s1);border:1px solid rgba(255,255,255,0.1);padding:14px 20px;border-radius:var(--r2);font-size:13px;z-index:400;}
+.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:var(--s1);border:1px solid rgba(255,255,255,0.1);padding:14px 20px;border-radius:var(--r2);font-size:13px;z-index:400;white-space:nowrap;}
 </style>
 </head>
 <body>
@@ -112,23 +128,10 @@ body{min-height:100vh;padding-bottom:100px;position:relative;}
   </div>
 
   <div class="fib-chart">
-    <div class="fc-title">
-      <span>🎯</span>
-      <span id="objectifTitre">M0 → M12 — Route vers 28 clients</span>
-    </div>
+    <div class="fc-title"><span>🎯</span><span id="objectifTitre">M0 → M12 — Route vers 28 clients</span></div>
     <div class="fc-mois" id="fibMois"></div>
-    <div class="fc-progress">
-      <div class="fc-bar" id="fibBar" style="width:0%"></div>
-    </div>
+    <div class="fc-progress"><div class="fc-bar" id="fibBar" style="width:0%"></div></div>
     <button class="btn-fib" onclick="ajouterClient()">✓ Client acquis — Enregistrer</button>
-  </div>
-
-  <div class="whatsapp-teaser">
-    <div class="wt-icon">📱</div>
-    <div class="wt-content">
-      <div class="wt-title">Module WhatsApp — Bientôt disponible</div>
-      <div class="wt-desc">Ton assistant se connectera à ton WhatsApp Business pour organiser automatiquement tes messages clients. Comme ranger ta chambre pendant que tu dors 🧹✨</div>
-    </div>
   </div>
 
   <div class="section">
@@ -145,7 +148,7 @@ body{min-height:100vh;padding-bottom:100px;position:relative;}
         <div class="qc-title">Pipeline</div>
         <div class="qc-sub" id="pipelineCount">0 prospects</div>
       </div>
-      <div class="q-card" onclick="voirHistorique()">
+      <div class="q-card">
         <div class="qc-icon">📊</div>
         <div class="qc-title">Historique</div>
         <div class="qc-sub" id="histoCount">0 traitements</div>
@@ -154,6 +157,7 @@ body{min-height:100vh;padding-bottom:100px;position:relative;}
   </div>
 </div>
 
+<!-- MODAL AUDIT -->
 <div class="modal" id="modalAudit">
   <div class="modal-content">
     <div class="mc-header">
@@ -161,27 +165,13 @@ body{min-height:100vh;padding-bottom:100px;position:relative;}
       <button class="mc-close" onclick="fermerAudit()">×</button>
     </div>
     <form id="auditForm" onsubmit="soumettreAudit(event)">
-      
       <div class="form-block">
         <div class="fb-title">1. Identité</div>
-        <div class="form-field">
-          <label class="ff-label">Prénom *</label>
-          <input type="text" name="prenom" class="ff-input" required>
-        </div>
-        <div class="form-field">
-          <label class="ff-label">Nom *</label>
-          <input type="text" name="nom" class="ff-input" required>
-        </div>
-        <div class="form-field">
-          <label class="ff-label">Email *</label>
-          <input type="email" name="email" class="ff-input" required>
-        </div>
-        <div class="form-field">
-          <label class="ff-label">Activité *</label>
-          <input type="text" name="activite" class="ff-input" placeholder="Ex: Vente de bijoux" required>
-        </div>
-        <div class="form-field">
-          <label class="ff-label">Canal principal *</label>
+        <div class="form-field"><label class="ff-label">Prénom *</label><input type="text" name="prenom" class="ff-input" required></div>
+        <div class="form-field"><label class="ff-label">Nom *</label><input type="text" name="nom" class="ff-input" required></div>
+        <div class="form-field"><label class="ff-label">Email *</label><input type="email" name="email" class="ff-input" required></div>
+        <div class="form-field"><label class="ff-label">Activité *</label><input type="text" name="activite" class="ff-input" placeholder="Ex: Vente de bijoux" required></div>
+        <div class="form-field"><label class="ff-label">Canal principal *</label>
           <select name="canal" class="ff-input" required>
             <option value="">-- Choisir --</option>
             <option value="Boutique physique">Boutique physique</option>
@@ -190,82 +180,54 @@ body{min-height:100vh;padding-bottom:100px;position:relative;}
           </select>
         </div>
       </div>
-
       <div class="form-block">
         <div class="fb-title">2. Organisation actuelle</div>
-        <div class="form-field">
-          <label class="ff-label">Comment gères-tu ton agenda ?</label>
+        <div class="form-field"><label class="ff-label">Comment gères-tu ton agenda ?</label>
           <select name="agenda" class="ff-input">
             <option value="Téléphone">Téléphone (calendrier)</option>
             <option value="Agenda papier">Agenda papier</option>
             <option value="Rien">Rien / Mémoire</option>
           </select>
         </div>
-        <div class="form-field">
-          <label class="ff-label">Comment suis-tu tes ventes ?</label>
+        <div class="form-field"><label class="ff-label">Comment suis-tu tes ventes ?</label>
           <select name="suivi_ventes" class="ff-input">
             <option value="Tableur">Tableur (Excel/Sheets)</option>
             <option value="Mémoire">Mémoire</option>
             <option value="Rien">Rien du tout</option>
           </select>
         </div>
-        <div class="form-field">
-          <label class="ff-label">As-tu des assistantes ?</label>
-          <input type="text" name="assistantes" class="ff-input" placeholder="Ex: Oui, 2 personnes">
-        </div>
+        <div class="form-field"><label class="ff-label">As-tu des assistantes ?</label><input type="text" name="assistantes" class="ff-input" placeholder="Ex: Oui, 2 personnes"></div>
       </div>
-
       <div class="form-block">
         <div class="fb-title">3. Points douloureux</div>
-        <div class="form-field">
-          <label class="ff-label">Qu'est-ce qui te prend le plus de temps inutilement ?</label>
-          <input type="text" name="perte_temps" class="ff-input" placeholder="Ex: Chercher les infos clients">
-        </div>
-        <div class="form-field">
-          <label class="ff-label">Qu'est-ce que tu oublies régulièrement ?</label>
-          <input type="text" name="oublis" class="ff-input" placeholder="Ex: Relancer les impayés">
-        </div>
-        <div class="form-field">
-          <label class="ff-label">Qu'est-ce qui te stresse le plus ?</label>
-          <input type="text" name="stress" class="ff-input" placeholder="Ex: Savoir où j'en suis financièrement">
-        </div>
+        <div class="form-field"><label class="ff-label">Ce qui te prend le plus de temps inutilement ?</label><input type="text" name="perte_temps" class="ff-input" placeholder="Ex: Chercher les infos clients"></div>
+        <div class="form-field"><label class="ff-label">Ce que tu oublies régulièrement ?</label><input type="text" name="oublis" class="ff-input" placeholder="Ex: Relancer les impayés"></div>
+        <div class="form-field"><label class="ff-label">Ce qui te stresse le plus ?</label><input type="text" name="stress" class="ff-input" placeholder="Ex: Savoir où j'en suis financièrement"></div>
       </div>
-
       <div class="form-block">
         <div class="fb-title">4. Finances</div>
-        <div class="form-field">
-          <label class="ff-label">Connais-tu ton CA mensuel ?</label>
+        <div class="form-field"><label class="ff-label">Connais-tu ton CA mensuel ?</label>
           <select name="ca_connaissance" class="ff-input">
             <option value="Oui précisément">Oui, précisément</option>
             <option value="Approximativement">Approximativement</option>
             <option value="Non">Non</option>
           </select>
         </div>
-        <div class="form-field">
-          <label class="ff-label">Objectif financier (si défini)</label>
-          <input type="text" name="objectif_finance" class="ff-input" placeholder="Ex: 500 000 FCFA/mois">
-        </div>
+        <div class="form-field"><label class="ff-label">Objectif financier (si défini)</label><input type="text" name="objectif_finance" class="ff-input" placeholder="Ex: 500 000 FCFA/mois"></div>
       </div>
-
       <div class="form-block">
         <div class="fb-title">5. Digital & réseaux</div>
-        <div class="form-field">
-          <label class="ff-label">Vends-tu sur les réseaux ?</label>
-          <input type="text" name="reseaux" class="ff-input" placeholder="Ex: Facebook, Instagram">
-        </div>
-        <div class="form-field">
-          <label class="ff-label">Utilises-tu WhatsApp Business ?</label>
+        <div class="form-field"><label class="ff-label">Vends-tu sur les réseaux ?</label><input type="text" name="reseaux" class="ff-input" placeholder="Ex: Facebook, Instagram"></div>
+        <div class="form-field"><label class="ff-label">Utilises-tu WhatsApp Business ?</label>
           <select name="whatsapp" class="ff-input">
             <option value="Oui">Oui</option>
             <option value="Non">Non</option>
           </select>
         </div>
       </div>
-
       <div class="form-block">
         <div class="fb-title">6. Motivation</div>
-        <div class="form-field">
-          <label class="ff-label">Niveau d'urgence perçu (1-5)</label>
+        <div class="form-field"><label class="ff-label">Niveau d'urgence perçu (1-5)</label>
           <select name="urgence" class="ff-input" required>
             <option value="1">1 - Pas urgent</option>
             <option value="2">2 - Peut attendre</option>
@@ -274,17 +236,14 @@ body{min-height:100vh;padding-bottom:100px;position:relative;}
             <option value="5">5 - Critique</option>
           </select>
         </div>
-        <div class="form-field">
-          <label class="ff-label">Qu'est-ce que tu veux changer EN PREMIER ?</label>
-          <input type="text" name="priorite" class="ff-input" placeholder="Ex: Suivre mes finances">
-        </div>
+        <div class="form-field"><label class="ff-label">Ce que tu veux changer EN PREMIER ?</label><input type="text" name="priorite" class="ff-input" placeholder="Ex: Suivre mes finances"></div>
       </div>
-
       <button type="submit" class="btn-primary">Analyser le prospect</button>
     </form>
   </div>
 </div>
 
+<!-- MODAL RÉSULTAT -->
 <div class="modal" id="modalResultat">
   <div class="modal-content">
     <div class="mc-header">
@@ -292,43 +251,60 @@ body{min-height:100vh;padding-bottom:100px;position:relative;}
       <button class="mc-close" onclick="fermerResultat()">×</button>
     </div>
     <div id="resultatBody"></div>
-    <button class="btn-primary" onclick="genererSysteme()">Générer Système Client</button>
+
+    <!-- Spinner pendant génération -->
+    <div class="spinner" id="spinner">
+      <div class="spin-ring"></div>
+      <div class="spin-text">Création de l'assistant...</div>
+    </div>
+
+    <!-- ✅ Lien client généré -->
+    <div class="lien-client-box" id="lienClientBox" style="display:none">
+      <div class="lcb-label">✅ Assistant créé — Lien client</div>
+      <div class="lcb-id" id="lienClientId"></div>
+      <div class="lcb-url" id="lienClientUrl"></div>
+      <button class="btn-copy" onclick="copierLien()">📋 Copier le lien</button>
+      <button class="btn-wa" onclick="envoyerWhatsApp()">📲 Envoyer sur WhatsApp</button>
+    </div>
+
+    <button class="btn-primary" id="btnGenerer" onclick="genererSysteme()">Générer Système Client</button>
+    <button class="btn-secondary" onclick="fermerResultat()">Fermer</button>
   </div>
 </div>
 
 <div class="nav">
-  <button class="nav-item active" onclick="switchScreen('dashboard')">
-    <div class="ni-icon">🏠</div>
-    <div class="ni-label">Accueil</div>
-  </button>
-  <button class="nav-item" onclick="ouvrirAudit()">
-    <div class="ni-icon">➕</div>
-    <div class="ni-label">Nouveau</div>
-  </button>
-  <button class="nav-item">
-    <div class="ni-icon">📊</div>
-    <div class="ni-label">Historique</div>
-  </button>
+  <button class="nav-item active" onclick="switchScreen('dashboard')"><div class="ni-icon">🏠</div><div class="ni-label">Accueil</div></button>
+  <button class="nav-item" onclick="ouvrirAudit()"><div class="ni-icon">➕</div><div class="ni-label">Nouveau</div></button>
+  <button class="nav-item"><div class="ni-icon">📊</div><div class="ni-label">Historique</div></button>
 </div>
 
 <script>
-let currentData = null;
+// ══════════════════════════════════════════════
+// CONFIG
+// ══════════════════════════════════════════════
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxnsvcXaQERlcRKnwXzs0fMW34n68aMOB8IVmhtZZ256tNJMVRWcCjT3uJ82DjixlbJow/exec';
+const BASE_URL = 'https://fibonacciwinner.netlify.app/assistant-client.html';
 
+let currentData = null;
+let lienGenere  = '';
+
+// ══════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════
 function switchScreen(name) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById('screen-' + name).classList.add('active');
 }
 
-function ouvrirAudit() {
-  document.getElementById('modalAudit').classList.add('show');
-}
+function ouvrirAudit()   { document.getElementById('modalAudit').classList.add('show'); }
+function fermerAudit()   { document.getElementById('modalAudit').classList.remove('show'); }
+function fermerResultat(){ document.getElementById('modalResultat').classList.remove('show'); resetResultat(); }
 
-function fermerAudit() {
-  document.getElementById('modalAudit').classList.remove('show');
-}
-
-function fermerResultat() {
-  document.getElementById('modalResultat').classList.remove('show');
+function resetResultat() {
+  document.getElementById('lienClientBox').style.display = 'none';
+  document.getElementById('btnGenerer').style.display    = 'block';
+  document.getElementById('spinner').classList.remove('show');
+  lienGenere = '';
 }
 
 function showToast(msg) {
@@ -336,193 +312,236 @@ function showToast(msg) {
   t.className = 'toast';
   t.textContent = msg;
   document.body.appendChild(t);
-  setTimeout(function() { t.remove(); }, 3000);
+  setTimeout(() => t.remove(), 3000);
 }
 
+// ══════════════════════════════════════════════
+// ANALYSE AUDIT
+// ══════════════════════════════════════════════
 function soumettreAudit(event) {
   event.preventDefault();
-  const form = document.getElementById('auditForm');
-  const fd = new FormData(form);
-  
+  const fd = new FormData(document.getElementById('auditForm'));
+
   currentData = {
-    prenom: fd.get('prenom'),
-    nom: fd.get('nom'),
-    email: fd.get('email'),
-    activite: fd.get('activite'),
-    canal: fd.get('canal'),
-    agenda: fd.get('agenda'),
-    suivi_ventes: fd.get('suivi_ventes'),
-    assistantes: fd.get('assistantes'),
-    perte_temps: fd.get('perte_temps'),
-    oublis: fd.get('oublis'),
-    stress: fd.get('stress'),
-    ca_connaissance: fd.get('ca_connaissance'),
+    prenom          : fd.get('prenom'),
+    nom             : fd.get('nom'),
+    email           : fd.get('email'),
+    activite        : fd.get('activite'),
+    canal           : fd.get('canal'),
+    agenda          : fd.get('agenda'),
+    suivi_ventes    : fd.get('suivi_ventes'),
+    assistantes     : fd.get('assistantes'),
+    perte_temps     : fd.get('perte_temps'),
+    oublis          : fd.get('oublis'),
+    stress          : fd.get('stress'),
+    ca_connaissance : fd.get('ca_connaissance'),
     objectif_finance: fd.get('objectif_finance'),
-    reseaux: fd.get('reseaux'),
-    whatsapp: fd.get('whatsapp'),
-    urgence: fd.get('urgence'),
-    priorite: fd.get('priorite'),
-    timestamp: Date.now()
+    reseaux         : fd.get('reseaux'),
+    whatsapp        : fd.get('whatsapp'),
+    urgence         : fd.get('urgence'),
+    priorite        : fd.get('priorite'),
+    timestamp       : Date.now()
   };
-  
-  // ANALYSE AUTOMATIQUE
+
+  // Analyse automatique
   const failles = [];
   const modules = [];
-  let formule = 'STARTER IA';
-  
-  // Détection failles
+
   if (currentData.agenda === 'Rien') failles.push('Aucun système de gestion du temps');
   if (currentData.suivi_ventes === 'Rien' || currentData.suivi_ventes === 'Mémoire') failles.push('Suivi des ventes inexistant');
   if (currentData.ca_connaissance === 'Non') failles.push('CA mensuel inconnu');
-  if (currentData.oublis) failles.push('Oublis réguliers: ' + currentData.oublis);
-  
-  // Sélection modules
+  if (currentData.oublis) failles.push('Oublis réguliers : ' + currentData.oublis);
+
   if (currentData.agenda === 'Rien' || currentData.perte_temps) modules.push('AGENDA & TÂCHES');
   if (currentData.ca_connaissance !== 'Oui précisément') modules.push('TABLEAU DE BORD FINANCES');
   if (currentData.oublis || currentData.stress) modules.push('SUIVI CLIENTS & RELANCES');
-  if (currentData.assistantes && currentData.assistantes !== '') modules.push('GESTION ASSISTANTES');
-  if (currentData.reseaux && currentData.reseaux !== '') modules.push('CONTENU RÉSEAUX SOCIAUX');
-  
-  // Sélection formule
-  const nbModules = modules.length;
+  if (currentData.assistantes) modules.push('GESTION ASSISTANTES');
+  if (currentData.reseaux) modules.push('CONTENU RÉSEAUX SOCIAUX');
+
+  const nbMod  = modules.length;
   const urgence = parseInt(currentData.urgence);
-  
-  if (nbModules <= 2 && urgence < 4) {
-    formule = 'STARTER IA (250 €)';
-  } else if (nbModules <= 4 || urgence >= 4) {
-    formule = 'PRO IA (450 €)';
-  } else {
-    formule = 'PREMIUM IA (800 €)';
-  }
-  
-  currentData.analyse = {
-    failles: failles,
-    modules: modules,
-    formule: formule
-  };
-  
+  let formule = nbMod <= 2 && urgence < 4 ? 'STARTER IA (250 €)' : nbMod <= 4 || urgence >= 4 ? 'PRO IA (450 €)' : 'PREMIUM IA (800 €)';
+
+  currentData.analyse = { failles, modules, formule };
+
+  // Générer le prompt modules
+  const promptParts = [];
+  if (modules.includes('AGENDA & TÂCHES'))           promptParts.push('### MODULE AGENDA & TÂCHES\nTu aides à organiser les journées, RDV et tâches. Tu rappelles ce qui est urgent.');
+  if (modules.includes('TABLEAU DE BORD FINANCES'))  promptParts.push('### MODULE FINANCES\nTu permets de suivre le CA, les paiements et les objectifs. Tu alertes sur les impayés.');
+  if (modules.includes('SUIVI CLIENTS & RELANCES'))  promptParts.push('### MODULE CLIENTS & RELANCES\nTu aides à ne plus oublier les relances, à suivre les prospects et à convertir.');
+  if (modules.includes('GESTION ASSISTANTES'))       promptParts.push('### MODULE ASSISTANTES\nTu aides à déléguer les tâches, suivre l\'avancement et coordonner l\'équipe.');
+  if (modules.includes('CONTENU RÉSEAUX SOCIAUX'))   promptParts.push('### MODULE RÉSEAUX SOCIAUX\nTu aides à créer du contenu, planifier les publications et engager l\'audience.');
+  currentData.promptModules = promptParts.join('\n\n');
+
   fermerAudit();
-  form.reset();
-  
-  // Affichage résultat
-  let html = '<div style="margin-bottom:16px;"><strong>Prospect:</strong> ' + currentData.prenom + ' ' + currentData.nom + '</div>';
-  html += '<div style="margin-bottom:16px;"><strong>Activité:</strong> ' + currentData.activite + ' (' + currentData.canal + ')</div>';
-  
+  document.getElementById('auditForm').reset();
+
+  // Afficher résultat
+  let html = '<div style="margin-bottom:14px;font-size:15px;font-weight:700;">' + currentData.prenom + ' ' + currentData.nom + '</div>';
+  html += '<div style="margin-bottom:10px;font-size:13px;color:var(--txt2);">' + currentData.activite + ' · ' + currentData.canal + '</div>';
+
   if (failles.length > 0) {
-    html += '<div style="margin-bottom:12px;"><strong>🔴 Failles critiques:</strong></div>';
-    html += '<ul style="margin:0 0 16px 20px;font-size:13px;line-height:1.6;">';
-    failles.forEach(function(f) { html += '<li>' + f + '</li>'; });
+    html += '<div style="margin-bottom:8px;font-size:12px;font-weight:700;color:var(--red);">🔴 Failles</div>';
+    html += '<ul style="margin:0 0 14px 16px;font-size:12px;line-height:1.7;color:var(--txt2);">';
+    failles.forEach(f => html += '<li>' + f + '</li>');
     html += '</ul>';
   }
-  
-  html += '<div style="margin-bottom:12px;"><strong>📦 Modules recommandés:</strong></div>';
-  html += '<ul style="margin:0 0 16px 20px;font-size:13px;line-height:1.6;">';
-  modules.forEach(function(m) { html += '<li>' + m + '</li>'; });
+
+  html += '<div style="margin-bottom:8px;font-size:12px;font-weight:700;color:var(--or);">📦 Modules</div>';
+  html += '<ul style="margin:0 0 14px 16px;font-size:12px;line-height:1.7;color:var(--txt2);">';
+  modules.forEach(m => html += '<li>' + m + '</li>');
   html += '</ul>';
-  
-  html += '<div style="margin-bottom:12px;"><strong>⚡ Priorité:</strong> ' + currentData.priorite + '</div>';
-  html += '<div style="background:rgba(201,168,76,0.1);padding:12px;border-radius:8px;margin-top:16px;">';
-  html += '<strong style="color:var(--or);font-size:16px;">💰 ' + formule + '</strong>';
-  html += '</div>';
-  
+
+  html += '<div style="margin-bottom:10px;font-size:12px;"><strong>⚡ Priorité :</strong> <span style="color:var(--txt2)">' + currentData.priorite + '</span></div>';
+  html += '<div style="background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.2);padding:12px;border-radius:10px;margin-bottom:4px;">';
+  html += '<strong style="color:var(--or);font-size:15px;">💰 ' + formule + '</strong></div>';
+
   document.getElementById('resultatBody').innerHTML = html;
   document.getElementById('modalResultat').classList.add('show');
   showToast('✅ Analyse terminée');
 }
 
-function genererSysteme() {
-  if (!currentData) {
-    showToast('Aucun prospect');
-    return;
+// ══════════════════════════════════════════════
+// ✅ GÉNÉRER SYSTÈME CLIENT — VERSION CORRIGÉE
+// ══════════════════════════════════════════════
+async function genererSysteme() {
+  if (!currentData) { showToast('Aucun prospect'); return; }
+
+  // Générer ID unique
+  const now     = new Date();
+  const dateStr = now.getFullYear().toString() +
+                  String(now.getMonth()+1).padStart(2,'0') +
+                  String(now.getDate()).padStart(2,'0');
+  const rand    = Math.random().toString(36).substr(2,5).toUpperCase();
+  const id      = 'AA-' + currentData.prenom.replace(/\s+/g,'') + '-' + rand;
+
+  // UI — spinner
+  document.getElementById('btnGenerer').style.display = 'none';
+  document.getElementById('spinner').classList.add('show');
+
+  const payload = {
+    action      : 'createAssistant',
+    id          : id,
+    prenom      : currentData.prenom,
+    activite    : currentData.activite,
+    modules     : currentData.analyse.modules.join('|'),
+    priorite    : currentData.priorite,
+    objectif    : currentData.objectif_finance || '',
+    promptModules: currentData.promptModules,
+    url         : BASE_URL + '?id=' + id
+  };
+
+  try {
+    // ✅ Envoyer au Apps Script — créer dans onglet ASSISTANTS
+    const res  = await fetch(APPS_SCRIPT_URL, {
+      method : 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body   : JSON.stringify(payload)
+    });
+    const data = await res.json();
+
+    if (!data.success) throw new Error(data.error || 'Erreur serveur');
+
+    // ✅ Générer le lien client
+    lienGenere = BASE_URL + '?id=' + id;
+
+    document.getElementById('spinner').classList.remove('show');
+    document.getElementById('lienClientId').textContent  = 'ID : ' + id;
+    document.getElementById('lienClientUrl').textContent = lienGenere;
+    document.getElementById('lienClientBox').style.display = 'block';
+
+    showToast('✅ Assistant créé pour ' + currentData.prenom);
+
+  } catch(err) {
+    document.getElementById('spinner').classList.remove('show');
+    document.getElementById('btnGenerer').style.display = 'block';
+    showToast('❌ Erreur : ' + err.message);
+    console.error(err);
   }
-  
-  const prenom = currentData.prenom;
-  const activite = currentData.activite;
-  
-  const html = '<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">' +
-    '<meta name="viewport" content="width=device-width,initial-scale=1.0">' +
-    '<title>Attractor Assists - ' + prenom + '</title>' +
-    '<style>body{background:#06060E;color:#F2EEE6;font-family:Arial,sans-serif;padding:20px;text-align:center;}' +
-    'h1{color:#C9A84C;}</style></head><body>' +
-    '<h1>Attractor Assists</h1>' +
-    '<p>Bonjour ' + prenom + '</p>' +
-    '<p>Assistant IA pour ' + activite + '</p>' +
-    '</body></html>';
-  
-  const blob = new Blob([html], {type: 'text/html'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'attractor-' + prenom.toLowerCase() + '.html';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-  
-  showToast('Système généré pour ' + prenom);
 }
 
-const h = new Date().getHours();
-const tl = document.getElementById('timeLabel');
-if (h < 12) tl.textContent = 'Bonjour';
-else if (h < 18) tl.textContent = 'Bon après-midi';
-else tl.textContent = 'Bonsoir';
+// ══════════════════════════════════════════════
+// COPIER & ENVOYER LE LIEN
+// ══════════════════════════════════════════════
+function copierLien() {
+  if (!lienGenere) return;
+  navigator.clipboard.writeText(lienGenere)
+    .then(() => showToast('✅ Lien copié !'))
+    .catch(() => {
+      // Fallback pour mobile
+      const ta = document.createElement('textarea');
+      ta.value = lienGenere;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast('✅ Lien copié !');
+    });
+}
 
-// === FIBONACCI DASHBOARD CLIENTS ===
+function envoyerWhatsApp() {
+  if (!lienGenere || !currentData) return;
+  const msg = encodeURIComponent(
+    'Bonjour ' + currentData.prenom + ' 👋\n\n' +
+    'Ton assistant personnel Attractor Assists est prêt !\n\n' +
+    '📲 Ouvre ce lien sur ton téléphone :\n' + lienGenere + '\n\n' +
+    'Ensuite clique sur "Ajouter à l\'écran d\'accueil" pour l\'installer comme une vraie app.\n\n' +
+    'Je reste disponible si tu as des questions 🙏\n— Mac Arthur'
+  );
+  window.open('https://wa.me/?text=' + msg, '_blank');
+}
+
+// ══════════════════════════════════════════════
+// HEURE
+// ══════════════════════════════════════════════
+const h = new Date().getHours();
+document.getElementById('timeLabel').textContent = h < 12 ? 'Bonjour' : h < 18 ? 'Bon après-midi' : 'Bonsoir';
+
+// ══════════════════════════════════════════════
+// FIBONACCI DASHBOARD
+// ══════════════════════════════════════════════
 const PLAN = [
-  {mois:'M0', clients:0, phrase:'Préparer le terrain'},
-  {mois:'M1', clients:1, phrase:'Décrocher le 1er client réseau'},
-  {mois:'M2', clients:3, phrase:'3 clients, 1 témoignage capturé'},
-  {mois:'M3', clients:5, phrase:'Preuve sociale solide'},
-  {mois:'M4', clients:8, phrase:'Premiers inconnus convertis'},
-  {mois:'M5', clients:12, phrase:'Pub activée, démos afterwork'},
-  {mois:'M6', clients:16, phrase:'10 récurrents = base stable'},
-  {mois:'M7', clients:20, phrase:'Bouche-à-oreille actif'},
-  {mois:'M8', clients:25, phrase:'Programme ambassadeurs live'},
-  {mois:'M9', clients:30, phrase:'18 récurrents = 1 440 € fixes'},
-  {mois:'M10', clients:35, phrase:'Récurrent couvre charges'},
-  {mois:'M11', clients:40, phrase:'Pipeline rempli, scaling'},
-  {mois:'M12', clients:28, phrase:'10 000 € — Embauche possible'}
+  {mois:'M0',clients:0,phrase:'Préparer le terrain'},
+  {mois:'M1',clients:1,phrase:'Décrocher le 1er client réseau'},
+  {mois:'M2',clients:3,phrase:'3 clients, 1 témoignage capturé'},
+  {mois:'M3',clients:5,phrase:'Preuve sociale solide'},
+  {mois:'M4',clients:8,phrase:'Premiers inconnus convertis'},
+  {mois:'M5',clients:12,phrase:'Pub activée, démos afterwork'},
+  {mois:'M6',clients:16,phrase:'10 récurrents = base stable'},
+  {mois:'M7',clients:20,phrase:'Bouche-à-oreille actif'},
+  {mois:'M8',clients:25,phrase:'Programme ambassadeurs live'},
+  {mois:'M9',clients:30,phrase:'18 récurrents = 1 440 € fixes'},
+  {mois:'M10',clients:35,phrase:'Récurrent couvre charges'},
+  {mois:'M11',clients:40,phrase:'Pipeline rempli, scaling'},
+  {mois:'M12',clients:28,phrase:'10 000 € — Embauche possible'}
 ];
 
-let moisCourant = parseInt(localStorage.getItem('moisActuel') || '0');
+let moisCourant   = parseInt(localStorage.getItem('moisActuel') || '0');
 let clientsActuels = parseInt(localStorage.getItem('clientsActuels') || '0');
 
 function afficherFibonacci() {
   const container = document.getElementById('fibMois');
   container.innerHTML = '';
-  
-  PLAN.forEach(function(m, idx) {
-    const done = idx < moisCourant;
-    const current = idx === moisCourant;
+  PLAN.forEach((m, idx) => {
     const div = document.createElement('div');
-    div.className = 'fc-m';
-    if (done) div.className += ' done';
-    if (current) div.className += ' current';
-    
-    div.innerHTML = '<div class="fcm-label">' + m.mois + '</div>' +
-                    '<div class="fcm-val">' + m.clients + '</div>';
+    div.className = 'fc-m' + (idx < moisCourant ? ' done' : idx === moisCourant ? ' current' : '');
+    div.innerHTML = '<div class="fcm-label">' + m.mois + '</div><div class="fcm-val">' + m.clients + '</div>';
     container.appendChild(div);
   });
-  
   const objectifClients = PLAN[moisCourant].clients;
-  const progress = objectifClients > 0 ? Math.round((clientsActuels / objectifClients) * 100) : 0;
-  const progressGlobal = Math.round((moisCourant / 12) * 100);
-  
-  document.getElementById('fibBar').style.width = progressGlobal + '%';
-  document.getElementById('moisActuel').textContent = PLAN[moisCourant].mois;
-  document.getElementById('phraseDrive').textContent = PLAN[moisCourant].phrase;
+  document.getElementById('fibBar').style.width = Math.round((moisCourant / 12) * 100) + '%';
+  document.getElementById('moisActuel').textContent    = PLAN[moisCourant].mois;
+  document.getElementById('phraseDrive').textContent   = PLAN[moisCourant].phrase;
   document.getElementById('clientsAcquis').textContent = clientsActuels;
   document.getElementById('clientsObjectif').textContent = objectifClients;
 }
 
 function ajouterClient() {
-  const objectifClients = PLAN[moisCourant].clients;
-  
-  if (clientsActuels >= objectifClients && moisCourant < 12) {
-    if (confirm('Objectif ' + objectifClients + ' clients atteint ! Passer au mois suivant ?')) {
+  const obj = PLAN[moisCourant].clients;
+  if (clientsActuels >= obj && moisCourant < 12) {
+    if (confirm('Objectif ' + obj + ' clients atteint ! Passer au mois suivant ?')) {
       moisCourant++;
-      localStorage.setItem('moisActuel', moisCourant.toString());
+      localStorage.setItem('moisActuel', moisCourant);
       afficherFibonacci();
       showToast('✅ Passage à ' + PLAN[moisCourant].mois);
     }
@@ -530,7 +549,7 @@ function ajouterClient() {
     alert('🎉 Objectif 28 clients atteint ! 10 000 € validé. Félicitations Mac Arthur.');
   } else {
     clientsActuels++;
-    localStorage.setItem('clientsActuels', clientsActuels.toString());
+    localStorage.setItem('clientsActuels', clientsActuels);
     afficherFibonacci();
     showToast('✅ Client #' + clientsActuels + ' enregistré');
   }
@@ -538,6 +557,5 @@ function ajouterClient() {
 
 afficherFibonacci();
 </script>
-
 </body>
 </html>
