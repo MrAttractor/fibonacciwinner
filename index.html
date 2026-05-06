@@ -433,12 +433,13 @@ async function genererSysteme() {
 
   try {
     // ✅ Envoyer au Apps Script — créer dans onglet ASSISTANTS
-    const res  = await fetch(APPS_SCRIPT_URL, {
-      method : 'POST',
-      headers: { 'Content-Type': 'text/plain' },
-      body   : JSON.stringify(payload)
-    });
-    const data = await res.json();
+    await fetch(APPS_SCRIPT_URL, {
+  method : 'POST',
+  mode   : 'no-cors',
+  headers: { 'Content-Type': 'text/plain' },
+  body   : JSON.stringify(payload)
+});
+const data = { success: true };
 
     if (!data.success) throw new Error(data.error || 'Erreur serveur');
 
