@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Attractor Assists">
+<meta name="theme-color" content="#06060E">
+<title>Attractor Assists</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--or:#C9A84C;--or2:#E8C96A;--bg:#06060E;--s1:#141428;--s2:#1A1A32;--s3:#20203C;--txt:#F2EEE6;--txt2:rgba(242,238,230,0.5);--txt3:rgba(242,238,230,0.22);--txt4:rgba(242,238,230,0.08);--green:#3DC98A;--red:#E85858;--amber:#F5A840;--r:18px;--r2:12px;}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{width:100%;overflow-x:hidden;background:var(--bg);color:var(--txt);font-family:'Outfit',sans-serif;}
+body{min-height:100vh;padding-bottom:100px;position:relative;}
+.screen{display:none;animation:fadeUp 0.3s ease;}
+.screen.active{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.header{padding:52px 24px 16px;display:flex;align-items:center;justify-content:space-between;}
+.h-logo{display:flex;align-items:center;gap:10px;}
+.h-mark{width:32px;height:32px;background:linear-gradient(135deg,var(--or),var(--or2));border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-weight:700;font-size:11px;color:#06060E;}
+.h-name{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:700;}
+.h-name span{color:var(--or);}
+.greeting{padding:4px 24px 24px;}
+.g-time{font-size:12px;color:var(--or);letter-spacing:1.5px;text-transform:uppercase;font-weight:600;margin-bottom:4px;}
+.g-name{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:700;line-height:1.1;}
+.kpi-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 20px;margin-bottom:20px;}
+.kpi-card{background:var(--s1);border:1px solid rgba(255,255,255,0.05);border-radius:var(--r2);padding:14px;text-align:center;}
+.kc-label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--txt3);font-weight:600;margin-bottom:6px;}
+.kc-val{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;}
+.kc-val.gold{color:var(--or);}
+.kc-sub{font-size:11px;color:var(--txt3);margin-top:2px;}
+.fib-chart{background:var(--s1);border:1px solid rgba(255,255,255,0.05);border-radius:var(--r);padding:18px;margin:0 20px 20px;}
+.fc-title{font-size:11px;letter-spacing:1.8px;text-transform:uppercase;color:var(--or);font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.fc-mois{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px;}
+.fc-m{background:var(--s2);border:1px solid rgba(255,255,255,0.04);border-radius:8px;padding:8px;text-align:center;transition:all 0.3s;}
+.fc-m.done{background:rgba(61,201,138,0.08);border-color:rgba(61,201,138,0.2);}
+.fc-m.current{background:rgba(201,168,76,0.12);border-color:rgba(201,168,76,0.3);box-shadow:0 0 12px rgba(201,168,76,0.15);transform:scale(1.05);}
+.fcm-label{font-size:9px;color:var(--txt3);font-weight:600;letter-spacing:0.8px;}
+.fcm-val{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:700;margin-top:2px;}
+.fcm-val.small{font-size:14px;}
+.fc-m.current .fcm-val{color:var(--or);}
+.fc-m.done .fcm-val{color:var(--green);}
+.fc-progress{height:6px;background:var(--s3);border-radius:100px;overflow:hidden;margin-top:10px;}
+.fc-bar{height:100%;background:linear-gradient(90deg,var(--or),var(--or2));border-radius:100px;transition:width 0.6s ease;}
+.btn-fib{width:100%;background:var(--s2);border:1px solid rgba(255,255,255,0.1);border-radius:var(--r2);padding:10px;color:var(--txt2);font-size:12px;font-weight:600;cursor:pointer;margin-top:12px;transition:all 0.2s;}
+.btn-fib:active{transform:scale(0.98);background:rgba(201,168,76,0.1);color:var(--or);}
+.whatsapp-teaser{background:linear-gradient(135deg,rgba(37,211,102,0.08),rgba(37,211,102,0.02));border:1px solid rgba(37,211,102,0.2);border-radius:var(--r);padding:16px;margin:0 20px 20px;display:flex;gap:14px;align-items:flex-start;}
+.wt-icon{font-size:32px;flex-shrink:0;}
+.wt-content{flex:1;}
+.wt-title{font-weight:700;font-size:14px;color:var(--txt);margin-bottom:6px;}
+.wt-desc{font-size:12px;line-height:1.5;color:var(--txt2);}
+.section{padding:0 20px;margin-bottom:20px;}
+.s-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--txt3);font-weight:600;margin-bottom:12px;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.q-card{background:var(--s1);border:1px solid rgba(255,255,255,0.05);border-radius:var(--r2);padding:16px 14px;cursor:pointer;transition:all 0.2s;position:relative;}
+.q-card:active{transform:scale(0.97);}
+.q-card.featured{grid-column:span 2;background:linear-gradient(135deg,rgba(201,168,76,0.1),rgba(201,168,76,0.03));border-color:rgba(201,168,76,0.18);}
+.qc-icon{font-size:22px;margin-bottom:10px;}
+.qc-title{font-weight:600;font-size:14px;margin-bottom:2px;}
+.qc-sub{font-size:12px;color:var(--txt3);}
+.qc-badge{position:absolute;top:10px;right:10px;font-size:10px;font-weight:700;padding:2px 7px;border-radius:100px;background:var(--or);color:#06060E;}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;}
+.modal.show{display:flex;}
+.modal-content{background:var(--s1);border:1px solid rgba(255,255,255,0.08);border-radius:var(--r);max-width:380px;width:100%;max-height:80vh;overflow-y:auto;padding:24px;}
+.mc-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+.mc-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:var(--or);}
+.mc-close{background:none;border:none;color:var(--txt3);font-size:26px;cursor:pointer;}
+.form-block{background:var(--s2);border:1px solid rgba(255,255,255,0.05);border-radius:var(--r2);padding:18px;margin-bottom:16px;}
+.fb-title{font-weight:700;font-size:15px;color:var(--or);margin-bottom:12px;}
+.form-field{margin-bottom:14px;}
+.ff-label{font-size:12px;color:var(--txt2);font-weight:600;margin-bottom:6px;display:block;}
+.ff-input{width:100%;background:var(--bg);border:1px solid rgba(255,255,255,0.08);border-radius:var(--r2);padding:12px 14px;color:var(--txt);font-family:'Outfit',sans-serif;font-size:14px;}
+.ff-input:focus{outline:none;border-color:rgba(201,168,76,0.3);}
+.btn-primary{width:100%;background:linear-gradient(135deg,var(--or),var(--or2));color:#06060E;border:none;border-radius:var(--r2);padding:16px;font-weight:700;font-size:15px;cursor:pointer;margin-top:16px;}
+.btn-primary:active{transform:scale(0.97);}
+.nav{position:fixed;bottom:0;left:0;right:0;background:var(--bg);border-top:1px solid var(--txt4);padding:8px 12px 22px;display:flex;justify-content:space-around;z-index:100;}
+.nav-item{background:none;border:none;color:var(--txt3);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 10px;border-radius:var(--r2);font-family:'Outfit',sans-serif;}
+.nav-item.active{color:var(--or);background:rgba(201,168,76,0.1);}
+.ni-icon{font-size:20px;}
+.ni-label{font-size:10px;font-weight:600;}
+.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:var(--s1);border:1px solid rgba(255,255,255,0.1);padding:14px 20px;border-radius:var(--r2);font-size:13px;z-index:400;}
+</style>
+</head>
+<body>
+
+<div class="screen active" id="screen-dashboard">
+  <div class="header">
+    <div class="h-logo">
+      <div class="h-mark">AA</div>
+      <div class="h-name">Attractor <span>Assists</span></div>
+    </div>
+  </div>
+  
+  <div class="greeting">
+    <div class="g-time" id="timeLabel">Bonjour</div>
+    <div class="g-name">Mac Arthur.</div>
+  </div>
+
+  <div class="kpi-row">
+    <div class="kpi-card">
+      <div class="kc-label">Mois actuel</div>
+      <div class="kc-val gold" id="moisActuel">M0</div>
+      <div class="kc-sub" id="phraseDrive">Préparer le terrain</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kc-label">Clients acquis</div>
+      <div class="kc-val gold" id="clientsAcquis">0</div>
+      <div class="kc-sub">/ <span id="clientsObjectif">1</span> ce mois</div>
+    </div>
+  </div>
+
+  <div class="fib-chart">
+    <div class="fc-title">
+      <span>🎯</span>
+      <span id="objectifTitre">M0 → M12 — Route vers 28 clients</span>
+    </div>
+    <div class="fc-mois" id="fibMois"></div>
+    <div class="fc-progress">
+      <div class="fc-bar" id="fibBar" style="width:0%"></div>
+    </div>
+    <button class="btn-fib" onclick="ajouterClient()">✓ Client acquis — Enregistrer</button>
+  </div>
+
+  <div class="whatsapp-teaser">
+    <div class="wt-icon">📱</div>
+    <div class="wt-content">
+      <div class="wt-title">Module WhatsApp — Bientôt disponible</div>
+      <div class="wt-desc">Ton assistant se connectera à ton WhatsApp Business pour organiser automatiquement tes messages clients. Comme ranger ta chambre pendant que tu dors 🧹✨</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="s-label">Actions rapides</div>
+    <div class="grid2">
+      <div class="q-card featured" onclick="ouvrirAudit()">
+        <div class="qc-icon">🎯</div>
+        <div class="qc-title">Nouveau Prospect IA</div>
+        <div class="qc-sub">Audit + Config Attractor Assists</div>
+        <div class="qc-badge">GO</div>
+      </div>
+      <div class="q-card">
+        <div class="qc-icon">👥</div>
+        <div class="qc-title">Pipeline</div>
+        <div class="qc-sub" id="pipelineCount">0 prospects</div>
+      </div>
+      <div class="q-card" onclick="voirHistorique()">
+        <div class="qc-icon">📊</div>
+        <div class="qc-title">Historique</div>
+        <div class="qc-sub" id="histoCount">0 traitements</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="modalAudit">
+  <div class="modal-content">
+    <div class="mc-header">
+      <div class="mc-title">🎯 Audit Prospect IA</div>
+      <button class="mc-close" onclick="fermerAudit()">×</button>
+    </div>
+    <form id="auditForm" onsubmit="soumettreAudit(event)">
+      
+      <div class="form-block">
+        <div class="fb-title">1. Identité</div>
+        <div class="form-field">
+          <label class="ff-label">Prénom *</label>
+          <input type="text" name="prenom" class="ff-input" required>
+        </div>
+        <div class="form-field">
+          <label class="ff-label">Nom *</label>
+          <input type="text" name="nom" class="ff-input" required>
+        </div>
+        <div class="form-field">
+          <label class="ff-label">Email *</label>
+          <input type="email" name="email" class="ff-input" required>
+        </div>
+        <div class="form-field">
+          <label class="ff-label">Activité *</label>
+          <input type="text" name="activite" class="ff-input" placeholder="Ex: Vente de bijoux" required>
+        </div>
+        <div class="form-field">
+          <label class="ff-label">Canal principal *</label>
+          <select name="canal" class="ff-input" required>
+            <option value="">-- Choisir --</option>
+            <option value="Boutique physique">Boutique physique</option>
+            <option value="En ligne">En ligne</option>
+            <option value="Les deux">Les deux</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-block">
+        <div class="fb-title">2. Organisation actuelle</div>
+        <div class="form-field">
+          <label class="ff-label">Comment gères-tu ton agenda ?</label>
+          <select name="agenda" class="ff-input">
+            <option value="Téléphone">Téléphone (calendrier)</option>
+            <option value="Agenda papier">Agenda papier</option>
+            <option value="Rien">Rien / Mémoire</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label class="ff-label">Comment suis-tu tes ventes ?</label>
+          <select name="suivi_ventes" class="ff-input">
+            <option value="Tableur">Tableur (Excel/Sheets)</option>
+            <option value="Mémoire">Mémoire</option>
+            <option value="Rien">Rien du tout</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label class="ff-label">As-tu des assistantes ?</label>
+          <input type="text" name="assistantes" class="ff-input" placeholder="Ex: Oui, 2 personnes">
+        </div>
+      </div>
+
+      <div class="form-block">
+        <div class="fb-title">3. Points douloureux</div>
+        <div class="form-field">
+          <label class="ff-label">Qu'est-ce qui te prend le plus de temps inutilement ?</label>
+          <input type="text" name="perte_temps" class="ff-input" placeholder="Ex: Chercher les infos clients">
+        </div>
+        <div class="form-field">
+          <label class="ff-label">Qu'est-ce que tu oublies régulièrement ?</label>
+          <input type="text" name="oublis" class="ff-input" placeholder="Ex: Relancer les impayés">
+        </div>
+        <div class="form-field">
+          <label class="ff-label">Qu'est-ce qui te stresse le plus ?</label>
+          <input type="text" name="stress" class="ff-input" placeholder="Ex: Savoir où j'en suis financièrement">
+        </div>
+      </div>
+
+      <div class="form-block">
+        <div class="fb-title">4. Finances</div>
+        <div class="form-field">
+          <label class="ff-label">Connais-tu ton CA mensuel ?</label>
+          <select name="ca_connaissance" class="ff-input">
+            <option value="Oui précisément">Oui, précisément</option>
+            <option value="Approximativement">Approximativement</option>
+            <option value="Non">Non</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label class="ff-label">Objectif financier (si défini)</label>
+          <input type="text" name="objectif_finance" class="ff-input" placeholder="Ex: 500 000 FCFA/mois">
+        </div>
+      </div>
+
+      <div class="form-block">
+        <div class="fb-title">5. Digital & réseaux</div>
+        <div class="form-field">
+          <label class="ff-label">Vends-tu sur les réseaux ?</label>
+          <input type="text" name="reseaux" class="ff-input" placeholder="Ex: Facebook, Instagram">
+        </div>
+        <div class="form-field">
+          <label class="ff-label">Utilises-tu WhatsApp Business ?</label>
+          <select name="whatsapp" class="ff-input">
+            <option value="Oui">Oui</option>
+            <option value="Non">Non</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-block">
+        <div class="fb-title">6. Motivation</div>
+        <div class="form-field">
+          <label class="ff-label">Niveau d'urgence perçu (1-5)</label>
+          <select name="urgence" class="ff-input" required>
+            <option value="1">1 - Pas urgent</option>
+            <option value="2">2 - Peut attendre</option>
+            <option value="3">3 - Important</option>
+            <option value="4">4 - Urgent</option>
+            <option value="5">5 - Critique</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label class="ff-label">Qu'est-ce que tu veux changer EN PREMIER ?</label>
+          <input type="text" name="priorite" class="ff-input" placeholder="Ex: Suivre mes finances">
+        </div>
+      </div>
+
+      <button type="submit" class="btn-primary">Analyser le prospect</button>
+    </form>
+  </div>
+</div>
+
+<div class="modal" id="modalResultat">
+  <div class="modal-content">
+    <div class="mc-header">
+      <div class="mc-title">✅ Résultat</div>
+      <button class="mc-close" onclick="fermerResultat()">×</button>
+    </div>
+    <div id="resultatBody"></div>
+    <button class="btn-primary" onclick="genererSysteme()">Générer Système Client</button>
+  </div>
+</div>
+
+<div class="nav">
+  <button class="nav-item active" onclick="switchScreen('dashboard')">
+    <div class="ni-icon">🏠</div>
+    <div class="ni-label">Accueil</div>
+  </button>
+  <button class="nav-item" onclick="ouvrirAudit()">
+    <div class="ni-icon">➕</div>
+    <div class="ni-label">Nouveau</div>
+  </button>
+  <button class="nav-item">
+    <div class="ni-icon">📊</div>
+    <div class="ni-label">Historique</div>
+  </button>
+</div>
+
+<script>
+let currentData = null;
+
+function switchScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+}
+
+function ouvrirAudit() {
+  document.getElementById('modalAudit').classList.add('show');
+}
+
+function fermerAudit() {
+  document.getElementById('modalAudit').classList.remove('show');
+}
+
+function fermerResultat() {
+  document.getElementById('modalResultat').classList.remove('show');
+}
+
+function showToast(msg) {
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(function() { t.remove(); }, 3000);
+}
+
+function soumettreAudit(event) {
+  event.preventDefault();
+  const form = document.getElementById('auditForm');
+  const fd = new FormData(form);
+  
+  currentData = {
+    prenom: fd.get('prenom'),
+    nom: fd.get('nom'),
+    email: fd.get('email'),
+    activite: fd.get('activite'),
+    canal: fd.get('canal'),
+    agenda: fd.get('agenda'),
+    suivi_ventes: fd.get('suivi_ventes'),
+    assistantes: fd.get('assistantes'),
+    perte_temps: fd.get('perte_temps'),
+    oublis: fd.get('oublis'),
+    stress: fd.get('stress'),
+    ca_connaissance: fd.get('ca_connaissance'),
+    objectif_finance: fd.get('objectif_finance'),
+    reseaux: fd.get('reseaux'),
+    whatsapp: fd.get('whatsapp'),
+    urgence: fd.get('urgence'),
+    priorite: fd.get('priorite'),
+    timestamp: Date.now()
+  };
+  
+  // ANALYSE AUTOMATIQUE
+  const failles = [];
+  const modules = [];
+  let formule = 'STARTER IA';
+  
+  // Détection failles
+  if (currentData.agenda === 'Rien') failles.push('Aucun système de gestion du temps');
+  if (currentData.suivi_ventes === 'Rien' || currentData.suivi_ventes === 'Mémoire') failles.push('Suivi des ventes inexistant');
+  if (currentData.ca_connaissance === 'Non') failles.push('CA mensuel inconnu');
+  if (currentData.oublis) failles.push('Oublis réguliers: ' + currentData.oublis);
+  
+  // Sélection modules
+  if (currentData.agenda === 'Rien' || currentData.perte_temps) modules.push('AGENDA & TÂCHES');
+  if (currentData.ca_connaissance !== 'Oui précisément') modules.push('TABLEAU DE BORD FINANCES');
+  if (currentData.oublis || currentData.stress) modules.push('SUIVI CLIENTS & RELANCES');
+  if (currentData.assistantes && currentData.assistantes !== '') modules.push('GESTION ASSISTANTES');
+  if (currentData.reseaux && currentData.reseaux !== '') modules.push('CONTENU RÉSEAUX SOCIAUX');
+  
+  // Sélection formule
+  const nbModules = modules.length;
+  const urgence = parseInt(currentData.urgence);
+  
+  if (nbModules <= 2 && urgence < 4) {
+    formule = 'STARTER IA (250 €)';
+  } else if (nbModules <= 4 || urgence >= 4) {
+    formule = 'PRO IA (450 €)';
+  } else {
+    formule = 'PREMIUM IA (800 €)';
+  }
+  
+  currentData.analyse = {
+    failles: failles,
+    modules: modules,
+    formule: formule
+  };
+  
+  fermerAudit();
+  form.reset();
+  
+  // Affichage résultat
+  let html = '<div style="margin-bottom:16px;"><strong>Prospect:</strong> ' + currentData.prenom + ' ' + currentData.nom + '</div>';
+  html += '<div style="margin-bottom:16px;"><strong>Activité:</strong> ' + currentData.activite + ' (' + currentData.canal + ')</div>';
+  
+  if (failles.length > 0) {
+    html += '<div style="margin-bottom:12px;"><strong>🔴 Failles critiques:</strong></div>';
+    html += '<ul style="margin:0 0 16px 20px;font-size:13px;line-height:1.6;">';
+    failles.forEach(function(f) { html += '<li>' + f + '</li>'; });
+    html += '</ul>';
+  }
+  
+  html += '<div style="margin-bottom:12px;"><strong>📦 Modules recommandés:</strong></div>';
+  html += '<ul style="margin:0 0 16px 20px;font-size:13px;line-height:1.6;">';
+  modules.forEach(function(m) { html += '<li>' + m + '</li>'; });
+  html += '</ul>';
+  
+  html += '<div style="margin-bottom:12px;"><strong>⚡ Priorité:</strong> ' + currentData.priorite + '</div>';
+  html += '<div style="background:rgba(201,168,76,0.1);padding:12px;border-radius:8px;margin-top:16px;">';
+  html += '<strong style="color:var(--or);font-size:16px;">💰 ' + formule + '</strong>';
+  html += '</div>';
+  
+  document.getElementById('resultatBody').innerHTML = html;
+  document.getElementById('modalResultat').classList.add('show');
+  showToast('✅ Analyse terminée');
+}
+
+function genererSysteme() {
+  if (!currentData) {
+    showToast('Aucun prospect');
+    return;
+  }
+  
+  const prenom = currentData.prenom;
+  const activite = currentData.activite;
+  const modules = currentData.analyse.modules;
+  const priorite = currentData.priorite || 'Organiser mon activité';
+  const objectif = currentData.objectif_finance || 'Développer mon activité';
+  
+  // Construction du prompt système
+  let modulesTexte = '';
+  let commandesHTML = '';
+  
+  if (modules.indexOf('AGENDA & TÂCHES') >= 0) {
+    modulesTexte += '\\n\\n### MODULE AGENDA & TÂCHES\\nTu m\'aides à organiser mes journées, mes RDV, mes tâches prioritaires. Tu me rappelles ce qui est urgent.';
+    commandesHTML += '<div class="qb" onclick="sendMsg(\'Point du jour\')">📅 Point du jour</div>';
+    commandesHTML += '<div class="qb" onclick="sendMsg(\'Mes priorités\')">⚡ Priorités</div>';
+  }
+  
+  if (modules.indexOf('TABLEAU DE BORD FINANCES') >= 0) {
+    modulesTexte += '\\n\\n### MODULE FINANCES\\nTu me permets de suivre mon CA, mes paiements, mes objectifs financiers. Tu m\'alertes sur les impayés.';
+    commandesHTML += '<div class="qb" onclick="sendMsg(\'CA ce mois\')">💰 CA du mois</div>';
+    commandesHTML += '<div class="qb" onclick="sendMsg(\'Suivi objectif\')">📈 Objectif</div>';
+  }
+  
+  if (modules.indexOf('SUIVI CLIENTS & RELANCES') >= 0) {
+    modulesTexte += '\\n\\n### MODULE CLIENTS & RELANCES\\nTu m\'aides à ne plus oublier mes relances clients, à suivre mes prospects, à convertir mes contacts.';
+    commandesHTML += '<div class="qb" onclick="sendMsg(\'Relances dues\')">📬 Relances</div>';
+    commandesHTML += '<div class="qb" onclick="sendMsg(\'Prospects chauds\')">🔥 Prospects</div>';
+  }
+  
+  if (modules.indexOf('GESTION ASSISTANTES') >= 0) {
+    modulesTexte += '\\n\\n### MODULE ASSISTANTES\\nTu m\'aides à déléguer les tâches à mon équipe, à suivre l\'avancement, à coordonner le travail.';
+    commandesHTML += '<div class="qb" onclick="sendMsg(\'Tâches équipe\')">👥 Équipe</div>';
+  }
+  
+  if (modules.indexOf('CONTENU RÉSEAUX SOCIAUX') >= 0) {
+    modulesTexte += '\\n\\n### MODULE RÉSEAUX SOCIAUX\\nTu m\'aides à créer du contenu régulier pour mes réseaux, à planifier mes publications, à engager mon audience.';
+    commandesHTML += '<div class="qb" onclick="sendMsg(\'Idée post\')">📱 Post</div>';
+  }
+  
+  const promptSysteme = '# MON ASSISTANT PERSONNEL — ' + prenom + '\\n\\n' +
+    '## QUI JE SUIS\\n' +
+    'Je suis ' + prenom + ', je gère ' + activite + '.\\n' +
+    'Mon objectif : ' + objectif + '.\\n\\n' +
+    '## MES MODULES ACTIFS' + modulesTexte + '\\n\\n' +
+    '## MA PRIORITÉ ACTUELLE\\n' + priorite + '\\n\\n' +
+    '## MES RÈGLES\\n' +
+    '- Tu me parles en français, ton direct et simple\\n' +
+    '- Tout ce que je te dicte, tu le structures et tu agis\\n' +
+    '- Si une info manque, tu me poses UNE seule question\\n' +
+    '- Tu me rappelles mes relances et mes échéances sans que j\'aie à le demander\\n' +
+    '- Tu es mon bras droit — proactif, efficace, orienté résultats';
+  
+  const html = '<!DOCTYPE html>\\n<html lang=\"fr\">\\n<head>\\n' +
+    '<meta charset=\"UTF-8\">\\n' +
+    '<meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no\">\\n' +
+    '<meta name=\"apple-mobile-web-app-capable\" content=\"yes\">\\n' +
+    '<title>Attractor Assists — ' + prenom + '</title>\\n' +
+    '<link href=\"https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&display=swap\" rel=\"stylesheet\">\\n' +
+    '<style>\\n' +
+    ':root{--or:#C9A84C;--bg:#06060E;--s1:#141428;--s2:#1A1A32;--txt:#F2EEE6;--txt2:rgba(242,238,230,0.5);}\\n' +
+    '*{margin:0;padding:0;box-sizing:border-box;}\\n' +
+    'body{background:var(--bg);color:var(--txt);font-family:Outfit,sans-serif;padding:20px;}\\n' +
+    '.header{text-align:center;padding:20px;}\\n' +
+    '.logo{width:50px;height:50px;background:linear-gradient(135deg,var(--or),#E8C96A);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-family:Cormorant Garamond,serif;font-weight:700;font-size:20px;color:#06060E;}\\n' +
+    'h1{font-family:Cormorant Garamond,serif;font-size:24px;margin-bottom:6px;}\\n' +
+    '.subtitle{color:var(--txt2);font-size:13px;}\\n' +
+    '.chat{max-width:600px;margin:20px auto;padding:16px;background:var(--s1);border-radius:12px;min-height:300px;}\\n' +
+    '.msg{margin-bottom:12px;padding:10px 14px;background:var(--s2);border-radius:10px;line-height:1.5;font-size:14px;}\\n' +
+    '.msg.ai{border-left:3px solid var(--or);}\\n' +
+    '.msg.user{border-left:3px solid #3DC98A;}\\n' +
+    '.qb-row{max-width:600px;margin:0 auto 16px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center;}\\n' +
+    '.qb{padding:8px 14px;background:var(--s2);border:1px solid rgba(201,168,76,0.2);border-radius:100px;color:var(--or);font-size:12px;cursor:pointer;}\\n' +
+    '.input-area{max-width:600px;margin:0 auto;display:flex;gap:8px;}\\n' +
+    '.input-area input{flex:1;background:var(--s2);border:1px solid rgba(255,255,255,0.1);border-radius:100px;padding:12px 16px;color:var(--txt);font-family:Outfit,sans-serif;font-size:14px;outline:none;}\\n' +
+    '.input-area button{background:linear-gradient(135deg,var(--or),#E8C96A);color:#06060E;border:none;border-radius:100px;padding:12px 24px;font-weight:700;cursor:pointer;font-size:14px;}\\n' +
+    '</style>\\n' +
+    '</head>\\n<body>\\n\\n' +
+    '<div class=\"header\">\\n' +
+    '  <div class=\"logo\">AA</div>\\n' +
+    '  <h1>Attractor Assists</h1>\\n' +
+    '  <div class=\"subtitle\">Assistant IA personnel — ' + prenom + '</div>\\n' +
+    '</div>\\n\\n' +
+    '<div class=\"chat\" id=\"chat\">\\n' +
+    '  <div class=\"msg ai\">\\n' +
+    '    Bonjour ' + prenom + ' 👋<br><br>\\n' +
+    '    Je suis ton assistant personnel, configuré pour t\\'aider avec <strong>' + activite + '</strong>.<br><br>\\n' +
+    '    <strong>Priorité actuelle :</strong> ' + priorite + '<br><br>\\n' +
+    '    Utilise les commandes rapides ci-dessous ou pose-moi directement tes questions.\\n' +
+    '  </div>\\n' +
+    '</div>\\n\\n' +
+    '<div class=\"qb-row\">' + commandesHTML + '</div>\\n\\n' +
+    '<div class=\"input-area\">\\n' +
+    '  <input type=\"text\" id=\"input\" placeholder=\"Pose ta question...\" onkeypress=\"if(event.key===\\'Enter\\') sendMsg()\">\\n' +
+    '  <button onclick=\"sendMsg()\">Envoyer</button>\\n' +
+    '</div>\\n\\n' +
+    '<script>\\n' +
+    'const API_URL = \\'https://api.anthropic.com/v1/messages\\';\\n' +
+    'const SYSTEM_PROMPT = `' + promptSysteme.replace(/`/g, '\\\\`') + '`;\\n' +
+    'let messages = [];\\n\\n' +
+    'function addMsg(role, text) {\\n' +
+    '  const chat = document.getElementById(\\'chat\\');\\n' +
+    '  const div = document.createElement(\\'div\\');\\n' +
+    '  div.className = \\'msg \\' + (role === \\'user\\' ? \\'user\\' : \\'ai\\');\\n' +
+    '  div.innerHTML = text.replace(/\\\\n/g, \\'<br>\\');\\n' +
+    '  chat.appendChild(div);\\n' +
+    '  chat.scrollTop = chat.scrollHeight;\\n' +
+    '}\\n\\n' +
+    'async function sendMsg(text) {\\n' +
+    '  const input = document.getElementById(\\'input\\');\\n' +
+    '  const msg = text || input.value.trim();\\n' +
+    '  if (!msg) return;\\n' +
+    '  input.value = \\'\\';\\n' +
+    '  addMsg(\\'user\\', msg);\\n' +
+    '  messages.push({role: \\'user\\', content: msg});\\n' +
+    '  try {\\n' +
+    '    const res = await fetch(API_URL, {\\n' +
+    '      method: \\'POST\\',\\n' +
+    '      headers: {\\'Content-Type\\': \\'application/json\\'},\\n' +
+    '      body: JSON.stringify({\\n' +
+    '        model: \\'claude-sonnet-4-20250514\\',\\n' +
+    '        max_tokens: 1500,\\n' +
+    '        system: SYSTEM_PROMPT,\\n' +
+    '        messages: messages\\n' +
+    '      })\\n' +
+    '    });\\n' +
+    '    const data = await res.json();\\n' +
+    '    const reply = data.content?.[0]?.text || \\'Erreur API\\';\\n' +
+    '    messages.push({role: \\'assistant\\', content: reply});\\n' +
+    '    addMsg(\\'assistant\\', reply);\\n' +
+    '  } catch(e) {\\n' +
+    '    addMsg(\\'assistant\\', \\'❌ Erreur de connexion. Vérifie ta clé API Anthropic.\\');\\n' +
+    '  }\\n' +
+    '}\\n' +
+    '</script>\\n\\n' +
+    '</body>\\n</html>';
+  
+  const blob = new Blob([html], {type: 'text/html'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'attractor-' + prenom.toLowerCase() + '.html';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  
+  showToast('✅ Système généré pour ' + prenom);
+}
+
+const h = new Date().getHours();
+const tl = document.getElementById('timeLabel');
+if (h < 12) tl.textContent = 'Bonjour';
+else if (h < 18) tl.textContent = 'Bon après-midi';
+else tl.textContent = 'Bonsoir';
+
+// === FIBONACCI DASHBOARD CLIENTS ===
+const PLAN = [
+  {mois:'M0', clients:0, phrase:'Préparer le terrain'},
+  {mois:'M1', clients:1, phrase:'Décrocher le 1er client réseau'},
+  {mois:'M2', clients:3, phrase:'3 clients, 1 témoignage capturé'},
+  {mois:'M3', clients:5, phrase:'Preuve sociale solide'},
+  {mois:'M4', clients:8, phrase:'Premiers inconnus convertis'},
+  {mois:'M5', clients:12, phrase:'Pub activée, démos afterwork'},
+  {mois:'M6', clients:16, phrase:'10 récurrents = base stable'},
+  {mois:'M7', clients:20, phrase:'Bouche-à-oreille actif'},
+  {mois:'M8', clients:25, phrase:'Programme ambassadeurs live'},
+  {mois:'M9', clients:30, phrase:'18 récurrents = 1 440 € fixes'},
+  {mois:'M10', clients:35, phrase:'Récurrent couvre charges'},
+  {mois:'M11', clients:40, phrase:'Pipeline rempli, scaling'},
+  {mois:'M12', clients:28, phrase:'10 000 € — Embauche possible'}
+];
+
+let moisCourant = parseInt(localStorage.getItem('moisActuel') || '0');
+let clientsActuels = parseInt(localStorage.getItem('clientsActuels') || '0');
+
+function afficherFibonacci() {
+  const container = document.getElementById('fibMois');
+  container.innerHTML = '';
+  
+  PLAN.forEach(function(m, idx) {
+    const done = idx < moisCourant;
+    const current = idx === moisCourant;
+    const div = document.createElement('div');
+    div.className = 'fc-m';
+    if (done) div.className += ' done';
+    if (current) div.className += ' current';
+    
+    div.innerHTML = '<div class="fcm-label">' + m.mois + '</div>' +
+                    '<div class="fcm-val">' + m.clients + '</div>';
+    container.appendChild(div);
+  });
+  
+  const objectifClients = PLAN[moisCourant].clients;
+  const progress = objectifClients > 0 ? Math.round((clientsActuels / objectifClients) * 100) : 0;
+  const progressGlobal = Math.round((moisCourant / 12) * 100);
+  
+  document.getElementById('fibBar').style.width = progressGlobal + '%';
+  document.getElementById('moisActuel').textContent = PLAN[moisCourant].mois;
+  document.getElementById('phraseDrive').textContent = PLAN[moisCourant].phrase;
+  document.getElementById('clientsAcquis').textContent = clientsActuels;
+  document.getElementById('clientsObjectif').textContent = objectifClients;
+}
+
+function ajouterClient() {
+  const objectifClients = PLAN[moisCourant].clients;
+  
+  if (clientsActuels >= objectifClients && moisCourant < 12) {
+    if (confirm('Objectif ' + objectifClients + ' clients atteint ! Passer au mois suivant ?')) {
+      moisCourant++;
+      localStorage.setItem('moisActuel', moisCourant.toString());
+      afficherFibonacci();
+      showToast('✅ Passage à ' + PLAN[moisCourant].mois);
+    }
+  } else if (moisCourant >= 12) {
+    alert('🎉 Objectif 28 clients atteint ! 10 000 € validé. Félicitations Mac Arthur.');
+  } else {
+    clientsActuels++;
+    localStorage.setItem('clientsActuels', clientsActuels.toString());
+    afficherFibonacci();
+    showToast('✅ Client #' + clientsActuels + ' enregistré');
+  }
+}
+
+afficherFibonacci();
+</script>
+
+</body>
+</html>
