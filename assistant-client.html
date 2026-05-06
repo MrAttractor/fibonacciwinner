@@ -400,7 +400,7 @@ async function sendMsg(txt) {
     // Appel via Apps Script (proxy) pour éviter CORS
     const res = await fetch(APPS_SCRIPT_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify({
         action: 'chat',
         system: systemPrompt,
