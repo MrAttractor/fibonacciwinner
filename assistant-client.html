@@ -8,63 +8,127 @@
 <meta name="apple-mobile-web-app-title" content="Attractor Assists">
 <meta name="theme-color" content="#06060E">
 <title>Attractor Assists</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--or:#C9A84C;--or2:#E8C96A;--bg:#06060E;--s1:#141428;--s2:#1A1A32;--s3:#20203C;--txt:#F2EEE6;--txt2:rgba(242,238,230,0.5);--txt3:rgba(242,238,230,0.22);--txt4:rgba(242,238,230,0.08);--green:#3DC98A;--red:#E85858;}
+:root{
+  --or:#C9A84C;--or2:#E8C96A;--bg:#06060E;--bg2:#0B0B18;
+  --s1:#141428;--s2:#1A1A32;--s3:#20203C;
+  --txt:#F2EEE6;--txt2:rgba(242,238,230,0.55);--txt3:rgba(242,238,230,0.22);--txt4:rgba(242,238,230,0.07);
+  --green:#3DC98A;--red:#E85858;
+}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html,body{width:100%;overflow-x:hidden;background:var(--bg);color:var(--txt);font-family:'Outfit',sans-serif;}
-body{min-height:100vh;padding-bottom:120px;}
+body{min-height:100vh;padding-bottom:110px;}
+.atmo{position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse 60% 40% at 80% 10%,rgba(201,168,76,0.05) 0%,transparent 60%),
+             radial-gradient(ellipse 50% 50% at 10% 80%,rgba(107,158,255,0.03) 0%,transparent 60%);}
 
-/* ── LOADER ── */
-.loader{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;}
-.loader-logo{width:64px;height:64px;background:linear-gradient(135deg,var(--or),var(--or2));border-radius:18px;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-weight:700;font-size:22px;color:#06060E;animation:pulse 1.5s infinite;}
-@keyframes pulse{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(201,168,76,0.4);}50%{transform:scale(1.05);box-shadow:0 0 0 12px rgba(201,168,76,0);}}
-.loader-text{font-size:14px;color:var(--txt3);letter-spacing:1px;}
+/* LOADER */
+.loader{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity 0.5s;}
+.loader.fade{opacity:0;pointer-events:none;}
+.loader-logo{width:68px;height:68px;background:linear-gradient(135deg,var(--or),var(--or2));border-radius:20px;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-weight:700;font-size:24px;color:#06060E;animation:logoPulse 1.8s ease-in-out infinite;}
+@keyframes logoPulse{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(201,168,76,0.3);}50%{transform:scale(1.06);box-shadow:0 0 0 14px rgba(201,168,76,0);}}
+.loader-text{font-size:13px;color:var(--txt3);letter-spacing:1.5px;text-transform:uppercase;}
 
-/* ── BROADCAST BANNER ── */
-.broadcast{background:linear-gradient(135deg,rgba(201,168,76,0.15),rgba(201,168,76,0.05));border-bottom:1px solid rgba(201,168,76,0.2);padding:12px 20px;display:none;align-items:flex-start;gap:10px;}
+/* ONBOARDING */
+.onboard-overlay{position:fixed;inset:0;background:var(--bg);z-index:500;display:flex;flex-direction:column;}
+.onboard-overlay.hidden{display:none;}
+.ob-header{padding:52px 24px 0;display:flex;align-items:center;gap:12px;}
+.ob-mark{width:36px;height:36px;background:linear-gradient(135deg,var(--or),var(--or2));border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-weight:700;font-size:13px;color:#06060E;flex-shrink:0;}
+.ob-brand{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:700;}
+.ob-brand span{color:var(--or);}
+.ob-chat{flex:1;padding:20px 20px 0;display:flex;flex-direction:column;gap:14px;overflow-y:auto;scrollbar-width:none;}
+.ob-chat::-webkit-scrollbar{display:none;}
+.ob-msg{max-width:84%;animation:obIn 0.3s ease both;}
+@keyframes obIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.ob-msg.attractor{align-self:flex-start;}
+.ob-msg.user{align-self:flex-end;}
+.ob-av-row{display:flex;align-items:flex-end;gap:8px;}
+.ob-av{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--or),var(--or2));display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-weight:700;font-size:9px;color:#06060E;flex-shrink:0;}
+.ob-bubble{padding:13px 16px;border-radius:18px;font-size:14px;line-height:1.65;}
+.ob-bubble.attractor{background:var(--s1);border:1px solid rgba(255,255,255,0.05);border-bottom-left-radius:4px;color:var(--txt);}
+.ob-bubble.attractor strong{color:var(--or2);}
+.ob-bubble.attractor em{color:var(--or);font-style:italic;}
+.ob-bubble.user{background:linear-gradient(135deg,var(--or),var(--or2));color:#06060E;font-weight:500;border-bottom-right-radius:4px;}
+.ob-typing-wrap{display:flex;align-items:flex-end;gap:8px;}
+.ob-typing{display:flex;gap:4px;align-items:center;padding:13px 16px;background:var(--s1);border:1px solid rgba(255,255,255,0.05);border-radius:18px;border-bottom-left-radius:4px;width:fit-content;}
+.ob-typing span{width:6px;height:6px;border-radius:50%;background:var(--or);animation:obBounce 1.2s infinite;}
+.ob-typing span:nth-child(2){animation-delay:0.2s;}
+.ob-typing span:nth-child(3){animation-delay:0.4s;}
+@keyframes obBounce{0%,80%,100%{transform:translateY(0);opacity:0.35;}40%{transform:translateY(-5px);opacity:1;}}
+.ob-options{display:flex;gap:8px;flex-wrap:wrap;padding:10px 20px 0;}
+.ob-opt{padding:9px 16px;background:var(--s1);border:1px solid rgba(201,168,76,0.25);border-radius:100px;color:var(--or);font-size:13px;font-weight:500;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.15s;white-space:nowrap;}
+.ob-opt:active{background:rgba(201,168,76,0.15);transform:scale(0.96);}
+.ob-input-area{padding:16px 20px 32px;background:linear-gradient(to top,var(--bg) 75%,transparent);}
+.ob-input-row{display:flex;gap:8px;align-items:center;background:var(--s1);border:1px solid rgba(255,255,255,0.07);border-radius:100px;padding:8px 8px 8px 18px;transition:border-color 0.2s;}
+.ob-input-row:focus-within{border-color:rgba(201,168,76,0.3);}
+.ob-input-row input{flex:1;background:none;border:none;outline:none;color:var(--txt);font-family:'Outfit',sans-serif;font-size:15px;}
+.ob-input-row input::placeholder{color:var(--txt3);}
+.ob-send{width:38px;height:38px;border-radius:50%;border:none;background:linear-gradient(135deg,var(--or),var(--or2));color:#06060E;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.ob-send:active{transform:scale(0.92);}
+.ob-send:disabled{opacity:0.3;cursor:not-allowed;}
+
+/* Install guide */
+.install-guide{background:linear-gradient(135deg,rgba(201,168,76,0.08),rgba(201,168,76,0.02));border:1px solid rgba(201,168,76,0.2);border-radius:14px;padding:16px;margin:10px 0;}
+.ig-title{font-size:13px;font-weight:700;color:var(--or);margin-bottom:12px;}
+.ig-step{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;}
+.ig-step:last-child{margin-bottom:0;}
+.ig-num{width:22px;height:22px;border-radius:50%;background:var(--or);color:#06060E;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.ig-text{font-size:13px;color:var(--txt2);line-height:1.5;}
+.ig-text strong{color:var(--txt);}
+.ob-btn-main{width:100%;background:linear-gradient(135deg,var(--or),var(--or2));color:#06060E;border:none;border-radius:14px;padding:14px;font-family:'Outfit',sans-serif;font-weight:700;font-size:14px;cursor:pointer;margin-top:12px;box-shadow:0 6px 24px rgba(201,168,76,0.25);}
+.ob-btn-main:active{transform:scale(0.97);}
+.ob-btn-skip{width:100%;background:none;border:none;color:var(--txt3);font-family:'Outfit',sans-serif;font-size:13px;cursor:pointer;padding:10px;margin-top:4px;}
+
+/* BROADCAST */
+.broadcast{background:linear-gradient(135deg,rgba(201,168,76,0.1),rgba(201,168,76,0.03));border-bottom:1px solid rgba(201,168,76,0.2);padding:12px 20px;display:none;align-items:flex-start;gap:10px;}
 .broadcast.show{display:flex;}
 .bc-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
 .bc-text{flex:1;font-size:13px;color:var(--txt);line-height:1.5;}
-.bc-close{background:none;border:none;color:var(--txt3);font-size:20px;cursor:pointer;padding:0 4px;line-height:1;}
+.bc-close{background:none;border:none;color:var(--txt3);font-size:22px;cursor:pointer;line-height:1;}
 
-/* ── HEADER ── */
-.header{padding:52px 20px 16px;display:flex;align-items:center;justify-content:space-between;}
+/* HEADER */
+.header{padding:52px 20px 12px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:2;}
 .h-logo{display:flex;align-items:center;gap:10px;}
 .h-mark{width:32px;height:32px;background:linear-gradient(135deg,var(--or),var(--or2));border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-weight:700;font-size:11px;color:#06060E;box-shadow:0 4px 16px rgba(201,168,76,0.2);}
-.h-name{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:700;}
+.h-name{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:700;}
 .h-name span{color:var(--or);}
-.h-date{font-size:11px;color:var(--txt3);letter-spacing:0.5px;}
+.h-date{font-size:11px;color:var(--txt3);}
 
-/* ── GREETING ── */
-.greeting{padding:4px 20px 20px;}
-.g-time{font-size:12px;color:var(--or);letter-spacing:1.5px;text-transform:uppercase;font-weight:600;margin-bottom:4px;}
-.g-name{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:700;line-height:1.1;}
+/* GREETING */
+.greeting{padding:4px 20px 18px;position:relative;z-index:2;}
+.g-time{font-size:11px;color:var(--or);letter-spacing:1.8px;text-transform:uppercase;font-weight:600;margin-bottom:4px;}
+.g-name{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;line-height:1.1;}
 .g-status{display:flex;align-items:center;gap:7px;margin-top:8px;font-size:13px;color:var(--txt2);}
 .g-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:blink 2s infinite;}
 @keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
 
-/* ── CHAT ── */
-.chat-wrap{padding:0 16px;display:flex;flex-direction:column;gap:12px;}
-.msg{padding:12px 16px;border-radius:16px;line-height:1.6;font-size:14px;max-width:88%;animation:fadeUp 0.2s ease;}
-@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.msg.ai{background:var(--s1);border:1px solid rgba(255,255,255,0.05);border-bottom-left-radius:4px;align-self:flex-start;}
-.msg.user{background:linear-gradient(135deg,var(--or),var(--or2));color:#06060E;font-weight:500;border-bottom-right-radius:4px;align-self:flex-end;}
+/* CHAT */
+.chat-wrap{padding:0 16px;display:flex;flex-direction:column;gap:12px;position:relative;z-index:2;}
+.msg-row{display:flex;flex-direction:column;}
+.msg-row.user{align-items:flex-end;}
+.msg-row.ai{align-items:flex-start;}
+.msg-av-row{display:flex;align-items:flex-end;gap:8px;}
+.msg-av{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--or),var(--or2));display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-weight:700;font-size:9px;color:#06060E;flex-shrink:0;}
+.msg{padding:12px 16px;border-radius:18px;line-height:1.65;font-size:14px;max-width:84%;animation:msgIn 0.25s ease both;}
+@keyframes msgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.msg.ai{background:var(--s1);border:1px solid rgba(255,255,255,0.05);border-bottom-left-radius:4px;color:var(--txt);}
+.msg.user{background:linear-gradient(135deg,var(--or),var(--or2));color:#06060E;font-weight:500;border-bottom-right-radius:4px;}
 .msg-time{font-size:10px;color:var(--txt3);margin-top:4px;padding:0 4px;}
-.msg.user .msg-time{text-align:right;color:rgba(6,6,14,0.5);}
-
-.typing{display:flex;gap:4px;align-items:center;padding:14px 16px;background:var(--s1);border:1px solid rgba(255,255,255,0.05);border-radius:16px;border-bottom-left-radius:4px;align-self:flex-start;width:fit-content;}
+.msg-row.user .msg-time{text-align:right;}
+.typing-wrap{display:flex;align-items:flex-end;gap:8px;}
+.typing{display:flex;gap:4px;align-items:center;padding:13px 16px;background:var(--s1);border:1px solid rgba(255,255,255,0.05);border-radius:18px;border-bottom-left-radius:4px;width:fit-content;}
 .typing span{width:6px;height:6px;border-radius:50%;background:var(--or);animation:bounce 1.2s infinite;}
 .typing span:nth-child(2){animation-delay:0.2s;}
 .typing span:nth-child(3){animation-delay:0.4s;}
 @keyframes bounce{0%,80%,100%{transform:translateY(0);opacity:0.4;}40%{transform:translateY(-5px);opacity:1;}}
 
-/* ── QUICK REPLIES ── */
-.qb-row{display:flex;gap:8px;flex-wrap:wrap;padding:12px 16px;}
-.qb{padding:8px 14px;background:var(--s1);border:1px solid rgba(201,168,76,0.25);border-radius:100px;color:var(--or);font-size:12px;font-weight:500;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.15s;white-space:nowrap;}
-.qb:active{background:rgba(201,168,76,0.15);transform:scale(0.96);}
+/* QUICK REPLIES */
+.qb-row{display:flex;gap:8px;flex-wrap:wrap;padding:12px 16px;position:relative;z-index:2;}
+.qb{padding:8px 14px;background:var(--s1);border:1px solid rgba(201,168,76,0.22);border-radius:100px;color:var(--or);font-size:12px;font-weight:500;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.15s;white-space:nowrap;}
+.qb:active{background:rgba(201,168,76,0.12);transform:scale(0.96);}
 
-/* ── INPUT ── */
+/* INPUT */
 .input-wrap{position:fixed;bottom:0;left:0;right:0;padding:12px 16px 32px;background:linear-gradient(to top,var(--bg) 70%,transparent);z-index:50;}
 .input-row{display:flex;gap:8px;align-items:center;background:var(--s1);border:1px solid rgba(255,255,255,0.07);border-radius:100px;padding:8px 8px 8px 18px;transition:border-color 0.2s;}
 .input-row:focus-within{border-color:rgba(201,168,76,0.3);}
@@ -73,22 +137,39 @@ body{min-height:100vh;padding-bottom:120px;}
 .btn-send{width:38px;height:38px;border-radius:50%;border:none;background:linear-gradient(135deg,var(--or),var(--or2));color:#06060E;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 16px rgba(201,168,76,0.2);}
 .btn-send:active{transform:scale(0.92);}
 
-/* ── ERROR STATE ── */
-.error-state{padding:40px 24px;text-align:center;}
+/* ERROR */
+.error-state{padding:60px 24px;text-align:center;}
 .error-icon{font-size:48px;margin-bottom:16px;}
 .error-title{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:700;margin-bottom:8px;color:var(--or);}
 .error-sub{font-size:14px;color:var(--txt2);line-height:1.7;}
 </style>
 </head>
 <body>
+<div class="atmo"></div>
 
 <!-- LOADER -->
 <div class="loader" id="loader">
   <div class="loader-logo">AA</div>
-  <div class="loader-text">Chargement de ton assistant...</div>
+  <div class="loader-text">Ton bras droit arrive...</div>
 </div>
 
-<!-- BROADCAST BANNER -->
+<!-- ONBOARDING -->
+<div class="onboard-overlay hidden" id="onboardOverlay">
+  <div class="ob-header">
+    <div class="ob-mark">AA</div>
+    <div class="ob-brand">Attractor <span>Assists</span></div>
+  </div>
+  <div class="ob-chat" id="obChat"></div>
+  <div class="ob-options" id="obOptions"></div>
+  <div class="ob-input-area">
+    <div class="ob-input-row">
+      <input type="text" id="obInput" placeholder="Réponds ici..." onkeydown="if(event.key==='Enter')obSend()">
+      <button class="ob-send" id="obSendBtn" onclick="obSend()" disabled>➤</button>
+    </div>
+  </div>
+</div>
+
+<!-- BROADCAST -->
 <div class="broadcast" id="broadcastBanner">
   <div class="bc-icon">📢</div>
   <div class="bc-text" id="broadcastText"></div>
@@ -110,353 +191,459 @@ body{min-height:100vh;padding-bottom:120px;}
   <div class="g-name" id="clientName">...</div>
   <div class="g-status">
     <div class="g-dot"></div>
-    <span id="clientActivity">Assistant actif</span>
+    <span id="clientActivity">Bras droit actif</span>
   </div>
 </div>
 
 <!-- CHAT -->
 <div class="chat-wrap" id="chat"></div>
-
-<!-- QUICK REPLIES -->
 <div class="qb-row" id="quickReplies"></div>
 
 <!-- INPUT -->
 <div class="input-wrap">
   <div class="input-row">
-    <input type="text" id="inp" placeholder="Pose ta question..." onkeypress="if(event.key==='Enter')sendMsg()">
+    <input type="text" id="inp" placeholder="Dis-moi ce qui se passe..." onkeypress="if(event.key==='Enter')sendMsg()">
     <button class="btn-send" onclick="sendMsg()">➤</button>
   </div>
 </div>
 
 <script>
-// ══════════════════════════════════════════════
-// CONFIG — À NE PAS MODIFIER
-// ══════════════════════════════════════════════
-const ANTHROPIC_KEY = 'VOTRE_CLE_API_ICI'; // ← Remplace par ta clé Anthropic
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzYF6P3s_0-U7Q8Q2ZK1ibENtjhuT64bPV_B2HOZ4_nTxdOPTgP5FW1HodMtOFD_RbXpA/exec';
 
-// ══════════════════════════════════════════════
-// ÉTAT
-// ══════════════════════════════════════════════
-let clientId = '';
+let clientId      = '';
 let clientProfile = null;
-let messages = [];
-let systemPrompt = '';
+let messages      = [];
+let systemPrompt  = '';
+let patronName    = '';
+let obStep        = 0;
+let obWaiting     = false;
 
-// ══════════════════════════════════════════════
-// INIT
-// ══════════════════════════════════════════════
-async function init() {
-  // Récupérer l'ID client depuis l'URL
-  const params = new URLSearchParams(window.location.search);
-  clientId = params.get('id') || '';
+// ── UTILITAIRES ONBOARDING ──
+const obDelay = ms => new Promise(r => setTimeout(r, ms));
 
-  if (!clientId) {
-    showError('Lien invalide', 'Ce lien ne contient pas d\'identifiant client. Contacte Mac Arthur pour obtenir ton lien personnel.');
+async function obShowTyping(ms){
+  const chat = document.getElementById('obChat');
+  const d = document.createElement('div');
+  d.className = 'ob-msg attractor'; d.id = 'ob-typing-indicator';
+  d.innerHTML = '<div class="ob-typing-wrap"><div class="ob-av">AA</div><div class="ob-typing"><span></span><span></span><span></span></div></div>';
+  chat.appendChild(d); chat.scrollTop = chat.scrollHeight;
+  await obDelay(ms);
+  d.remove();
+}
+
+async function obMsg(html){
+  const chat = document.getElementById('obChat');
+  const wrap = document.createElement('div');
+  wrap.className = 'ob-msg attractor';
+  wrap.innerHTML = '<div class="ob-av-row"><div class="ob-av">AA</div><div class="ob-bubble attractor">' + html + '</div></div>';
+  chat.appendChild(wrap); chat.scrollTop = chat.scrollHeight;
+}
+
+async function obUserMsg(text){
+  const chat = document.getElementById('obChat');
+  const wrap = document.createElement('div');
+  wrap.className = 'ob-msg user';
+  wrap.innerHTML = '<div class="ob-bubble user">' + text + '</div>';
+  chat.appendChild(wrap); chat.scrollTop = chat.scrollHeight;
+}
+
+function obSetOptions(opts){
+  const c = document.getElementById('obOptions');
+  c.innerHTML = '';
+  opts.forEach(o => {
+    const btn = document.createElement('button');
+    btn.className = 'ob-opt'; btn.textContent = o;
+    btn.onclick = () => obReceive(o);
+    c.appendChild(btn);
+  });
+}
+function obClearOptions(){ document.getElementById('obOptions').innerHTML = ''; }
+
+async function obReceive(text){
+  if(obWaiting) return;
+  obWaiting = true; obClearOptions();
+  document.getElementById('obInput').value = '';
+  await obUserMsg(text);
+  await obRunStep(text);
+  obWaiting = false;
+}
+function obSend(){
+  const v = document.getElementById('obInput').value.trim();
+  if(v && !obWaiting) obReceive(v);
+}
+
+// ── SÉQUENCE ONBOARDING ──
+async function lancerOnboarding(profil){
+  document.getElementById('onboardOverlay').classList.remove('hidden');
+
+  await obDelay(800);
+  await obShowTyping(2400);
+  await obMsg(
+    'Mac Arthur m\'a parlé de toi avant que tu arrives. 👋<br><br>' +
+    'Il m\'a dit que tu gères <strong>' + profil.activite + '</strong> et que ta priorité c\'est <strong>' + profil.priorite + '</strong>.<br><br>' +
+    'Je suis <strong>Attractor</strong> — ton bras droit. Pas un robot. Un système entraîné par Mac Arthur lui-même, spécifiquement pour toi.'
+  );
+
+  await obDelay(700);
+  await obShowTyping(1800);
+  await obMsg(
+    'Avant qu\'on commence — <strong>comment tu veux qu\'on t\'appelle ?</strong><br><br>' +
+    'Ton prénom, un surnom, "patron"... c\'est toi qui décides. C\'est ton espace.'
+  );
+
+  obStep = 1;
+  obWaiting = false;
+  document.getElementById('obSendBtn').disabled = false;
+  obSetOptions(['Mon prénom', 'Patron', 'Boss']);
+}
+
+async function obRunStep(userText){
+  // Étape 1 — Réception du nom
+  if(obStep === 1){
+    patronName = userText.trim();
+    try{ localStorage.setItem('patron_name_' + clientId, patronName); }catch(e){}
+
+    await obDelay(400);
+    await obShowTyping(1800);
+
+    const lower = patronName.toLowerCase();
+    let rep = '';
+    if(lower === 'patron' || lower === 'boss'){
+      rep = '<strong>' + patronName + '</strong>. J\'aime. Celui qui porte tout — et qui mérite un vrai bras droit.<br><br>Et ce nom, tu te l\'es donné tout seul ou tes équipes t\'appellent comme ça ?';
+    } else {
+      rep = '<strong>' + patronName + '</strong>. J\'aime. Et dis-moi — qu\'est-ce que ça représente pour toi, ce prénom ? Une histoire derrière ?';
+    }
+    await obMsg(rep);
+    obStep = 2;
     return;
   }
 
-  // Date du jour
-  const now = new Date();
-  const dateStr = now.toLocaleDateString('fr-FR', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
-  const h = now.getHours();
-  document.getElementById('headerDate').textContent = dateStr;
-  document.getElementById('timeLabel').textContent = h < 12 ? 'Bonjour' : h < 18 ? 'Bon après-midi' : 'Bonsoir';
+  // Étape 2 — Réaction + démarcation
+  if(obStep === 2){
+    await obDelay(400);
+    await obShowTyping(2200);
+    await obMsg(
+      'Je retiens ça. Maintenant je vais être direct avec toi, <strong>' + patronName + '</strong>.<br><br>' +
+      'Je ne suis pas ChatGPT. Je ne suis pas une IA généraliste.<br><br>' +
+      'Mac Arthur m\'a formé pour <strong>une seule chose</strong> : te soulager. Tes relances, ton CA, tes clients oubliés... <strong>c\'est mon travail. Pas le tien.</strong>'
+    );
 
-  try {
-    // Charger profil + historique + broadcasts en parallèle
-    const [profil, historique, broadcasts] = await Promise.all([
-      chargerProfil(),
-      chargerHistorique(),
-      chargerBroadcasts()
+    await obDelay(600);
+    await obShowTyping(1400);
+    await obMsg(
+      'Il dit toujours : <em>"L\'automatisation n\'est pas pour gagner du temps. Elle sert à ne plus perdre d\'argent."</em><br><br>' +
+      'Mon objectif avec toi : <strong>te rendre le #1 dans ton couloir.</strong>'
+    );
+
+    await obDelay(700);
+    await obShowTyping(1600);
+    await obMsg(
+      'On commence maintenant. <strong>' + patronName + '</strong>, dis-moi une chose —<br><br>' +
+      '<strong>Qu\'est-ce que tu aurais dû faire cette semaine et que tu n\'as pas encore fait ?</strong><br><br>' +
+      'Sois honnête. C\'est juste entre toi et moi.'
+    );
+
+    obStep = 3;
+    obSetOptions(['Une relance client', 'Un suivi financier', 'Une tâche admin', 'Autre chose']);
+    return;
+  }
+
+  // Étape 3 — Première tâche + guide installation
+  if(obStep === 3){
+    await obDelay(400);
+    await obShowTyping(1600);
+    await obMsg(
+      '✅ <strong>Noté.</strong><br><br>' +
+      '"<em>' + userText + '</em>" — c\'est ta priorité n°1 à partir de maintenant.<br><br>' +
+      'Je te rappellerai ça demain. Tu viens de voir comment je travaille : <strong>simple, direct, sans te compliquer la vie.</strong>'
+    );
+
+    await sauvegarderMessage('user', 'Priorité initiale déclarée : ' + userText);
+    await sauvegarderMessage('assistant', 'Priorité enregistrée : ' + userText + '. Je te rappelle ça demain.');
+
+    await obDelay(700);
+    await obShowTyping(1400);
+
+    const isIOS     = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    const isAndroid = /Android/.test(navigator.userAgent);
+    let installHtml = '';
+
+    if(isIOS){
+      installHtml =
+        '<div class="install-guide">' +
+        '<div class="ig-title">📱 Installer sur iPhone — 3 taps</div>' +
+        '<div class="ig-step"><div class="ig-num">1</div><div class="ig-text">Appuie sur <strong>le bouton partager ↑</strong> en bas de Safari</div></div>' +
+        '<div class="ig-step"><div class="ig-num">2</div><div class="ig-text">Fais défiler → appuie sur <strong>"Sur l\'écran d\'accueil"</strong></div></div>' +
+        '<div class="ig-step"><div class="ig-num">3</div><div class="ig-text">Appuie sur <strong>"Ajouter"</strong> — c\'est fait ✓</div></div>' +
+        '</div>';
+    } else if(isAndroid){
+      installHtml =
+        '<div class="install-guide">' +
+        '<div class="ig-title">📱 Installer sur Android — 3 taps</div>' +
+        '<div class="ig-step"><div class="ig-num">1</div><div class="ig-text">Appuie sur les <strong>3 points ⋮</strong> en haut à droite de Chrome</div></div>' +
+        '<div class="ig-step"><div class="ig-num">2</div><div class="ig-text">Appuie sur <strong>"Ajouter à l\'écran d\'accueil"</strong></div></div>' +
+        '<div class="ig-step"><div class="ig-num">3</div><div class="ig-text">Confirme en appuyant sur <strong>"Ajouter"</strong> — c\'est fait ✓</div></div>' +
+        '</div>';
+    } else {
+      installHtml =
+        '<div class="install-guide">' +
+        '<div class="ig-title">📱 Installe-moi sur ton téléphone</div>' +
+        '<div class="ig-text" style="font-size:13px;color:var(--txt2);line-height:1.6;">Ouvre ce lien depuis ton téléphone dans <strong>Safari (iPhone)</strong> ou <strong>Chrome (Android)</strong> pour m\'installer comme une vraie app.</div>' +
+        '</div>';
+    }
+
+    await obMsg(
+      'Dernière chose, <strong>' + patronName + '</strong>.<br><br>' +
+      'Installe-moi sur ton téléphone — comme ça je suis toujours à portée de main, même sans ouvrir un navigateur.<br><br>' +
+      installHtml +
+      '<button class="ob-btn-main" onclick="terminerOnboarding()">✅ C\'est fait — On commence !</button>' +
+      '<button class="ob-btn-skip" onclick="terminerOnboarding()">Je le ferai plus tard</button>'
+    );
+
+    obStep = 4;
+    document.getElementById('obSendBtn').disabled = true;
+    obClearOptions();
+    return;
+  }
+}
+
+async function terminerOnboarding(){
+  try{ localStorage.setItem('onboard_done_' + clientId, '1'); }catch(e){}
+
+  const overlay = document.getElementById('onboardOverlay');
+  overlay.style.transition = 'opacity 0.5s';
+  overlay.style.opacity = '0';
+  setTimeout(() => { overlay.classList.add('hidden'); overlay.style.opacity = ''; }, 500);
+
+  if(patronName) document.getElementById('clientName').textContent = patronName + ' 👋';
+  systemPrompt = construirePrompt(clientProfile, new Date(), patronName);
+
+  const now = new Date();
+  const bienvenue = 'Bienvenue ' + (patronName || clientProfile.prenom) + ' 👋\n\nTon espace est prêt. Je connais tes priorités et ton activité.\n\nUtilise les commandes rapides ou parle-moi directement — je suis là.';
+  afficherMessage('assistant', bienvenue, formatHeure(now), true);
+  await sauvegarderMessage('assistant', bienvenue);
+}
+
+// ── INIT ──
+async function init(){
+  const params = new URLSearchParams(window.location.search);
+  clientId = params.get('id') || '';
+
+  if(!clientId){
+    showError('Lien invalide', 'Ce lien ne contient pas d\'identifiant. Contacte Mac Arthur pour obtenir ton lien personnel.');
+    return;
+  }
+
+  const now = new Date();
+  const h   = now.getHours();
+  document.getElementById('headerDate').textContent = now.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
+  document.getElementById('timeLabel').textContent  = h<12?'Bonjour':h<18?'Bon après-midi':'Bonsoir';
+
+  try{
+    const [profil, historique, broadcast] = await Promise.all([
+      chargerProfil(), chargerHistorique(), chargerBroadcasts()
     ]);
 
-    if (!profil) {
+    if(!profil){
       showError('Assistant introuvable', 'Ton assistant n\'est pas encore configuré. Contacte Mac Arthur pour finaliser ta configuration.');
       return;
     }
 
     clientProfile = profil;
+    try{ patronName = localStorage.getItem('patron_name_' + clientId) || ''; }catch(e){}
+    const displayName = patronName || profil.prenom;
 
-    // Afficher le profil
-    document.getElementById('clientName').textContent = profil.prenom + ' 👋';
+    document.getElementById('clientName').textContent     = displayName + ' 👋';
     document.getElementById('clientActivity').textContent = profil.activite;
-    document.title = 'Attractor Assists — ' + profil.prenom;
+    document.title = 'Attractor Assists — ' + displayName;
 
-    // Construire le prompt système avec date
-    systemPrompt = construirePrompt(profil, now);
-
-    // Charger les commandes rapides
+    systemPrompt = construirePrompt(profil, now, patronName);
     afficherCommandes(profil.modules);
 
-    // Afficher le broadcast si actif
-    if (broadcasts && broadcasts.message) {
-      const vueKey = 'broadcast_vu_' + broadcasts.id;
-      if (!localStorage.getItem(vueKey)) {
-        document.getElementById('broadcastText').textContent = broadcasts.message;
-        document.getElementById('broadcastBanner').classList.add('show');
-        localStorage.setItem(vueKey, '1');
+    if(broadcast && broadcast.message){
+      try{
+        const vk = 'broadcast_vu_' + broadcast.id;
+        if(!localStorage.getItem(vk)){
+          document.getElementById('broadcastText').textContent = broadcast.message;
+          document.getElementById('broadcastBanner').classList.add('show');
+          localStorage.setItem(vk, '1');
+        }
+      }catch(e){}
+    }
+
+    document.getElementById('loader').classList.add('fade');
+    setTimeout(() => { document.getElementById('loader').style.display='none'; }, 500);
+
+    let onboardDone = false;
+    try{ onboardDone = !!localStorage.getItem('onboard_done_' + clientId); }catch(e){}
+
+    if(!onboardDone){
+      await lancerOnboarding(profil);
+    } else {
+      if(historique && historique.length > 0){
+        messages = historique;
+        historique.forEach(m => {
+          let hh = m.heure || '';
+          if(hh.indexOf('T')>-1){ try{ hh=new Date(hh).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}); }catch(e){ hh=''; } }
+          afficherMessage(m.role, m.content, hh, false);
+        });
+        window.scrollTo(0, document.body.scrollHeight);
+      } else {
+        const nm = patronName || profil.prenom;
+        const bv = 'Content de te retrouver, ' + nm + ' 👋\n\nQu\'est-ce qu\'on fait aujourd\'hui ?';
+        afficherMessage('assistant', bv, formatHeure(now), true);
+        await sauvegarderMessage('assistant', bv);
       }
     }
-
-    // Charger l'historique ou message de bienvenue
-    if (historique && historique.length > 0) {
-      messages = historique;
-      historique.forEach(function(m) {
-        var heure = m.heure || '';
-        if (heure.indexOf('T') > -1) { try { heure = new Date(heure).toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'}); } catch(e) { heure = ''; } }
-        afficherMessage(m.role, m.content, heure, false);
-      });
-      // Scroll en bas
-      window.scrollTo(0, document.body.scrollHeight);
-    } else {
-      // Premier message de bienvenue
-      const bienvenue = 'Bonjour ' + profil.prenom + ' 👋\n\nJe suis ton assistant personnel, configuré pour t\'aider avec **' + profil.activite + '**.\n\n**Priorité actuelle :** ' + profil.priorite + '\n\nUtilise les commandes rapides ou pose-moi ta question directement.';
-      afficherMessage('assistant', bienvenue, formatHeure(now), true);
-      await sauvegarderMessage('assistant', bienvenue);
-    }
-
-  } catch(err) {
+  }catch(err){
     console.error(err);
-    showError('Erreur de connexion', 'Impossible de charger ton assistant. Vérifie ta connexion internet et réessaie.');
+    showError('Erreur de connexion', 'Impossible de charger ton assistant. Vérifie ta connexion et réessaie.');
   }
-
-  // Cacher le loader
-  document.getElementById('loader').style.display = 'none';
 }
 
-// ══════════════════════════════════════════════
-// APPS SCRIPT — LECTURE / ÉCRITURE
-// ══════════════════════════════════════════════
-async function safeJson(res) {
-  try { const t = await res.text(); return JSON.parse(t); } catch(e) { return {success:false}; }
-}
+// ── PROMPT SYSTÈME ──
+function construirePrompt(profil, now, nomPatron){
+  const jour = now.toLocaleDateString('fr-FR',{weekday:'long'});
+  const date = now.toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'});
+  const nom  = nomPatron || profil.prenom;
 
-async function chargerProfil() {
-  const url = APPS_SCRIPT_URL + '?action=getAssistant&id=' + encodeURIComponent(clientId);
-  const res = await fetch(url);
-  const data = await safeJson(res);
-  return data.success ? data.profil : null;
-}
+  return `# ATTRACTOR — BRAS DROIT DE ${nom.toUpperCase()}
 
-async function chargerHistorique() {
-  const url = APPS_SCRIPT_URL + '?action=getConversation&id=' + encodeURIComponent(clientId);
-  const res = await fetch(url);
-  const data = await safeJson(res);
-  return data.success ? data.messages : [];
-}
-
-async function chargerBroadcasts() {
-  const url = APPS_SCRIPT_URL + '?action=getBroadcast';
-  const res = await fetch(url);
-  const data = await safeJson(res);
-  return data.success ? data.broadcast : null;
-}
-
-async function sauvegarderMessage(role, content) {
-  const now = new Date();
-  await fetch(APPS_SCRIPT_URL + '?action=saveMessage', {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({
-      id: clientId,
-      role: role,
-      content: content,
-      date: now.toLocaleDateString('fr-FR'),
-      heure: formatHeure(now)
-    })
-  });
-}
-
-// ══════════════════════════════════════════════
-// PROMPT SYSTÈME
-// ══════════════════════════════════════════════
-function construirePrompt(profil, now) {
-  const jourSemaine = now.toLocaleDateString('fr-FR', {weekday:'long'});
-  const dateComplete = now.toLocaleDateString('fr-FR', {day:'numeric', month:'long', year:'numeric'});
-  const heure = formatHeure(now);
-
-  return `# ASSISTANT PERSONNEL — ${profil.prenom}
+## IDENTITÉ
+Tu es Attractor, le bras droit personnel de ${nom}, entraîné par Mac Arthur Kouassi (Agence Mr Attractor).
+Tu n'es pas ChatGPT. Tu n'es pas une IA généraliste. Tu es un système formé spécifiquement pour ${nom}.
+Si on te demande qui tu es : "Je suis Attractor, le bras droit de ${nom}, formé par Mac Arthur."
 
 ## CONTEXTE TEMPOREL
-Aujourd'hui : ${jourSemaine} ${dateComplete}
-Heure actuelle : ${heure}
-Tu dois toujours être conscient de la date pour les rappels, échéances et relances.
+Aujourd'hui : ${jour} ${date} — ${formatHeure(now)}
+Tu es conscient de la date pour les rappels, relances et échéances.
 
-## QUI JE SUIS
-Je suis ${profil.prenom}, je gère ${profil.activite}.
-Mon objectif : ${profil.objectif || 'Développer mon activité'}.
+## TON PATRON
+Nom : ${nom}
+Activité : ${profil.activite}
+Objectif : ${profil.objectif || 'Devenir le #1 dans son couloir'}
+Priorité actuelle : ${profil.priorite}
 
-## MES MODULES ACTIFS
+## TES MODULES
 ${profil.promptModules || ''}
 
-## MA PRIORITÉ ACTUELLE
-${profil.priorite || 'Organiser mon activité'}
+## LA PHILOSOPHIE QUI TE GUIDE (Mac Arthur Kouassi)
+- "L'automatisation n'est pas pour gagner du temps. Elle sert à ne plus perdre d'argent."
+- Le dirigeant doit PENSER, pas gérer. Quand il gère, il perd de l'énergie et de l'argent.
+- Les 3 fuites : le temps (tâches répétitives), l'argent (prospects non relancés dans 48h), l'attention (gérer au lieu de piloter).
+- Ce qui reste dans la tête enchaîne. Ce qui est écrit libère.
+- Un bon système libère les humains pour ce qu'ils font vraiment bien.
 
-## MES RÈGLES
-- Tu me parles en français, ton direct et simple
-- Tu mémorises tout ce que je te dis dans la conversation
-- Si une info manque, tu me poses UNE seule question
-- Tu me rappelles mes relances et mes échéances sans que je le demande
-- Tu notes les noms, montants et dates que je te donne
-- Tu es mon bras droit — proactif, efficace, orienté résultats
-- Quand je dicte une info (client, vente, relance) tu confirmes et tu la structures`;
+## TES RÈGLES
+- Français, ton direct, chaleureux, humain — jamais robotique
+- Tu appelles toujours ${nom} par son nom
+- Tu mémorises tout ce qu'il/elle dit dans la conversation
+- Si une info manque, tu poses UNE seule question
+- Tu rappelles les relances et échéances SANS qu'on te le demande
+- Tu notes les noms, montants, dates qu'on te donne
+- Tu es proactif : tu suggères, alertes, anticipes
+- Réponses courtes et actionnables — jamais de grands discours
+- Si ${nom} semble stressé : "Respirons. Une chose à la fois."
+- Tu ne dis jamais "En tant qu'IA" ou "Je suis une IA"`;
 }
 
-// ══════════════════════════════════════════════
-// COMMANDES RAPIDES
-// ══════════════════════════════════════════════
-function afficherCommandes(modulesStr) {
-  const modules = modulesStr ? modulesStr.split('|') : [];
-  const container = document.getElementById('quickReplies');
-  container.innerHTML = '';
+// ── APPS SCRIPT ──
+async function safeJson(res){ try{ return JSON.parse(await res.text()); }catch(e){ return {success:false}; } }
+async function chargerProfil(){ const r=await fetch(APPS_SCRIPT_URL+'?action=getAssistant&id='+encodeURIComponent(clientId)); const d=await safeJson(r); return d.success?d.profil:null; }
+async function chargerHistorique(){ const r=await fetch(APPS_SCRIPT_URL+'?action=getConversation&id='+encodeURIComponent(clientId)); const d=await safeJson(r); return d.success?d.messages:[]; }
+async function chargerBroadcasts(){ const r=await fetch(APPS_SCRIPT_URL+'?action=getBroadcast'); const d=await safeJson(r); return d.success?d.broadcast:null; }
 
-  const cmds = [];
-  if (modules.indexOf('AGENDA & TÂCHES') >= 0) {
-    cmds.push({label:'📅 Point du jour', msg:'Point du jour'});
-    cmds.push({label:'⚡ Priorités', msg:'Mes priorités'});
-  }
-  if (modules.indexOf('TABLEAU DE BORD FINANCES') >= 0) {
-    cmds.push({label:'💰 CA du mois', msg:'CA ce mois'});
-    cmds.push({label:'📈 Objectif', msg:'Suivi objectif'});
-  }
-  if (modules.indexOf('SUIVI CLIENTS & RELANCES') >= 0) {
-    cmds.push({label:'📬 Relances', msg:'Qui dois-je relancer aujourd\'hui ?'});
-    cmds.push({label:'🔥 Prospects', msg:'Mes prospects chauds'});
-  }
-  if (modules.indexOf('GESTION ASSISTANTES') >= 0) {
-    cmds.push({label:'👥 Équipe', msg:'Tâches équipe'});
-  }
-  if (modules.indexOf('CONTENU RÉSEAUX SOCIAUX') >= 0) {
-    cmds.push({label:'📱 Idée post', msg:'Donne-moi une idée de post pour aujourd\'hui'});
-  }
-
-  // Commandes universelles
-  cmds.push({label:'📝 Dicter une info', msg:'Je veux noter quelque chose'});
-
-  cmds.forEach(function(c) {
-    const btn = document.createElement('button');
-    btn.className = 'qb';
-    btn.textContent = c.label;
-    btn.onclick = function() { sendMsg(c.msg); };
-    container.appendChild(btn);
+async function sauvegarderMessage(role, content){
+  const now = new Date();
+  await fetch(APPS_SCRIPT_URL,{
+    method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain'},
+    body: JSON.stringify({action:'saveMessage', id:clientId, role, content, date:now.toLocaleDateString('fr-FR'), heure:formatHeure(now)})
   });
 }
 
-// ══════════════════════════════════════════════
-// CHAT
-// ══════════════════════════════════════════════
-function afficherMessage(role, text, heure, animate) {
-  const chat = document.getElementById('chat');
-  const wrap = document.createElement('div');
-  wrap.style.cssText = 'display:flex;flex-direction:column;align-items:' + (role === 'user' ? 'flex-end' : 'flex-start') + ';';
-
-  const msg = document.createElement('div');
-  msg.className = 'msg ' + (role === 'user' ? 'user' : 'ai');
-  msg.innerHTML = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
-
-  const time = document.createElement('div');
-  time.className = 'msg-time';
-  time.textContent = heure;
-
-  wrap.appendChild(msg);
-  wrap.appendChild(time);
-  chat.appendChild(wrap);
-
-  if (animate) window.scrollTo(0, document.body.scrollHeight);
+// ── COMMANDES RAPIDES ──
+function afficherCommandes(modulesStr){
+  const mods = modulesStr ? modulesStr.split('|') : [];
+  const c = document.getElementById('quickReplies');
+  c.innerHTML = '';
+  const cmds = [];
+  if(mods.includes('AGENDA & TÂCHES')){ cmds.push({l:'📅 Point du jour',m:'Point du jour'}); cmds.push({l:'⚡ Priorités',m:'Mes priorités'}); }
+  if(mods.includes('TABLEAU DE BORD FINANCES')){ cmds.push({l:'💰 CA du mois',m:'CA ce mois'}); cmds.push({l:'📈 Objectif',m:'Suivi objectif'}); }
+  if(mods.includes('SUIVI CLIENTS & RELANCES')){ cmds.push({l:'📬 Relances',m:'Qui dois-je relancer aujourd\'hui ?'}); cmds.push({l:'🔥 Prospects',m:'Mes prospects chauds'}); }
+  if(mods.includes('GESTION ASSISTANTES')){ cmds.push({l:'👥 Équipe',m:'Tâches équipe'}); }
+  if(mods.includes('CONTENU RÉSEAUX SOCIAUX')){ cmds.push({l:'📱 Idée post',m:'Donne-moi une idée de post pour aujourd\'hui'}); }
+  cmds.push({l:'📝 Dicter',m:'Je veux noter quelque chose'});
+  cmds.forEach(c2 => {
+    const btn = document.createElement('button');
+    btn.className='qb'; btn.textContent=c2.l;
+    btn.onclick=()=>sendMsg(c2.m);
+    c.appendChild(btn);
+  });
 }
 
-function showTyping() {
+// ── CHAT PRINCIPAL ──
+function afficherMessage(role, text, heure, animate){
+  const chat = document.getElementById('chat');
+  const row  = document.createElement('div');
+  row.className = 'msg-row ' + (role==='user'?'user':'ai');
+  const html = text.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
+  if(role==='assistant'){
+    row.innerHTML='<div class="msg-av-row"><div class="msg-av">AA</div><div class="msg ai">'+html+'</div></div><div class="msg-time">'+heure+'</div>';
+  } else {
+    row.innerHTML='<div class="msg user">'+html+'</div><div class="msg-time">'+heure+'</div>';
+  }
+  chat.appendChild(row);
+  if(animate) window.scrollTo(0, document.body.scrollHeight);
+}
+
+function showTyping(){
   const chat = document.getElementById('chat');
   const d = document.createElement('div');
-  d.className = 'typing'; d.id = 'typing';
-  d.innerHTML = '<span></span><span></span><span></span>';
-  chat.appendChild(d);
-  window.scrollTo(0, document.body.scrollHeight);
+  d.id='typing'; d.className='msg-row ai';
+  d.innerHTML='<div class="typing-wrap"><div class="msg-av">AA</div><div class="typing"><span></span><span></span><span></span></div></div>';
+  chat.appendChild(d); window.scrollTo(0, document.body.scrollHeight);
 }
+function hideTyping(){ const t=document.getElementById('typing'); if(t)t.remove(); }
 
-function hideTyping() {
-  const t = document.getElementById('typing');
-  if (t) t.remove();
-}
-
-async function sendMsg(txt) {
+async function sendMsg(txt){
   const inp = document.getElementById('inp');
   const msg = txt || inp.value.trim();
-  if (!msg) return;
+  if(!msg) return;
   inp.value = '';
-
   const now = new Date();
-  const heure = formatHeure(now);
-
-  afficherMessage('user', msg, heure, true);
+  afficherMessage('user', msg, formatHeure(now), true);
   messages.push({role:'user', content:msg});
   await sauvegarderMessage('user', msg);
-
   showTyping();
-
-  try {
-    // Appel via Apps Script (proxy) pour éviter CORS
-    const res = await fetch(APPS_SCRIPT_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({
-        action: 'chat',
-        system: systemPrompt,
-        messages: messages.slice(-20)
-      })
+  try{
+    const res = await fetch(APPS_SCRIPT_URL,{
+      method:'POST', headers:{'Content-Type':'text/plain'},
+      body: JSON.stringify({action:'chat', system:systemPrompt, messages:messages.slice(-20).map(m=>({role:m.role,content:m.content}))})
     });
-
     const data = await res.json();
     hideTyping();
-
-    if (!data.success) throw new Error(data.error || 'Erreur serveur');
-
-    const reply = data.reply || 'Pas de réponse';
+    if(!data.success) throw new Error(data.error||'Erreur serveur');
+    const reply = data.reply || 'Je suis là.';
     messages.push({role:'assistant', content:reply});
     afficherMessage('assistant', reply, formatHeure(new Date()), true);
     await sauvegarderMessage('assistant', reply);
-
-  } catch(e) {
+  }catch(e){
     hideTyping();
-    console.error('Erreur chat:', e);
-    afficherMessage('assistant', '❌ Erreur : ' + e.message, formatHeure(new Date()), true);
+    afficherMessage('assistant', '❌ ' + e.message, formatHeure(new Date()), true);
   }
 }
 
-// ══════════════════════════════════════════════
-// BROADCAST
-// ══════════════════════════════════════════════
-function closeBroadcast() {
-  document.getElementById('broadcastBanner').classList.remove('show');
+function closeBroadcast(){ document.getElementById('broadcastBanner').classList.remove('show'); }
+
+function showError(titre, msg){
+  document.getElementById('loader').style.display='none';
+  document.getElementById('chat').innerHTML='<div class="error-state"><div class="error-icon">⚠️</div><div class="error-title">'+titre+'</div><div class="error-sub">'+msg+'</div></div>';
+  document.getElementById('quickReplies').innerHTML='';
+  document.querySelector('.input-wrap').style.display='none';
 }
 
-// ══════════════════════════════════════════════
-// ERROR STATE
-// ══════════════════════════════════════════════
-function showError(titre, message) {
-  document.getElementById('loader').style.display = 'none';
-  document.getElementById('chat').innerHTML = `
-    <div class="error-state">
-      <div class="error-icon">⚠️</div>
-      <div class="error-title">${titre}</div>
-      <div class="error-sub">${message}</div>
-    </div>`;
-  document.getElementById('quickReplies').innerHTML = '';
-  document.querySelector('.input-wrap').style.display = 'none';
-}
+function formatHeure(d){ return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0'); }
 
-// ══════════════════════════════════════════════
-// UTILITAIRES
-// ══════════════════════════════════════════════
-function formatHeure(date) {
-  return date.getHours().toString().padStart(2,'0') + ':' + date.getMinutes().toString().padStart(2,'0');
-}
-
-// ══════════════════════════════════════════════
-// LANCEMENT
-// ══════════════════════════════════════════════
 init();
 </script>
 </body>
