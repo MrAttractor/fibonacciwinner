@@ -5,272 +5,177 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Dashboard ATTRACTOR">
 <meta name="theme-color" content="#06060E">
-<title>Attractor Assists — Dashboard Mac Arthur</title>
+<title>Dashboard — Attractor Assists</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --or:#C9A84C;--or2:#E8C96A;--or3:rgba(201,168,76,0.12);
-  --bg:#06060E;--s1:#0E0E1C;--s2:#141428;--s3:#1A1A32;--s4:#20203C;
-  --txt:#F2EEE6;--txt2:rgba(242,238,230,0.55);--txt3:rgba(242,238,230,0.22);--txt4:rgba(242,238,230,0.07);
+  --bg:#06060E;--s1:#0E0E1C;--s2:#141428;--s3:#1A1A32;
+  --txt:#F2EEE6;--txt2:rgba(242,238,230,0.55);--txt3:rgba(242,238,230,0.2);--txt4:rgba(242,238,230,0.07);
   --green:#3DC98A;--green2:rgba(61,201,138,0.12);
   --red:#E85858;--red2:rgba(232,88,88,0.12);
   --amber:#F5A840;--amber2:rgba(245,168,64,0.12);
-  --blue:#5B8BF5;--blue2:rgba(91,139,245,0.12);
   --r:20px;--r2:12px;--r3:8px;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html,body{width:100%;background:var(--bg);color:var(--txt);font-family:'Outfit',sans-serif;font-size:15px;}
 body{min-height:100vh;padding-bottom:110px;overflow-x:hidden;}
-
-/* NOISE OVERLAY */
-body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:0.5;}
-
-/* SCREENS */
-.screen{display:none;animation:fadeUp 0.3s ease;position:relative;z-index:1;}
+.screen{display:none;animation:fadeUp .3s ease;}
 .screen.active{display:block;}
-@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 
-/* HEADER */
 .header{padding:52px 20px 12px;display:flex;align-items:center;justify-content:space-between;}
 .h-brand{display:flex;align-items:center;gap:10px;}
 .h-icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--or),var(--or2));display:flex;align-items:center;justify-content:center;font-size:16px;}
-.h-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:700;color:var(--txt);line-height:1;}
-.h-sub{font-size:11px;color:var(--txt2);margin-top:2px;letter-spacing:0.5px;}
-.h-date{font-size:12px;color:var(--txt2);text-align:right;}
+.h-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:700;line-height:1;}
+.h-sub{font-size:11px;color:var(--txt2);margin-top:2px;letter-spacing:.5px;}
+.back-btn{background:none;border:none;color:var(--txt2);font-size:22px;cursor:pointer;padding:0 10px 0 0;line-height:1;}
 
-/* SECTION TITLE */
-.sec-title{padding:0 20px;margin-bottom:12px;}
-.sec-title h2{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:var(--txt);}
-.sec-title p{font-size:13px;color:var(--txt2);margin-top:3px;}
-
-/* CARDS */
-.card{background:var(--s2);border:1px solid var(--txt4);border-radius:var(--r);padding:20px;margin:0 20px 14px;}
-.card-title{font-size:12px;font-weight:600;letter-spacing:1px;color:var(--txt2);text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:6px;}
-.card-title span{width:6px;height:6px;border-radius:50%;background:var(--or);display:inline-block;}
-
-/* STATS ROW */
 .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 20px 14px;}
 .stat-box{background:var(--s2);border:1px solid var(--txt4);border-radius:var(--r2);padding:16px 12px;text-align:center;}
 .stat-num{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;color:var(--or);line-height:1;}
 .stat-label{font-size:11px;color:var(--txt2);margin-top:4px;}
 
-/* FORM ELEMENTS */
+.card{background:var(--s2);border:1px solid var(--txt4);border-radius:var(--r);padding:20px;margin:0 20px 14px;}
+.card-title{font-size:12px;font-weight:600;letter-spacing:1px;color:var(--txt2);text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:6px;}
+.card-title span{width:6px;height:6px;border-radius:50%;background:var(--or);display:inline-block;}
+
 .field-group{margin-bottom:14px;}
-.field-label{font-size:12px;font-weight:600;color:var(--txt2);letter-spacing:0.5px;margin-bottom:6px;display:block;}
-.field-input{width:100%;background:var(--s3);border:1px solid var(--txt3);border-radius:var(--r3);padding:12px 14px;color:var(--txt);font-family:'Outfit',sans-serif;font-size:14px;outline:none;transition:border-color 0.2s;}
+.field-label{font-size:12px;font-weight:600;color:var(--txt2);letter-spacing:.5px;margin-bottom:6px;display:block;}
+.field-input{width:100%;background:var(--s3);border:1px solid var(--txt3);border-radius:var(--r3);padding:12px 14px;color:var(--txt);font-family:'Outfit',sans-serif;font-size:14px;outline:none;transition:border-color .2s;}
 .field-input:focus{border-color:var(--or);}
 .field-input::placeholder{color:var(--txt3);}
 textarea.field-input{min-height:80px;resize:vertical;line-height:1.5;}
-select.field-input{-webkit-appearance:none;appearance:none;cursor:pointer;}
+select.field-input{-webkit-appearance:none;cursor:pointer;}
 .field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 
-/* TOGGLE GROUP */
 .toggle-group{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;}
-.toggle-btn{padding:8px 14px;border-radius:30px;border:1px solid var(--txt3);background:transparent;color:var(--txt2);font-family:'Outfit',sans-serif;font-size:13px;cursor:pointer;transition:all 0.2s;}
+.toggle-btn{padding:8px 14px;border-radius:30px;border:1px solid var(--txt3);background:transparent;color:var(--txt2);font-family:'Outfit',sans-serif;font-size:13px;cursor:pointer;transition:all .2s;}
 .toggle-btn.active{background:var(--or3);border-color:var(--or);color:var(--or);}
 
-/* BUTTONS */
-.btn{width:100%;padding:16px;border-radius:var(--r);font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;cursor:pointer;border:none;transition:all 0.2s;letter-spacing:0.3px;}
+.btn{width:100%;padding:16px;border-radius:var(--r);font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;cursor:pointer;border:none;transition:all .2s;letter-spacing:.3px;}
 .btn-primary{background:linear-gradient(135deg,var(--or),var(--or2));color:#06060E;}
-.btn-primary:active{opacity:0.85;transform:scale(0.98);}
+.btn-primary:active{opacity:.85;transform:scale(.98);}
 .btn-outline{background:transparent;border:1px solid var(--or);color:var(--or);}
-.btn-outline:active{background:var(--or3);}
 .btn-ghost{background:transparent;border:1px solid var(--txt3);color:var(--txt2);}
-.btn-danger{background:var(--red2);border:1px solid var(--red);color:var(--red);}
 .btn-sm{width:auto;padding:10px 18px;font-size:13px;}
 
-/* RESULT BOX */
-.result-box{background:var(--green2);border:1px solid var(--green);border-radius:var(--r2);padding:16px;display:none;}
-.result-box.visible{display:block;animation:fadeUp 0.3s ease;}
-.result-box.error{background:var(--red2);border-color:var(--red);}
-.result-box.warning{background:var(--amber2);border-color:var(--amber);}
-.result-title{font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;}
-.result-box .result-title{color:var(--green);}
-.result-box.error .result-title{color:var(--red);}
-.result-box.warning .result-title{color:var(--amber);}
+.result-box{border-radius:var(--r2);padding:18px;display:none;}
+.result-box.visible{display:block;animation:fadeUp .3s ease;}
+.result-ok{background:var(--green2);border:1px solid var(--green);}
+.result-err{background:var(--red2);border:1px solid var(--red);}
+.result-title{font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;}
+.result-ok .result-title{color:var(--green);}
+.result-err .result-title{color:var(--red);}
 
-/* LINK COPY BOX */
 .link-copy-box{background:var(--s3);border:1px solid var(--txt3);border-radius:var(--r3);padding:12px 14px;display:flex;align-items:center;gap:10px;margin-top:10px;}
-.link-copy-box span{flex:1;font-size:13px;color:var(--or);word-break:break-all;font-family:monospace;}
-.copy-btn{flex-shrink:0;padding:8px 14px;background:var(--or);border:none;border-radius:var(--r3);font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;color:#06060E;cursor:pointer;}
-.copy-btn:active{opacity:0.8;}
+.link-copy-box .link-text{flex:1;font-size:12px;color:var(--or);word-break:break-all;font-family:monospace;}
+.copy-btn{flex-shrink:0;padding:8px 14px;background:var(--or);border:none;border-radius:var(--r3);font-family:'Outfit',sans-serif;font-size:12px;font-weight:700;color:#06060E;cursor:pointer;}
+.copy-btn:active{opacity:.8;}
 
-/* QUALIFICATION SCORE */
-.score-bar-container{margin-top:12px;}
-.score-bar-label{display:flex;justify-content:space-between;font-size:12px;color:var(--txt2);margin-bottom:6px;}
-.score-bar-track{height:6px;background:var(--txt4);border-radius:3px;overflow:hidden;}
-.score-bar-fill{height:100%;border-radius:3px;transition:width 1s ease;background:linear-gradient(90deg,var(--or),var(--or2));}
-
-/* BADGE */
-.badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:0.5px;}
+.client-item{background:var(--s2);border:1px solid var(--txt4);border-radius:var(--r2);padding:16px;margin:0 20px 10px;display:flex;align-items:center;justify-content:space-between;}
+.client-avatar{width:40px;height:40px;border-radius:50%;background:var(--or3);border:1.5px solid var(--or);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:700;color:var(--or);flex-shrink:0;}
+.client-name{font-size:15px;font-weight:600;}
+.client-meta{font-size:12px;color:var(--txt2);margin-top:2px;}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;}
 .badge-green{background:var(--green2);color:var(--green);}
 .badge-amber{background:var(--amber2);color:var(--amber);}
-.badge-red{background:var(--red2);color:var(--red);}
-.badge-blue{background:var(--blue2);color:var(--blue);}
-.badge-or{background:var(--or3);color:var(--or);}
-.badge::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor;}
 
-/* CLIENT LIST */
-.client-item{background:var(--s2);border:1px solid var(--txt4);border-radius:var(--r2);padding:16px;margin:0 20px 10px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:border-color 0.2s;}
-.client-item:active{border-color:var(--or);}
-.client-left{display:flex;align-items:center;gap:12px;}
-.client-avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--or3),var(--s4));border:1.5px solid var(--or);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:700;color:var(--or);}
-.client-name{font-size:15px;font-weight:600;color:var(--txt);}
-.client-meta{font-size:12px;color:var(--txt2);margin-top:2px;}
-.client-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;}
-
-/* BROADCAST */
-.broadcast-preview{background:var(--s3);border-radius:var(--r3);padding:12px;margin-top:8px;font-size:13px;color:var(--txt2);line-height:1.6;font-style:italic;}
-
-/* DIVIDER */
-.divider{height:1px;background:var(--txt4);margin:16px 0;}
-
-/* PROGRESS RING */
-.progress-ring{position:relative;width:70px;height:70px;margin:0 auto;}
-.progress-ring svg{transform:rotate(-90deg);}
-.progress-ring .track{stroke:var(--txt4);fill:none;}
-.progress-ring .fill{stroke:var(--or);fill:none;stroke-linecap:round;transition:stroke-dashoffset 1s ease;}
-.progress-ring .label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:700;color:var(--or);}
-
-/* BOTTOM NAV */
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(14,14,28,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--txt4);padding:10px 0 24px;display:flex;justify-content:space-around;align-items:center;z-index:100;}
-.nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:4px 16px;border-radius:var(--r3);transition:all 0.2s;flex:1;}
-.nav-item.active .nav-icon{color:var(--or);}
-.nav-item.active .nav-label{color:var(--or);}
-.nav-icon{font-size:20px;transition:transform 0.2s;color:var(--txt3);}
-.nav-item.active .nav-icon{transform:scale(1.1);}
-.nav-label{font-size:10px;font-weight:500;color:var(--txt3);letter-spacing:0.3px;}
-
-/* LOADING */
-.loading-spinner{display:inline-block;width:18px;height:18px;border:2px solid rgba(6,6,14,0.3);border-radius:50%;border-top-color:#06060E;animation:spin 0.7s linear infinite;vertical-align:middle;margin-right:6px;}
+.loading-spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(6,6,14,.3);border-radius:50%;border-top-color:#06060E;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px;}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* EMPTY STATE */
 .empty-state{text-align:center;padding:40px 20px;}
-.empty-icon{font-size:42px;margin-bottom:12px;opacity:0.4;}
+.empty-icon{font-size:40px;opacity:.4;margin-bottom:12px;}
 .empty-text{color:var(--txt2);font-size:14px;line-height:1.6;}
 
-/* MODAL */
-.modal-overlay{position:fixed;inset:0;background:rgba(6,6,14,0.85);backdrop-filter:blur(8px);z-index:200;display:none;align-items:flex-end;}
-.modal-overlay.open{display:flex;animation:fadeIn 0.2s ease;}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
-.modal-sheet{background:var(--s2);border:1px solid var(--txt4);border-radius:var(--r) var(--r) 0 0;padding:24px 20px 40px;width:100%;max-height:85vh;overflow-y:auto;animation:slideUp 0.3s ease;}
-@keyframes slideUp{from{transform:translateY(40px)}to{transform:translateY(0)}}
-.modal-handle{width:40px;height:4px;background:var(--txt3);border-radius:2px;margin:0 auto 20px;}
-.modal-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;margin-bottom:16px;}
-
-/* TOAST */
-.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--s3);border:1px solid var(--txt3);border-radius:30px;padding:10px 20px;font-size:13px;font-weight:500;z-index:300;opacity:0;transition:opacity 0.3s;white-space:nowrap;}
-.toast.show{opacity:1;}
-.toast.success{border-color:var(--green);color:var(--green);}
-.toast.error{border-color:var(--red);color:var(--red);}
-
-/* SPACING UTILITY */
-.px{padding:0 20px;}
-.mb8{margin-bottom:8px;}
-.mb12{margin-bottom:12px;}
-.mb16{margin-bottom:16px;}
 .gap8{display:flex;flex-direction:column;gap:8px;}
+.px{padding:0 20px;}
+.mb16{margin-bottom:16px;}
+
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);border-radius:30px;padding:10px 20px;font-size:13px;font-weight:500;z-index:300;opacity:0;transition:opacity .3s;white-space:nowrap;pointer-events:none;}
+.toast.show{opacity:1;}
+.toast-ok{background:var(--green2);border:1px solid var(--green);color:var(--green);}
+.toast-err{background:var(--red2);border:1px solid var(--red);color:var(--red);}
+
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(14,14,28,.95);backdrop-filter:blur(20px);border-top:1px solid var(--txt4);padding:10px 0 24px;display:flex;z-index:100;}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:4px 0;flex:1;}
+.nav-icon{font-size:20px;color:var(--txt3);transition:color .2s;}
+.nav-label{font-size:10px;color:var(--txt3);font-weight:500;}
+.nav-item.active .nav-icon,.nav-item.active .nav-label{color:var(--or);}
+
+.score-track{height:5px;background:var(--txt4);border-radius:3px;overflow:hidden;margin-top:8px;}
+.score-fill{height:100%;background:linear-gradient(90deg,var(--or),var(--or2));border-radius:3px;transition:width 1s ease;}
+.divider{height:1px;background:var(--txt4);margin:14px 0;}
 </style>
 </head>
 <body>
 
-<!-- ═══════════════════════════════════════════
-     SCREEN 1 — HOME / TABLEAU DE BORD
-════════════════════════════════════════════ -->
-<div id="screen-home" class="screen active">
+<!-- ════ SCREEN HOME ════ -->
+<div id="s-home" class="screen active">
   <div class="header">
     <div class="h-brand">
       <div class="h-icon">⬡</div>
-      <div>
-        <div class="h-title">ATTRACTOR ASSISTS</div>
-        <div class="h-sub">Dashboard Mac Arthur</div>
-      </div>
+      <div><div class="h-title">ATTRACTOR ASSISTS</div><div class="h-sub">Dashboard Mac Arthur</div></div>
     </div>
-    <div class="h-date" id="home-date"></div>
+    <div style="font-size:12px;color:var(--txt2);" id="home-date"></div>
   </div>
 
   <div class="stats-row">
-    <div class="stat-box">
-      <div class="stat-num" id="stat-clients">—</div>
-      <div class="stat-label">Clients actifs</div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-num" id="stat-conv">—</div>
-      <div class="stat-label">Conversations</div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-num" id="stat-broadcast">—</div>
-      <div class="stat-label">Broadcasts</div>
-    </div>
+    <div class="stat-box"><div class="stat-num" id="stat-c">—</div><div class="stat-label">Clients</div></div>
+    <div class="stat-box"><div class="stat-num" id="stat-v">—</div><div class="stat-label">Conv.</div></div>
+    <div class="stat-box"><div class="stat-num" id="stat-b">—</div><div class="stat-label">Broadcast</div></div>
   </div>
 
   <div class="card">
     <div class="card-title"><span></span>Accès rapide</div>
     <div class="gap8">
-      <button class="btn btn-primary" onclick="goScreen('screen-nouveau')">➕ Nouveau client assistant</button>
-      <button class="btn btn-outline" onclick="goScreen('screen-clients')">👥 Gérer les clients</button>
-      <button class="btn btn-ghost" onclick="goScreen('screen-broadcast')">📢 Envoyer un broadcast</button>
+      <button class="btn btn-primary" onclick="nav('s-nouveau',0)">➕ Nouveau client assistant</button>
+      <button class="btn btn-outline" onclick="nav('s-clients',2);chargerClients()">👥 Gérer les clients</button>
+      <button class="btn btn-ghost" onclick="nav('s-broadcast',3)">📢 Envoyer un broadcast</button>
     </div>
   </div>
 
   <div class="card">
-    <div class="card-title"><span></span>Système</div>
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;">
-      <span style="font-size:13px;color:var(--txt2);">MasterSheet</span>
-      <span class="badge badge-green">Connecté</span>
+    <div class="card-title"><span></span>Statut système</div>
+    <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:13px;">
+      <span style="color:var(--txt2)">Apps Script</span><span class="badge badge-green" id="script-badge">Vérif...</span>
     </div>
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;">
-      <span style="font-size:13px;color:var(--txt2);">Apps Script</span>
-      <span class="badge badge-green" id="script-status">Actif</span>
+    <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:13px;">
+      <span style="color:var(--txt2)">Mode requêtes</span><span class="badge badge-green">GET uniquement ✓</span>
     </div>
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;">
-      <span style="font-size:13px;color:var(--txt2);">Clé Claude API</span>
-      <span class="badge badge-amber">Via Apps Script ✓</span>
+    <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:13px;">
+      <span style="color:var(--txt2)">Clé Claude</span><span class="badge badge-green">Apps Script ✓</span>
     </div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════
-     SCREEN 2 — NOUVEAU CLIENT (AUDIT + GÉNÉRATION)
-════════════════════════════════════════════ -->
-<div id="screen-nouveau" class="screen">
+<!-- ════ SCREEN NOUVEAU CLIENT ════ -->
+<div id="s-nouveau" class="screen">
   <div class="header">
     <div class="h-brand">
-      <button onclick="goScreen('screen-home')" style="background:none;border:none;color:var(--txt2);font-size:20px;cursor:pointer;padding:0 8px 0 0;">←</button>
-      <div>
-        <div class="h-title">Nouveau Client</div>
-        <div class="h-sub">Audit + Génération système</div>
-      </div>
+      <button class="back-btn" onclick="nav('s-home',4)">←</button>
+      <div><div class="h-title">Nouveau Client</div><div class="h-sub">Créer le système assistant</div></div>
     </div>
   </div>
 
   <div class="card">
-    <div class="card-title"><span></span>Identité client</div>
+    <div class="card-title"><span></span>Identité</div>
     <div class="field-group">
       <label class="field-label">Prénom *</label>
-      <input id="f-prenom" class="field-input" type="text" placeholder="Ex: Fatima">
+      <input id="f-prenom" class="field-input" type="text" placeholder="Ex : Nabintou">
     </div>
     <div class="field-row">
-      <div class="field-group" style="margin-bottom:0;">
+      <div class="field-group" style="margin:0">
         <label class="field-label">Secteur</label>
-        <input id="f-secteur" class="field-input" type="text" placeholder="Ex: E-commerce">
+        <input id="f-activite" class="field-input" type="text" placeholder="Ex : Foodpreneur">
       </div>
-      <div class="field-group" style="margin-bottom:0;">
+      <div class="field-group" style="margin:0">
         <label class="field-label">Pays</label>
         <select id="f-pays" class="field-input">
-          <option value="CI">Côte d'Ivoire</option>
-          <option value="SN">Sénégal</option>
-          <option value="CM">Cameroun</option>
-          <option value="FR">France</option>
-          <option value="BJ">Bénin</option>
-          <option value="TG">Togo</option>
-          <option value="ML">Mali</option>
-          <option value="BF">Burkina Faso</option>
-          <option value="GA">Gabon</option>
-          <option value="Autre">Autre</option>
+          <option>Côte d'Ivoire</option><option>Sénégal</option><option>Cameroun</option>
+          <option>France</option><option>Bénin</option><option>Togo</option>
+          <option>Mali</option><option>Burkina Faso</option><option>Gabon</option><option>Autre</option>
         </select>
       </div>
     </div>
@@ -279,614 +184,333 @@ select.field-input{-webkit-appearance:none;appearance:none;cursor:pointer;}
   <div class="card">
     <div class="card-title"><span></span>Profil & Objectifs</div>
     <div class="field-group">
-      <label class="field-label">Ce qu'il/elle vend</label>
-      <input id="f-produit" class="field-input" type="text" placeholder="Ex: Cosmétiques naturels en ligne">
+      <label class="field-label">Priorité n°1 (ce sur quoi l'assistant doit l'aider)</label>
+      <input id="f-priorite" class="field-input" type="text" placeholder="Ex : Vendre ses aides culinaires Afro-infusées">
     </div>
     <div class="field-group">
-      <label class="field-label">Son rêve / Désir profond</label>
-      <textarea id="f-reve" class="field-input" placeholder="Ex: Quitter son emploi, vivre de son business, toucher 500k FCFA/mois..."></textarea>
-    </div>
-    <div class="field-group">
-      <label class="field-label">Ses blocages actuels</label>
-      <textarea id="f-blocages" class="field-input" placeholder="Ex: Pas de temps, ne sait pas marketer, peu de ventes..."></textarea>
+      <label class="field-label">Objectif / Rêve</label>
+      <textarea id="f-objectif" class="field-input" placeholder="Ex : Créer une franchise, recruter une équipe, 500k FCFA/mois..."></textarea>
     </div>
     <div class="field-group">
       <label class="field-label">Email client</label>
-      <input id="f-email" class="field-input" type="email" placeholder="Ex: fatima@gmail.com">
+      <input id="f-email" class="field-input" type="email" placeholder="Ex : nabycook@gmail.com">
     </div>
-    <div class="field-group">
+    <div class="field-group" style="margin:0">
       <label class="field-label">WhatsApp client</label>
-      <input id="f-whatsapp" class="field-input" type="tel" placeholder="Ex: +225 07 XX XX XX">
+      <input id="f-wa" class="field-input" type="tel" placeholder="Ex : +33746457148">
     </div>
   </div>
 
   <div class="card">
     <div class="card-title"><span></span>Modules activés</div>
     <div class="toggle-group" id="modules-group">
-      <button class="toggle-btn active" data-module="Marketing & Ventes">📣 Marketing</button>
-      <button class="toggle-btn active" data-module="Gestion du temps">⏱ Temps</button>
-      <button class="toggle-btn" data-module="Finance & Comptabilité">💰 Finance</button>
-      <button class="toggle-btn" data-module="Mindset & Motivation">🔥 Mindset</button>
-      <button class="toggle-btn" data-module="Réseaux sociaux">📱 Réseaux</button>
-      <button class="toggle-btn" data-module="Prospection clients">🎯 Prospection</button>
-      <button class="toggle-btn" data-module="E-commerce">🛒 E-commerce</button>
-      <button class="toggle-btn" data-module="Service client">💬 Service client</button>
+      <button class="toggle-btn active" data-m="MARKETING & VENTES">📣 Marketing</button>
+      <button class="toggle-btn active" data-m="GESTION DU TEMPS">⏱ Temps</button>
+      <button class="toggle-btn" data-m="FINANCE & COMPTABILITÉ">💰 Finance</button>
+      <button class="toggle-btn" data-m="MINDSET & MOTIVATION">🔥 Mindset</button>
+      <button class="toggle-btn" data-m="RÉSEAUX SOCIAUX">📱 Réseaux</button>
+      <button class="toggle-btn" data-m="PROSPECTION CLIENTS">🎯 Prospection</button>
+      <button class="toggle-btn" data-m="E-COMMERCE">🛒 E-commerce</button>
+      <button class="toggle-btn" data-m="SERVICE CLIENT">💬 Service client</button>
     </div>
   </div>
 
   <div class="card">
     <div class="card-title"><span></span>Personnalité de l'assistant</div>
-    <div class="field-group">
-      <label class="field-label">Ton de l'assistant</label>
+    <div class="field-group" style="margin:0">
+      <label class="field-label">Ton</label>
       <select id="f-ton" class="field-input">
-        <option value="Coach bienveillant et direct">🤝 Coach bienveillant et direct</option>
-        <option value="Expert technique et précis">🧠 Expert technique et précis</option>
-        <option value="Motivateur énergique">⚡ Motivateur énergique</option>
-        <option value="Mentor patient et pédagogique">📚 Mentor patient et pédagogique</option>
-        <option value="Partenaire business pragmatique">💼 Partenaire business pragmatique</option>
-      </select>
-    </div>
-    <div class="field-group" style="margin-bottom:0;">
-      <label class="field-label">Langue principale</label>
-      <select id="f-langue" class="field-input">
-        <option value="Français">🇫🇷 Français</option>
-        <option value="Français et Nouchi">🇨🇮 Français et Nouchi</option>
-        <option value="Anglais">🇬🇧 Anglais</option>
+        <option>Coach bienveillant et direct</option>
+        <option>Expert technique et précis</option>
+        <option>Motivateur énergique</option>
+        <option>Mentor patient et pédagogique</option>
+        <option>Partenaire business pragmatique</option>
       </select>
     </div>
   </div>
 
   <div class="px mb16">
-    <button class="btn btn-primary" id="btn-analyser" onclick="analyserProspect()">
-      🔍 Analyser le prospect
-    </button>
+    <button class="btn btn-primary" id="btn-gen" onclick="genererSysteme()">⬡ Générer le Système Client</button>
   </div>
 
-  <!-- RÉSULTAT ANALYSE -->
-  <div id="analyse-result" class="card" style="display:none;border-color:var(--or);">
-    <div class="card-title"><span></span>Analyse Claude</div>
-    <div id="analyse-content" style="font-size:13px;line-height:1.7;color:var(--txt2);"></div>
-    <div class="score-bar-container">
-      <div class="score-bar-label">
-        <span>Score potentiel</span>
-        <span id="score-val">—/10</span>
-      </div>
-      <div class="score-bar-track">
-        <div class="score-bar-fill" id="score-fill" style="width:0%;"></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="px mb16">
-    <button class="btn btn-primary" id="btn-generer" onclick="genererSysteme()" style="display:none;">
-      ⬡ Générer le Système Client
-    </button>
-  </div>
-
-  <!-- RÉSULTAT GÉNÉRATION -->
-  <div id="generation-result" class="result-box" style="margin:0 20px 16px;">
-    <div class="result-title">✅ Système créé avec succès</div>
-    <div style="font-size:13px;color:var(--txt2);margin-bottom:12px;">
-      Envoie ce lien à ton client sur WhatsApp :
-    </div>
+  <!-- RÉSULTATS -->
+  <div id="res-ok" class="result-box result-ok px mb16" style="margin-left:20px;margin-right:20px;">
+    <div class="result-title">✅ Système créé</div>
+    <div style="font-size:13px;color:var(--txt2);margin-bottom:4px;">Lien à envoyer au client :</div>
     <div class="link-copy-box">
-      <span id="client-link-text">—</span>
-      <button class="copy-btn" onclick="copierLien()">Copier</button>
+      <span class="link-text" id="lien-texte">—</span>
+      <button class="copy-btn" onclick="copier()">Copier</button>
     </div>
-    <div style="margin-top:12px;font-size:12px;color:var(--txt2);">
-      ID client : <span id="client-id-text" style="color:var(--or);font-family:monospace;"></span>
-    </div>
-    <div style="margin-top:16px;display:flex;gap:8px;">
-      <button class="btn btn-outline btn-sm" onclick="ouvrirWhatsApp()">📲 Envoyer WhatsApp</button>
-      <button class="btn btn-ghost btn-sm" onclick="nouveauClient()">+ Nouveau</button>
+    <div style="margin-top:8px;font-size:12px;color:var(--txt3);">ID : <span id="id-texte" style="color:var(--or);font-family:monospace;"></span></div>
+    <div style="margin-top:14px;display:flex;gap:8px;">
+      <button class="btn btn-outline btn-sm" onclick="ouvrirWA()">📲 WhatsApp</button>
+      <button class="btn btn-ghost btn-sm" onclick="resetForm()">+ Nouveau</button>
     </div>
   </div>
 
-  <div id="generation-error" class="result-box error" style="margin:0 20px 16px;">
+  <div id="res-err" class="result-box result-err" style="margin:0 20px 16px;">
     <div class="result-title">⚠️ Erreur</div>
-    <div id="error-msg" style="font-size:13px;color:var(--txt2);"></div>
+    <div id="err-msg" style="font-size:13px;color:var(--txt2);"></div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════
-     SCREEN 3 — CLIENTS
-════════════════════════════════════════════ -->
-<div id="screen-clients" class="screen">
+<!-- ════ SCREEN CLIENTS ════ -->
+<div id="s-clients" class="screen">
   <div class="header">
     <div class="h-brand">
-      <button onclick="goScreen('screen-home')" style="background:none;border:none;color:var(--txt2);font-size:20px;cursor:pointer;padding:0 8px 0 0;">←</button>
-      <div>
-        <div class="h-title">Clients Actifs</div>
-        <div class="h-sub">Attractor Assists</div>
-      </div>
+      <button class="back-btn" onclick="nav('s-home',4)">←</button>
+      <div><div class="h-title">Clients actifs</div><div class="h-sub">Attractor Assists</div></div>
     </div>
-    <button class="btn btn-primary btn-sm" onclick="chargerClients()" style="padding:8px 14px;font-size:12px;">↻ Sync</button>
+    <button class="btn btn-primary btn-sm" onclick="chargerClients()">↻</button>
   </div>
-
-  <div id="clients-loading" class="empty-state" style="padding:30px 20px;">
-    <div style="font-size:13px;color:var(--txt2);">Chargement en cours...</div>
-  </div>
-  <div id="clients-list"></div>
-  <div id="clients-empty" class="empty-state" style="display:none;">
-    <div class="empty-icon">👥</div>
-    <div class="empty-text">Aucun client assistant pour l'instant.<br>Créez votre premier profil.</div>
-    <button class="btn btn-primary btn-sm" style="margin-top:16px;display:inline-block;" onclick="goScreen('screen-nouveau')">+ Nouveau client</button>
+  <div id="clients-zone">
+    <div class="empty-state"><div class="empty-icon">👥</div><div class="empty-text">Appuie sur ↻ pour charger</div></div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════
-     SCREEN 4 — BROADCAST
-════════════════════════════════════════════ -->
-<div id="screen-broadcast" class="screen">
+<!-- ════ SCREEN BROADCAST ════ -->
+<div id="s-broadcast" class="screen">
   <div class="header">
     <div class="h-brand">
-      <button onclick="goScreen('screen-home')" style="background:none;border:none;color:var(--txt2);font-size:20px;cursor:pointer;padding:0 8px 0 0;">←</button>
-      <div>
-        <div class="h-title">Broadcast</div>
-        <div class="h-sub">Message à tous les clients</div>
-      </div>
+      <button class="back-btn" onclick="nav('s-home',4)">←</button>
+      <div><div class="h-title">Broadcast</div><div class="h-sub">Message à tous les clients</div></div>
     </div>
   </div>
-
   <div class="card">
-    <div class="card-title"><span></span>Composer un broadcast</div>
+    <div class="card-title"><span></span>Composer</div>
     <div class="field-group">
-      <label class="field-label">Titre du message</label>
-      <input id="bc-titre" class="field-input" type="text" placeholder="Ex: Conseil de la semaine — Marketing">
+      <label class="field-label">Titre</label>
+      <input id="bc-titre" class="field-input" placeholder="Ex : Conseil de la semaine">
     </div>
-    <div class="field-group">
-      <label class="field-label">Contenu</label>
-      <textarea id="bc-contenu" class="field-input" style="min-height:120px;" placeholder="Ton message sera envoyé à tous tes clients assistants..."></textarea>
-    </div>
-    <div class="field-group" style="margin-bottom:0;">
-      <label class="field-label">Catégorie</label>
-      <select id="bc-categorie" class="field-input">
-        <option value="Conseil">💡 Conseil business</option>
-        <option value="Motivation">🔥 Motivation</option>
-        <option value="Promotion">🎁 Offre spéciale</option>
-        <option value="Alerte">⚠️ Alerte importante</option>
-        <option value="Formation">📚 Formation</option>
-      </select>
+    <div class="field-group" style="margin:0">
+      <label class="field-label">Message</label>
+      <textarea id="bc-msg" class="field-input" style="min-height:120px;" placeholder="Ton message sera visible dans l'assistant de chaque client..."></textarea>
     </div>
   </div>
-
-  <div class="px mb8">
-    <div class="broadcast-preview" id="bc-preview">Le message s'affichera ici à la prévisualisation...</div>
+  <div class="px mb16 gap8">
+    <button class="btn btn-primary" id="btn-bc" onclick="envoyerBroadcast()">📢 Envoyer à tous</button>
   </div>
-
-  <div class="px gap8 mb16">
-    <button class="btn btn-outline" onclick="previewBroadcast()">👁 Prévisualiser</button>
-    <button class="btn btn-primary" id="btn-broadcast" onclick="envoyerBroadcast()">📢 Envoyer à tous les clients</button>
-  </div>
-
-  <div id="broadcast-result" class="result-box" style="margin:0 20px 16px;display:none;">
+  <div id="bc-result" class="result-box result-ok" style="margin:0 20px 16px;display:none;">
     <div class="result-title">✅ Broadcast envoyé</div>
-    <div id="broadcast-result-msg" style="font-size:13px;color:var(--txt2);"></div>
+    <div id="bc-result-msg" style="font-size:13px;color:var(--txt2);"></div>
   </div>
 </div>
 
-<!-- BOTTOM NAV -->
+<!-- NAV -->
 <nav class="bottom-nav">
-  <div class="nav-item active" onclick="navTo('screen-home',this)">
-    <div class="nav-icon">⬡</div>
-    <div class="nav-label">Accueil</div>
-  </div>
-  <div class="nav-item" onclick="navTo('screen-nouveau',this)">
-    <div class="nav-icon">➕</div>
-    <div class="nav-label">Nouveau</div>
-  </div>
-  <div class="nav-item" onclick="navTo('screen-clients',this);chargerClients()">
-    <div class="nav-icon">👥</div>
-    <div class="nav-label">Clients</div>
-  </div>
-  <div class="nav-item" onclick="navTo('screen-broadcast',this)">
-    <div class="nav-icon">📢</div>
-    <div class="nav-label">Broadcast</div>
-  </div>
+  <div class="nav-item active" id="nav-0" onclick="nav('s-home',0)"><div class="nav-icon">⬡</div><div class="nav-label">Accueil</div></div>
+  <div class="nav-item" id="nav-1" onclick="nav('s-nouveau',1)"><div class="nav-icon">➕</div><div class="nav-label">Nouveau</div></div>
+  <div class="nav-item" id="nav-2" onclick="nav('s-clients',2);chargerClients()"><div class="nav-icon">👥</div><div class="nav-label">Clients</div></div>
+  <div class="nav-item" id="nav-3" onclick="nav('s-broadcast',3)"><div class="nav-icon">📢</div><div class="nav-label">Broadcast</div></div>
 </nav>
-
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
 <script>
-// ══════════════════════════════════════════════
-// CONFIGURATION — À METTRE À JOUR
-// ══════════════════════════════════════════════
-const CONFIG = {
-  // URL de déploiement du Apps Script SYSTEME ATTRACTOR UNIVERSEL
-  APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbxnsvcXaQERlcRKnwXzs0fMW34n68aMOB8IVmhtZZ256tNJMVRWcCjT3uJ82DjixlbJow/exec',
-  // URL de base du site client
-  CLIENT_BASE_URL: 'https://fibonacciwinner.netlify.app/assistant-client.html',
-  // Clé Claude API (utilisée via Apps Script uniquement — ne jamais mettre ici)
-  // CLAUDE_KEY est dans Apps Script côté serveur
-};
+// ══════════════════════════════════════════
+// CONFIG — METTRE TON URL APPS SCRIPT ICI
+// ══════════════════════════════════════════
+var AS = "https://script.google.com/macros/s/AKfycbxnsvcXaQERlcRKnwXzs0fMW34n68aMOB8IVmhtZZ256tNJMVRWcCjT3uJ82DjixlbJow/exec";
+var CLIENT_URL = "https://fibonacciwinner.netlify.app/assistant-client.html";
 
-// ══════════════════════════════════════════════
+// ══════════════════════════════════════════
 // NAVIGATION
-// ══════════════════════════════════════════════
-function goScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+// ══════════════════════════════════════════
+function nav(id, idx) {
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
   document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('active');});
+  if(idx<4) document.getElementById('nav-'+idx).classList.add('active');
   window.scrollTo(0,0);
 }
 
-function navTo(screenId, el) {
-  goScreen(screenId);
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  el.classList.add('active');
+document.getElementById('home-date').textContent = new Date().toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short'});
+
+// Modules toggle
+document.querySelectorAll('.toggle-btn').forEach(function(b){
+  b.addEventListener('click',function(){b.classList.toggle('active');});
+});
+function getModules(){
+  var m=[];
+  document.querySelectorAll('.toggle-btn.active').forEach(function(b){m.push(b.dataset.m);});
+  return m.join('|');
 }
 
-// ══════════════════════════════════════════════
-// DATE
-// ══════════════════════════════════════════════
-function setDate() {
-  const d = new Date();
-  const opts = {weekday:'short',day:'numeric',month:'short'};
-  document.getElementById('home-date').textContent = d.toLocaleDateString('fr-FR', opts);
+// ══════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════
+function toast(msg,type){
+  var t=document.getElementById('toast');
+  t.textContent=msg;
+  t.className='toast show '+(type==='err'?'toast-err':'toast-ok');
+  setTimeout(function(){t.className='toast';},2500);
 }
-setDate();
 
-// ══════════════════════════════════════════════
-// MODULES TOGGLE
-// ══════════════════════════════════════════════
-document.querySelectorAll('.toggle-btn').forEach(btn => {
-  btn.addEventListener('click', () => btn.classList.toggle('active'));
+// ══════════════════════════════════════════
+// GET HELPER — tout passe par GET pour éviter CORS
+// ══════════════════════════════════════════
+function getAS(params) {
+  var url = AS + '?' + Object.keys(params).map(function(k){
+    return encodeURIComponent(k)+'='+encodeURIComponent(params[k]);
+  }).join('&');
+  return fetch(url).then(function(r){return r.json();});
+}
+
+// ══════════════════════════════════════════
+// VÉRIFIER SCRIPT AU DÉMARRAGE
+// ══════════════════════════════════════════
+getAS({action:'test'}).then(function(){
+  document.getElementById('script-badge').textContent='Actif ✓';
+}).catch(function(){
+  document.getElementById('script-badge').textContent='Hors ligne';
+  document.getElementById('script-badge').className='badge badge-amber';
 });
 
-function getModulesActifs() {
-  const actifs = [];
-  document.querySelectorAll('.toggle-btn.active').forEach(b => actifs.push(b.dataset.module));
-  return actifs;
-}
+// ══════════════════════════════════════════
+// GÉNÉRER SYSTÈME CLIENT
+// ══════════════════════════════════════════
+var _lien='', _wa='', _prenom='';
 
-// ══════════════════════════════════════════════
-// TOAST
-// ══════════════════════════════════════════════
-function showToast(msg, type='success') {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'toast show ' + type;
-  setTimeout(() => t.className = 'toast', 2500);
-}
+function genererSysteme(){
+  var prenom  = document.getElementById('f-prenom').value.trim();
+  var activite= document.getElementById('f-activite').value.trim();
+  var pays    = document.getElementById('f-pays').value;
+  var priorite= document.getElementById('f-priorite').value.trim();
+  var objectif= document.getElementById('f-objectif').value.trim();
+  var email   = document.getElementById('f-email').value.trim();
+  var wa      = document.getElementById('f-wa').value.trim();
+  var modules = getModules();
+  var ton     = document.getElementById('f-ton').value;
 
-// ══════════════════════════════════════════════
-// ANALYSER LE PROSPECT (via Claude API → Apps Script)
-// ══════════════════════════════════════════════
-async function analyserProspect() {
-  const prenom = document.getElementById('f-prenom').value.trim();
-  const secteur = document.getElementById('f-secteur').value.trim();
-  const produit = document.getElementById('f-produit').value.trim();
-  const reve = document.getElementById('f-reve').value.trim();
-  const blocages = document.getElementById('f-blocages').value.trim();
-  const modules = getModulesActifs();
+  if(!prenom){toast('Prénom obligatoire','err');return;}
+  if(!objectif&&!priorite){toast('Remplis au moins la priorité ou l\'objectif','err');return;}
 
-  if (!prenom || !reve) {
-    showToast('Remplis au moins le prénom et le rêve', 'error');
-    return;
-  }
+  // Générer l'ID côté client
+  var slug = prenom.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,'-');
+  var id = 'AA-'+slug+'-'+Math.random().toString(36).substr(2,5).toUpperCase();
 
-  const btn = document.getElementById('btn-analyser');
-  btn.innerHTML = '<span class="loading-spinner"></span>Analyse en cours...';
-  btn.disabled = true;
+  // Construire le promptModules
+  var modulesArr = modules.split('|').filter(Boolean);
+  var promptMods = modulesArr.map(function(m){
+    return 'MODULE '+m+' : Tu aides '+prenom+' à progresser sur ce sujet.';
+  }).join('\n');
 
-  try {
-    const payload = {
-      action: 'analyserProspect',
-      prenom, secteur, produit, reve, blocages, modules
-    };
+  var btn = document.getElementById('btn-gen');
+  btn.innerHTML='<span class="loading-spinner"></span>Création...';
+  btn.disabled=true;
 
-    const resp = await fetch(CONFIG.APPS_SCRIPT_URL, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(payload)
-    });
-    const data = await resp.json();
+  // Cacher résultats précédents
+  document.getElementById('res-ok').classList.remove('visible');
+  document.getElementById('res-ok').style.display='none';
+  document.getElementById('res-err').classList.remove('visible');
+  document.getElementById('res-err').style.display='none';
 
-    if (data.success) {
-      const ar = document.getElementById('analyse-result');
-      ar.style.display = 'block';
-      document.getElementById('analyse-content').innerHTML = data.analyse.replace(/\n/g,'<br>');
-      const score = data.score || 7;
-      document.getElementById('score-val').textContent = score + '/10';
-      document.getElementById('score-fill').style.width = (score*10) + '%';
-      document.getElementById('btn-generer').style.display = 'block';
-      ar.scrollIntoView({behavior:'smooth',block:'start'});
+  var lien = CLIENT_URL+'?id='+id;
+
+  // Envoyer vers Apps Script — action createAssistant (nom exact dans le script)
+  getAS({
+    action        : 'createAssistant',
+    id            : id,
+    prenom        : prenom,
+    activite      : activite + (pays ? ' — ' + pays : ''),
+    modules       : modules,
+    priorite      : priorite,
+    objectif      : objectif,
+    promptModules : promptMods,
+    url           : lien
+  }).then(function(data){
+    btn.innerHTML='⬡ Générer le Système Client';
+    btn.disabled=false;
+
+    if(data.success){
+      _lien=lien; _wa=wa; _prenom=prenom;
+      document.getElementById('lien-texte').textContent=lien;
+      document.getElementById('id-texte').textContent=id;
+      var box=document.getElementById('res-ok');
+      box.style.display='block';
+      box.classList.add('visible');
+      box.scrollIntoView({behavior:'smooth',block:'start'});
+      toast('✅ '+prenom+' créé — '+id);
     } else {
-      showToast(data.error || 'Erreur analyse', 'error');
+      afficherErreur(data.error || 'Erreur Apps Script');
     }
-  } catch(e) {
+  }).catch(function(e){
+    btn.innerHTML='⬡ Générer le Système Client';
+    btn.disabled=false;
+    afficherErreur('Load failed — Vérifie ta connexion ou redéploie le Apps Script');
     console.error(e);
-    // Mode dégradé — afficher bouton quand même
-    document.getElementById('analyse-result').style.display = 'block';
-    document.getElementById('analyse-content').innerHTML = '⚠️ Analyse impossible (réseau). Tu peux quand même générer le système client.';
-    document.getElementById('score-val').textContent = '—';
-    document.getElementById('score-fill').style.width = '0%';
-    document.getElementById('btn-generer').style.display = 'block';
-  }
-
-  btn.innerHTML = '🔍 Analyser le prospect';
-  btn.disabled = false;
+  });
 }
 
-// ══════════════════════════════════════════════
-// GÉNÉRER SYSTÈME CLIENT — CORRECTION PRINCIPALE
-// ══════════════════════════════════════════════
-async function genererSysteme() {
-  // 1. Récupérer les données du formulaire
-  const prenom = document.getElementById('f-prenom').value.trim();
-  const secteur = document.getElementById('f-secteur').value.trim();
-  const pays = document.getElementById('f-pays').value;
-  const produit = document.getElementById('f-produit').value.trim();
-  const reve = document.getElementById('f-reve').value.trim();
-  const blocages = document.getElementById('f-blocages').value.trim();
-  const email = document.getElementById('f-email').value.trim();
-  const whatsapp = document.getElementById('f-whatsapp').value.trim();
-  const ton = document.getElementById('f-ton').value;
-  const langue = document.getElementById('f-langue').value;
-  const modules = getModulesActifs();
-
-  if (!prenom) {
-    showToast('Le prénom est obligatoire', 'error');
-    return;
-  }
-  if (!reve) {
-    showToast('Le rêve du client est obligatoire', 'error');
-    return;
-  }
-
-  // 2. Générer l'ID unique
-  const timestamp = Date.now().toString().slice(-5);
-  const prenomSlug = prenom.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,'-');
-  const clientId = `AA-${prenomSlug}-${timestamp}`;
-
-  // 3. Construire le profil complet
-  const profil = {
-    id: clientId,
-    prenom,
-    secteur,
-    pays,
-    produit,
-    reve,
-    blocages,
-    email,
-    whatsapp,
-    ton,
-    langue,
-    modules,
-    dateCreation: new Date().toISOString(),
-    statut: 'Actif'
-  };
-
-  // 4. UI — chargement
-  const btn = document.getElementById('btn-generer');
-  btn.innerHTML = '<span class="loading-spinner"></span>Création en cours...';
-  btn.disabled = true;
-
-  // Cacher les résultats précédents
-  document.getElementById('generation-result').classList.remove('visible');
-  document.getElementById('generation-result').style.display = 'none';
-  document.getElementById('generation-error').classList.remove('visible');
-  document.getElementById('generation-error').style.display = 'none';
-
-  try {
-    // 5. Envoyer vers Apps Script → onglet ASSISTANTS
-    const payload = {
-      action: 'creerAssistant',
-      profil: profil
-    };
-
-    const resp = await fetch(CONFIG.APPS_SCRIPT_URL, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(payload)
-    });
-    const data = await resp.json();
-
-    if (!data.success) {
-      throw new Error(data.error || 'Erreur Apps Script');
-    }
-
-    // 6. Construire le lien client
-    const lienClient = `${CONFIG.CLIENT_BASE_URL}?id=${clientId}`;
-
-    // 7. Afficher le résultat
-    document.getElementById('client-link-text').textContent = lienClient;
-    document.getElementById('client-id-text').textContent = clientId;
-    window._lienClient = lienClient;
-    window._whatsappClient = whatsapp;
-    window._prenomClient = prenom;
-
-    const resultBox = document.getElementById('generation-result');
-    resultBox.style.display = 'block';
-    resultBox.classList.add('visible');
-    resultBox.scrollIntoView({behavior:'smooth',block:'start'});
-
-    showToast('✅ Système créé — ' + clientId);
-
-    // Mettre à jour les stats
-    chargerStats();
-
-  } catch(e) {
-    console.error('Erreur génération:', e);
-    const errBox = document.getElementById('generation-error');
-    document.getElementById('error-msg').textContent = e.message || 'Impossible de joindre le serveur. Vérifie ta connexion.';
-    errBox.style.display = 'block';
-    errBox.classList.add('visible');
-    errBox.scrollIntoView({behavior:'smooth',block:'start'});
-    showToast('Erreur — ' + e.message, 'error');
-  }
-
-  btn.innerHTML = '⬡ Générer le Système Client';
-  btn.disabled = false;
+function afficherErreur(msg){
+  document.getElementById('err-msg').textContent=msg;
+  var box=document.getElementById('res-err');
+  box.style.display='block';
+  box.classList.add('visible');
+  box.scrollIntoView({behavior:'smooth',block:'start'});
+  toast(msg,'err');
 }
 
-// ══════════════════════════════════════════════
-// COPIER LE LIEN
-// ══════════════════════════════════════════════
-function copierLien() {
-  const lien = window._lienClient;
-  if (!lien) return;
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(lien).then(() => showToast('Lien copié !'));
-  } else {
-    const el = document.createElement('textarea');
-    el.value = lien;
-    document.body.appendChild(el);
-    el.select();
-    document.execCommand('copy');
-    document.body.removeChild(el);
-    showToast('Lien copié !');
-  }
+function copier(){
+  if(!_lien)return;
+  if(navigator.clipboard){navigator.clipboard.writeText(_lien).then(function(){toast('Lien copié !');})}
+  else{var t=document.createElement('textarea');t.value=_lien;document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);toast('Copié !');}
 }
 
-function ouvrirWhatsApp() {
-  const lien = window._lienClient;
-  const tel = window._whatsappClient || '';
-  const prenom = window._prenomClient || 'ton client';
-  const msg = encodeURIComponent(`Bonjour ${prenom} 👋\n\nTon assistant personnel est prêt ! Il est configuré spécialement pour toi.\n\n🔗 Accède ici : ${lien}\n\nInstalle-le sur ton téléphone pour l'avoir toujours disponible. N'hésite pas si tu as des questions 🙏`);
-  const url = tel ? `https://wa.me/${tel.replace(/\D/g,'')}?text=${msg}` : `https://wa.me/?text=${msg}`;
-  window.open(url, '_blank');
+function ouvrirWA(){
+  if(!_lien)return;
+  var msg='Bonjour '+_prenom+' 👋\n\nTon assistant personnel est prêt !\n\n🔗 '+_lien+'\n\nInstalle-le sur ton téléphone (bouton "Ajouter à l\'écran d\'accueil") 🙏';
+  var tel=_wa.replace(/\D/g,'');
+  var url=tel?'https://wa.me/'+tel+'?text='+encodeURIComponent(msg):'https://wa.me/?text='+encodeURIComponent(msg);
+  window.open(url,'_blank');
 }
 
-function nouveauClient() {
-  document.getElementById('f-prenom').value = '';
-  document.getElementById('f-secteur').value = '';
-  document.getElementById('f-produit').value = '';
-  document.getElementById('f-reve').value = '';
-  document.getElementById('f-blocages').value = '';
-  document.getElementById('f-email').value = '';
-  document.getElementById('f-whatsapp').value = '';
-  document.getElementById('analyse-result').style.display = 'none';
-  document.getElementById('btn-generer').style.display = 'none';
-  document.getElementById('generation-result').style.display = 'none';
-  document.getElementById('generation-error').style.display = 'none';
+function resetForm(){
+  ['f-prenom','f-activite','f-priorite','f-objectif','f-email','f-wa'].forEach(function(id){document.getElementById(id).value='';});
+  document.getElementById('res-ok').style.display='none';
+  document.getElementById('res-err').style.display='none';
   window.scrollTo(0,0);
-  showToast('Formulaire réinitialisé');
+  toast('Formulaire réinitialisé');
 }
 
-// ══════════════════════════════════════════════
-// CHARGER LES CLIENTS (onglet ASSISTANTS)
-// ══════════════════════════════════════════════
-async function chargerClients() {
-  document.getElementById('clients-loading').style.display = 'block';
-  document.getElementById('clients-list').innerHTML = '';
-  document.getElementById('clients-empty').style.display = 'none';
+// ══════════════════════════════════════════
+// CHARGER LES CLIENTS
+// ══════════════════════════════════════════
+function chargerClients(){
+  var z=document.getElementById('clients-zone');
+  z.innerHTML='<div class="empty-state"><div class="empty-text">Chargement...</div></div>';
 
-  try {
-    const resp = await fetch(`${CONFIG.APPS_SCRIPT_URL}?action=listerAssistants`);
-    const data = await resp.json();
-
-    document.getElementById('clients-loading').style.display = 'none';
-
-    if (!data.clients || data.clients.length === 0) {
-      document.getElementById('clients-empty').style.display = 'block';
-      return;
-    }
-
-    const list = document.getElementById('clients-list');
-    data.clients.forEach(c => {
-      const initiale = (c.prenom || '?')[0].toUpperCase();
-      const el = document.createElement('div');
-      el.className = 'client-item';
-      el.innerHTML = `
-        <div class="client-left">
-          <div class="client-avatar">${initiale}</div>
-          <div>
-            <div class="client-name">${c.prenom || '—'}</div>
-            <div class="client-meta">${c.secteur || ''} · ${c.pays || ''}</div>
-          </div>
-        </div>
-        <div class="client-right">
-          <span class="badge badge-green">${c.statut || 'Actif'}</span>
-          <span style="font-size:11px;color:var(--txt3);">${c.id || ''}</span>
-        </div>
-      `;
-      el.onclick = () => voirClient(c);
-      list.appendChild(el);
-    });
-
-    document.getElementById('stat-clients').textContent = data.clients.length;
-
-  } catch(e) {
-    document.getElementById('clients-loading').style.display = 'none';
-    document.getElementById('clients-list').innerHTML = `<div class="empty-state"><div class="empty-icon">⚠️</div><div class="empty-text">Impossible de charger les clients.<br>${e.message}</div></div>`;
-  }
+  // Le script n'a pas listerAssistants — on affiche un message d'info
+  // À ajouter dans Apps Script : if(action==="listerAssistants") return listerAssistants();
+  z.innerHTML='<div class="empty-state"><div class="empty-icon">👥</div><div class="empty-text">Pour voir tes clients, ouvre directement le MasterSheet Google.<br><br>La fonction "listerAssistants" sera ajoutée au prochain déploiement Apps Script.</div></div>';
+  // Note : voir README pour ajouter cette fonction au script
 }
 
-function voirClient(c) {
-  const lien = `${CONFIG.CLIENT_BASE_URL}?id=${c.id}`;
-  const msg = `Client : ${c.prenom}\nID : ${c.id}\n\nLien assistant :\n${lien}`;
-  alert(msg);
+// ══════════════════════════════════════════
+// BROADCAST — écrit dans onglet BROADCAST via Apps Script
+// Le script lit le broadcast côté client via getBroadcast()
+// On passe par un appel manuel pour l'instant (pas de doPost sans CORS)
+// ══════════════════════════════════════════
+function envoyerBroadcast(){
+  var titre = document.getElementById('bc-titre').value.trim();
+  var msg   = document.getElementById('bc-msg').value.trim();
+  if(!titre||!msg){toast('Titre et message requis','err');return;}
+
+  // Le broadcast se fait en ajoutant manuellement dans le Sheet BROADCAST
+  // Colonne A: date, B: message (titre + contenu), C: "actif", D: "tous"
+  var txt = titre + '\n\n' + msg;
+
+  // Ouvrir le sheet directement
+  var sheetUrl = 'https://docs.google.com/spreadsheets/d/1zhk_-DvR7cs4QmVK9ftsL-XETr1qjsW9RUfNr1bCe9c/edit#gid=0';
+
+  document.getElementById('bc-result').style.display='block';
+  document.getElementById('bc-result-msg').innerHTML =
+    'Le broadcast se configure directement dans le MasterSheet.<br><br>'+
+    '<strong>1.</strong> Ouvre l\'onglet <strong>BROADCAST</strong><br>'+
+    '<strong>2.</strong> Ajoute une ligne : date | <em>'+titre+' — '+msg.substring(0,40)+'...</em> | actif | tous<br>'+
+    '<strong>3.</strong> Les clients verront la bannière à leur prochaine ouverture.<br><br>'+
+    '<a href="'+sheetUrl+'" target="_blank" style="color:var(--or)">→ Ouvrir le MasterSheet</a>';
+  toast('Instructions affichées');
 }
-
-// ══════════════════════════════════════════════
-// BROADCAST
-// ══════════════════════════════════════════════
-function previewBroadcast() {
-  const titre = document.getElementById('bc-titre').value.trim() || 'Message sans titre';
-  const contenu = document.getElementById('bc-contenu').value.trim() || '...';
-  const cat = document.getElementById('bc-categorie').value;
-  document.getElementById('bc-preview').innerHTML = `<strong>${cat} — ${titre}</strong><br><br>${contenu}`;
-}
-
-async function envoyerBroadcast() {
-  const titre = document.getElementById('bc-titre').value.trim();
-  const contenu = document.getElementById('bc-contenu').value.trim();
-  const categorie = document.getElementById('bc-categorie').value;
-
-  if (!titre || !contenu) {
-    showToast('Titre et contenu requis', 'error');
-    return;
-  }
-
-  const btn = document.getElementById('btn-broadcast');
-  btn.innerHTML = '<span class="loading-spinner"></span>Envoi en cours...';
-  btn.disabled = true;
-
-  try {
-    const resp = await fetch(CONFIG.APPS_SCRIPT_URL, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        action: 'envoyerBroadcast',
-        titre, contenu, categorie,
-        date: new Date().toISOString()
-      })
-    });
-    const data = await resp.json();
-
-    const rb = document.getElementById('broadcast-result');
-    rb.style.display = 'block';
-    document.getElementById('broadcast-result-msg').textContent =
-      data.success ? `Message envoyé à ${data.nbClients || '?'} client(s).` : (data.error || 'Erreur envoi');
-    showToast(data.success ? '✅ Broadcast envoyé !' : 'Erreur', data.success ? 'success' : 'error');
-
-    if (data.success) {
-      document.getElementById('stat-broadcast').textContent = (parseInt(document.getElementById('stat-broadcast').textContent)||0)+1;
-    }
-  } catch(e) {
-    showToast('Erreur réseau', 'error');
-  }
-
-  btn.innerHTML = '📢 Envoyer à tous les clients';
-  btn.disabled = false;
-}
-
-// ══════════════════════════════════════════════
-// STATS ACCUEIL
-// ══════════════════════════════════════════════
-async function chargerStats() {
-  try {
-    const resp = await fetch(`${CONFIG.APPS_SCRIPT_URL}?action=getStats`);
-    const data = await resp.json();
-    if (data.clients !== undefined) document.getElementById('stat-clients').textContent = data.clients;
-    if (data.conversations !== undefined) document.getElementById('stat-conv').textContent = data.conversations;
-    if (data.broadcasts !== undefined) document.getElementById('stat-broadcast').textContent = data.broadcasts;
-  } catch(e) {
-    // Silencieux
-  }
-}
-chargerStats();
 </script>
 </body>
 </html>
