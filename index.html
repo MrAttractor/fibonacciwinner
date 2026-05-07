@@ -5,558 +5,888 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Attractor Assists">
+<meta name="apple-mobile-web-app-title" content="Dashboard ATTRACTOR">
 <meta name="theme-color" content="#06060E">
-<title>Attractor Assists — Dashboard</title>
+<title>Attractor Assists — Dashboard Mac Arthur</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--or:#C9A84C;--or2:#E8C96A;--bg:#06060E;--s1:#141428;--s2:#1A1A32;--s3:#20203C;--txt:#F2EEE6;--txt2:rgba(242,238,230,0.5);--txt3:rgba(242,238,230,0.22);--txt4:rgba(242,238,230,0.08);--green:#3DC98A;--red:#E85858;--amber:#F5A840;--r:18px;--r2:12px;}
+:root{
+  --or:#C9A84C;--or2:#E8C96A;--or3:rgba(201,168,76,0.12);
+  --bg:#06060E;--s1:#0E0E1C;--s2:#141428;--s3:#1A1A32;--s4:#20203C;
+  --txt:#F2EEE6;--txt2:rgba(242,238,230,0.55);--txt3:rgba(242,238,230,0.22);--txt4:rgba(242,238,230,0.07);
+  --green:#3DC98A;--green2:rgba(61,201,138,0.12);
+  --red:#E85858;--red2:rgba(232,88,88,0.12);
+  --amber:#F5A840;--amber2:rgba(245,168,64,0.12);
+  --blue:#5B8BF5;--blue2:rgba(91,139,245,0.12);
+  --r:20px;--r2:12px;--r3:8px;
+}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-html,body{width:100%;overflow-x:hidden;background:var(--bg);color:var(--txt);font-family:'Outfit',sans-serif;}
-body{min-height:100vh;padding-bottom:100px;position:relative;}
-.screen{display:none;animation:fadeUp 0.3s ease;}
+html,body{width:100%;background:var(--bg);color:var(--txt);font-family:'Outfit',sans-serif;font-size:15px;}
+body{min-height:100vh;padding-bottom:110px;overflow-x:hidden;}
+
+/* NOISE OVERLAY */
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:0.5;}
+
+/* SCREENS */
+.screen{display:none;animation:fadeUp 0.3s ease;position:relative;z-index:1;}
 .screen.active{display:block;}
-@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-.header{padding:52px 24px 16px;display:flex;align-items:center;justify-content:space-between;}
-.h-logo{display:flex;align-items:center;gap:10px;}
-.h-mark{width:32px;height:32px;background:linear-gradient(135deg,var(--or),var(--or2));border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-weight:700;font-size:11px;color:#06060E;}
-.h-name{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:700;}
-.h-name span{color:var(--or);}
-.greeting{padding:4px 24px 24px;}
-.g-time{font-size:12px;color:var(--or);letter-spacing:1.5px;text-transform:uppercase;font-weight:600;margin-bottom:4px;}
-.g-name{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:700;line-height:1.1;}
-.kpi-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 20px;margin-bottom:20px;}
-.kpi-card{background:var(--s1);border:1px solid rgba(255,255,255,0.05);border-radius:var(--r2);padding:14px;text-align:center;}
-.kc-label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--txt3);font-weight:600;margin-bottom:6px;}
-.kc-val{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;}
-.kc-val.gold{color:var(--or);}
-.kc-sub{font-size:11px;color:var(--txt3);margin-top:2px;}
-.fib-chart{background:var(--s1);border:1px solid rgba(255,255,255,0.05);border-radius:var(--r);padding:18px;margin:0 20px 20px;}
-.fc-title{font-size:11px;letter-spacing:1.8px;text-transform:uppercase;color:var(--or);font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
-.fc-mois{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px;}
-.fc-m{background:var(--s2);border:1px solid rgba(255,255,255,0.04);border-radius:8px;padding:8px;text-align:center;transition:all 0.3s;}
-.fc-m.done{background:rgba(61,201,138,0.08);border-color:rgba(61,201,138,0.2);}
-.fc-m.current{background:rgba(201,168,76,0.12);border-color:rgba(201,168,76,0.3);box-shadow:0 0 12px rgba(201,168,76,0.15);transform:scale(1.05);}
-.fcm-label{font-size:9px;color:var(--txt3);font-weight:600;letter-spacing:0.8px;}
-.fcm-val{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:700;margin-top:2px;}
-.fc-m.current .fcm-val{color:var(--or);}
-.fc-m.done .fcm-val{color:var(--green);}
-.fc-progress{height:6px;background:var(--s3);border-radius:100px;overflow:hidden;margin-top:10px;}
-.fc-bar{height:100%;background:linear-gradient(90deg,var(--or),var(--or2));border-radius:100px;transition:width 0.6s ease;}
-.btn-fib{width:100%;background:var(--s2);border:1px solid rgba(255,255,255,0.1);border-radius:var(--r2);padding:10px;color:var(--txt2);font-size:12px;font-weight:600;cursor:pointer;margin-top:12px;transition:all 0.2s;}
-.btn-fib:active{transform:scale(0.98);background:rgba(201,168,76,0.1);color:var(--or);}
-.section{padding:0 20px;margin-bottom:20px;}
-.s-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--txt3);font-weight:600;margin-bottom:12px;}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.q-card{background:var(--s1);border:1px solid rgba(255,255,255,0.05);border-radius:var(--r2);padding:16px 14px;cursor:pointer;transition:all 0.2s;position:relative;}
-.q-card:active{transform:scale(0.97);}
-.q-card.featured{grid-column:span 2;background:linear-gradient(135deg,rgba(201,168,76,0.1),rgba(201,168,76,0.03));border-color:rgba(201,168,76,0.18);}
-.qc-icon{font-size:22px;margin-bottom:10px;}
-.qc-title{font-weight:600;font-size:14px;margin-bottom:2px;}
-.qc-sub{font-size:12px;color:var(--txt3);}
-.qc-badge{position:absolute;top:10px;right:10px;font-size:10px;font-weight:700;padding:2px 7px;border-radius:100px;background:var(--or);color:#06060E;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* HEADER */
+.header{padding:52px 20px 12px;display:flex;align-items:center;justify-content:space-between;}
+.h-brand{display:flex;align-items:center;gap:10px;}
+.h-icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--or),var(--or2));display:flex;align-items:center;justify-content:center;font-size:16px;}
+.h-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:700;color:var(--txt);line-height:1;}
+.h-sub{font-size:11px;color:var(--txt2);margin-top:2px;letter-spacing:0.5px;}
+.h-date{font-size:12px;color:var(--txt2);text-align:right;}
+
+/* SECTION TITLE */
+.sec-title{padding:0 20px;margin-bottom:12px;}
+.sec-title h2{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:var(--txt);}
+.sec-title p{font-size:13px;color:var(--txt2);margin-top:3px;}
+
+/* CARDS */
+.card{background:var(--s2);border:1px solid var(--txt4);border-radius:var(--r);padding:20px;margin:0 20px 14px;}
+.card-title{font-size:12px;font-weight:600;letter-spacing:1px;color:var(--txt2);text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:6px;}
+.card-title span{width:6px;height:6px;border-radius:50%;background:var(--or);display:inline-block;}
+
+/* STATS ROW */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 20px 14px;}
+.stat-box{background:var(--s2);border:1px solid var(--txt4);border-radius:var(--r2);padding:16px 12px;text-align:center;}
+.stat-num{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;color:var(--or);line-height:1;}
+.stat-label{font-size:11px;color:var(--txt2);margin-top:4px;}
+
+/* FORM ELEMENTS */
+.field-group{margin-bottom:14px;}
+.field-label{font-size:12px;font-weight:600;color:var(--txt2);letter-spacing:0.5px;margin-bottom:6px;display:block;}
+.field-input{width:100%;background:var(--s3);border:1px solid var(--txt3);border-radius:var(--r3);padding:12px 14px;color:var(--txt);font-family:'Outfit',sans-serif;font-size:14px;outline:none;transition:border-color 0.2s;}
+.field-input:focus{border-color:var(--or);}
+.field-input::placeholder{color:var(--txt3);}
+textarea.field-input{min-height:80px;resize:vertical;line-height:1.5;}
+select.field-input{-webkit-appearance:none;appearance:none;cursor:pointer;}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+
+/* TOGGLE GROUP */
+.toggle-group{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;}
+.toggle-btn{padding:8px 14px;border-radius:30px;border:1px solid var(--txt3);background:transparent;color:var(--txt2);font-family:'Outfit',sans-serif;font-size:13px;cursor:pointer;transition:all 0.2s;}
+.toggle-btn.active{background:var(--or3);border-color:var(--or);color:var(--or);}
+
+/* BUTTONS */
+.btn{width:100%;padding:16px;border-radius:var(--r);font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;cursor:pointer;border:none;transition:all 0.2s;letter-spacing:0.3px;}
+.btn-primary{background:linear-gradient(135deg,var(--or),var(--or2));color:#06060E;}
+.btn-primary:active{opacity:0.85;transform:scale(0.98);}
+.btn-outline{background:transparent;border:1px solid var(--or);color:var(--or);}
+.btn-outline:active{background:var(--or3);}
+.btn-ghost{background:transparent;border:1px solid var(--txt3);color:var(--txt2);}
+.btn-danger{background:var(--red2);border:1px solid var(--red);color:var(--red);}
+.btn-sm{width:auto;padding:10px 18px;font-size:13px;}
+
+/* RESULT BOX */
+.result-box{background:var(--green2);border:1px solid var(--green);border-radius:var(--r2);padding:16px;display:none;}
+.result-box.visible{display:block;animation:fadeUp 0.3s ease;}
+.result-box.error{background:var(--red2);border-color:var(--red);}
+.result-box.warning{background:var(--amber2);border-color:var(--amber);}
+.result-title{font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;}
+.result-box .result-title{color:var(--green);}
+.result-box.error .result-title{color:var(--red);}
+.result-box.warning .result-title{color:var(--amber);}
+
+/* LINK COPY BOX */
+.link-copy-box{background:var(--s3);border:1px solid var(--txt3);border-radius:var(--r3);padding:12px 14px;display:flex;align-items:center;gap:10px;margin-top:10px;}
+.link-copy-box span{flex:1;font-size:13px;color:var(--or);word-break:break-all;font-family:monospace;}
+.copy-btn{flex-shrink:0;padding:8px 14px;background:var(--or);border:none;border-radius:var(--r3);font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;color:#06060E;cursor:pointer;}
+.copy-btn:active{opacity:0.8;}
+
+/* QUALIFICATION SCORE */
+.score-bar-container{margin-top:12px;}
+.score-bar-label{display:flex;justify-content:space-between;font-size:12px;color:var(--txt2);margin-bottom:6px;}
+.score-bar-track{height:6px;background:var(--txt4);border-radius:3px;overflow:hidden;}
+.score-bar-fill{height:100%;border-radius:3px;transition:width 1s ease;background:linear-gradient(90deg,var(--or),var(--or2));}
+
+/* BADGE */
+.badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:0.5px;}
+.badge-green{background:var(--green2);color:var(--green);}
+.badge-amber{background:var(--amber2);color:var(--amber);}
+.badge-red{background:var(--red2);color:var(--red);}
+.badge-blue{background:var(--blue2);color:var(--blue);}
+.badge-or{background:var(--or3);color:var(--or);}
+.badge::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor;}
+
+/* CLIENT LIST */
+.client-item{background:var(--s2);border:1px solid var(--txt4);border-radius:var(--r2);padding:16px;margin:0 20px 10px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:border-color 0.2s;}
+.client-item:active{border-color:var(--or);}
+.client-left{display:flex;align-items:center;gap:12px;}
+.client-avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--or3),var(--s4));border:1.5px solid var(--or);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:700;color:var(--or);}
+.client-name{font-size:15px;font-weight:600;color:var(--txt);}
+.client-meta{font-size:12px;color:var(--txt2);margin-top:2px;}
+.client-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;}
+
+/* BROADCAST */
+.broadcast-preview{background:var(--s3);border-radius:var(--r3);padding:12px;margin-top:8px;font-size:13px;color:var(--txt2);line-height:1.6;font-style:italic;}
+
+/* DIVIDER */
+.divider{height:1px;background:var(--txt4);margin:16px 0;}
+
+/* PROGRESS RING */
+.progress-ring{position:relative;width:70px;height:70px;margin:0 auto;}
+.progress-ring svg{transform:rotate(-90deg);}
+.progress-ring .track{stroke:var(--txt4);fill:none;}
+.progress-ring .fill{stroke:var(--or);fill:none;stroke-linecap:round;transition:stroke-dashoffset 1s ease;}
+.progress-ring .label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:700;color:var(--or);}
+
+/* BOTTOM NAV */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(14,14,28,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--txt4);padding:10px 0 24px;display:flex;justify-content:space-around;align-items:center;z-index:100;}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:4px 16px;border-radius:var(--r3);transition:all 0.2s;flex:1;}
+.nav-item.active .nav-icon{color:var(--or);}
+.nav-item.active .nav-label{color:var(--or);}
+.nav-icon{font-size:20px;transition:transform 0.2s;color:var(--txt3);}
+.nav-item.active .nav-icon{transform:scale(1.1);}
+.nav-label{font-size:10px;font-weight:500;color:var(--txt3);letter-spacing:0.3px;}
+
+/* LOADING */
+.loading-spinner{display:inline-block;width:18px;height:18px;border:2px solid rgba(6,6,14,0.3);border-radius:50%;border-top-color:#06060E;animation:spin 0.7s linear infinite;vertical-align:middle;margin-right:6px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:40px 20px;}
+.empty-icon{font-size:42px;margin-bottom:12px;opacity:0.4;}
+.empty-text{color:var(--txt2);font-size:14px;line-height:1.6;}
 
 /* MODAL */
-.modal{position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);z-index:200;display:none;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto;}
-.modal.show{display:flex;}
-.modal-content{background:var(--s1);border:1px solid rgba(255,255,255,0.08);border-radius:var(--r);max-width:380px;width:100%;padding:24px;margin:auto;}
-.mc-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
-.mc-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:var(--or);}
-.mc-close{background:none;border:none;color:var(--txt3);font-size:26px;cursor:pointer;}
-.form-block{background:var(--s2);border:1px solid rgba(255,255,255,0.05);border-radius:var(--r2);padding:18px;margin-bottom:16px;}
-.fb-title{font-weight:700;font-size:15px;color:var(--or);margin-bottom:12px;}
-.form-field{margin-bottom:14px;}
-.ff-label{font-size:12px;color:var(--txt2);font-weight:600;margin-bottom:6px;display:block;}
-.ff-input{width:100%;background:var(--bg);border:1px solid rgba(255,255,255,0.08);border-radius:var(--r2);padding:12px 14px;color:var(--txt);font-family:'Outfit',sans-serif;font-size:14px;}
-.ff-input:focus{outline:none;border-color:rgba(201,168,76,0.3);}
-.btn-primary{width:100%;background:linear-gradient(135deg,var(--or),var(--or2));color:#06060E;border:none;border-radius:var(--r2);padding:16px;font-weight:700;font-size:15px;cursor:pointer;margin-top:16px;font-family:'Outfit',sans-serif;}
-.btn-primary:active{transform:scale(0.97);}
-.btn-secondary{width:100%;background:var(--s2);border:1px solid rgba(255,255,255,0.1);border-radius:var(--r2);padding:14px;font-weight:600;font-size:14px;cursor:pointer;margin-top:10px;color:var(--txt2);font-family:'Outfit',sans-serif;}
-.btn-secondary:active{transform:scale(0.97);}
+.modal-overlay{position:fixed;inset:0;background:rgba(6,6,14,0.85);backdrop-filter:blur(8px);z-index:200;display:none;align-items:flex-end;}
+.modal-overlay.open{display:flex;animation:fadeIn 0.2s ease;}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal-sheet{background:var(--s2);border:1px solid var(--txt4);border-radius:var(--r) var(--r) 0 0;padding:24px 20px 40px;width:100%;max-height:85vh;overflow-y:auto;animation:slideUp 0.3s ease;}
+@keyframes slideUp{from{transform:translateY(40px)}to{transform:translateY(0)}}
+.modal-handle{width:40px;height:4px;background:var(--txt3);border-radius:2px;margin:0 auto 20px;}
+.modal-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;margin-bottom:16px;}
 
-/* ✅ LIEN CLIENT */
-.lien-client-box{background:linear-gradient(135deg,rgba(61,201,138,0.1),rgba(61,201,138,0.03));border:1px solid rgba(61,201,138,0.3);border-radius:var(--r2);padding:18px;margin-top:16px;}
-.lcb-label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--green);font-weight:700;margin-bottom:8px;}
-.lcb-id{font-size:11px;color:var(--txt3);margin-bottom:10px;}
-.lcb-url{background:var(--bg);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--or);word-break:break-all;margin-bottom:12px;font-family:monospace;}
-.btn-copy{width:100%;background:linear-gradient(135deg,var(--green),#2aa96d);color:#06060E;border:none;border-radius:10px;padding:12px;font-weight:700;font-size:14px;cursor:pointer;font-family:'Outfit',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;}
-.btn-copy:active{transform:scale(0.97);}
-.btn-wa{width:100%;background:linear-gradient(135deg,#25D366,#128C7E);color:white;border:none;border-radius:10px;padding:12px;font-weight:700;font-size:14px;cursor:pointer;font-family:'Outfit',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:8px;}
-.btn-wa:active{transform:scale(0.97);}
+/* TOAST */
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--s3);border:1px solid var(--txt3);border-radius:30px;padding:10px 20px;font-size:13px;font-weight:500;z-index:300;opacity:0;transition:opacity 0.3s;white-space:nowrap;}
+.toast.show{opacity:1;}
+.toast.success{border-color:var(--green);color:var(--green);}
+.toast.error{border-color:var(--red);color:var(--red);}
 
-/* SPINNER */
-.spinner{display:none;flex-direction:column;align-items:center;gap:14px;padding:24px 0;}
-.spinner.show{display:flex;}
-.spin-ring{width:44px;height:44px;border:3px solid rgba(201,168,76,0.2);border-top-color:var(--or);border-radius:50%;animation:spin 0.8s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg)}}
-.spin-text{font-size:13px;color:var(--txt3);}
-
-.nav{position:fixed;bottom:0;left:0;right:0;background:var(--bg);border-top:1px solid var(--txt4);padding:8px 12px 22px;display:flex;justify-content:space-around;z-index:100;}
-.nav-item{background:none;border:none;color:var(--txt3);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 10px;border-radius:var(--r2);font-family:'Outfit',sans-serif;}
-.nav-item.active{color:var(--or);background:rgba(201,168,76,0.1);}
-.ni-icon{font-size:20px;}
-.ni-label{font-size:10px;font-weight:600;}
-.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:var(--s1);border:1px solid rgba(255,255,255,0.1);padding:14px 20px;border-radius:var(--r2);font-size:13px;z-index:400;white-space:nowrap;}
+/* SPACING UTILITY */
+.px{padding:0 20px;}
+.mb8{margin-bottom:8px;}
+.mb12{margin-bottom:12px;}
+.mb16{margin-bottom:16px;}
+.gap8{display:flex;flex-direction:column;gap:8px;}
 </style>
 </head>
 <body>
 
-<div class="screen active" id="screen-dashboard">
+<!-- ═══════════════════════════════════════════
+     SCREEN 1 — HOME / TABLEAU DE BORD
+════════════════════════════════════════════ -->
+<div id="screen-home" class="screen active">
   <div class="header">
-    <div class="h-logo">
-      <div class="h-mark">AA</div>
-      <div class="h-name">Attractor <span>Assists</span></div>
+    <div class="h-brand">
+      <div class="h-icon">⬡</div>
+      <div>
+        <div class="h-title">ATTRACTOR ASSISTS</div>
+        <div class="h-sub">Dashboard Mac Arthur</div>
+      </div>
     </div>
-  </div>
-  
-  <div class="greeting">
-    <div class="g-time" id="timeLabel">Bonjour</div>
-    <div class="g-name">Mac Arthur.</div>
+    <div class="h-date" id="home-date"></div>
   </div>
 
-  <div class="kpi-row">
-    <div class="kpi-card">
-      <div class="kc-label">Mois actuel</div>
-      <div class="kc-val gold" id="moisActuel">M0</div>
-      <div class="kc-sub" id="phraseDrive">Préparer le terrain</div>
+  <div class="stats-row">
+    <div class="stat-box">
+      <div class="stat-num" id="stat-clients">—</div>
+      <div class="stat-label">Clients actifs</div>
     </div>
-    <div class="kpi-card">
-      <div class="kc-label">Clients acquis</div>
-      <div class="kc-val gold" id="clientsAcquis">0</div>
-      <div class="kc-sub">/ <span id="clientsObjectif">1</span> ce mois</div>
+    <div class="stat-box">
+      <div class="stat-num" id="stat-conv">—</div>
+      <div class="stat-label">Conversations</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num" id="stat-broadcast">—</div>
+      <div class="stat-label">Broadcasts</div>
     </div>
   </div>
 
-  <div class="fib-chart">
-    <div class="fc-title"><span>🎯</span><span id="objectifTitre">M0 → M12 — Route vers 28 clients</span></div>
-    <div class="fc-mois" id="fibMois"></div>
-    <div class="fc-progress"><div class="fc-bar" id="fibBar" style="width:0%"></div></div>
-    <button class="btn-fib" onclick="ajouterClient()">✓ Client acquis — Enregistrer</button>
+  <div class="card">
+    <div class="card-title"><span></span>Accès rapide</div>
+    <div class="gap8">
+      <button class="btn btn-primary" onclick="goScreen('screen-nouveau')">➕ Nouveau client assistant</button>
+      <button class="btn btn-outline" onclick="goScreen('screen-clients')">👥 Gérer les clients</button>
+      <button class="btn btn-ghost" onclick="goScreen('screen-broadcast')">📢 Envoyer un broadcast</button>
+    </div>
   </div>
 
-  <div class="section">
-    <div class="s-label">Actions rapides</div>
-    <div class="grid2">
-      <div class="q-card featured" onclick="ouvrirAudit()">
-        <div class="qc-icon">🎯</div>
-        <div class="qc-title">Nouveau Prospect IA</div>
-        <div class="qc-sub">Audit + Config Attractor Assists</div>
-        <div class="qc-badge">GO</div>
-      </div>
-      <div class="q-card">
-        <div class="qc-icon">👥</div>
-        <div class="qc-title">Pipeline</div>
-        <div class="qc-sub" id="pipelineCount">0 prospects</div>
-      </div>
-      <div class="q-card">
-        <div class="qc-icon">📊</div>
-        <div class="qc-title">Historique</div>
-        <div class="qc-sub" id="histoCount">0 traitements</div>
-      </div>
+  <div class="card">
+    <div class="card-title"><span></span>Système</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;">
+      <span style="font-size:13px;color:var(--txt2);">MasterSheet</span>
+      <span class="badge badge-green">Connecté</span>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;">
+      <span style="font-size:13px;color:var(--txt2);">Apps Script</span>
+      <span class="badge badge-green" id="script-status">Actif</span>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;">
+      <span style="font-size:13px;color:var(--txt2);">Clé Claude API</span>
+      <span class="badge badge-amber">Via Apps Script ✓</span>
     </div>
   </div>
 </div>
 
-<!-- MODAL AUDIT -->
-<div class="modal" id="modalAudit">
-  <div class="modal-content">
-    <div class="mc-header">
-      <div class="mc-title">🎯 Audit Prospect IA</div>
-      <button class="mc-close" onclick="fermerAudit()">×</button>
+<!-- ═══════════════════════════════════════════
+     SCREEN 2 — NOUVEAU CLIENT (AUDIT + GÉNÉRATION)
+════════════════════════════════════════════ -->
+<div id="screen-nouveau" class="screen">
+  <div class="header">
+    <div class="h-brand">
+      <button onclick="goScreen('screen-home')" style="background:none;border:none;color:var(--txt2);font-size:20px;cursor:pointer;padding:0 8px 0 0;">←</button>
+      <div>
+        <div class="h-title">Nouveau Client</div>
+        <div class="h-sub">Audit + Génération système</div>
+      </div>
     </div>
-    <form id="auditForm" onsubmit="soumettreAudit(event)">
-      <div class="form-block">
-        <div class="fb-title">1. Identité</div>
-        <div class="form-field"><label class="ff-label">Prénom *</label><input type="text" name="prenom" class="ff-input" required></div>
-        <div class="form-field"><label class="ff-label">Nom *</label><input type="text" name="nom" class="ff-input" required></div>
-        <div class="form-field"><label class="ff-label">Email *</label><input type="email" name="email" class="ff-input" required></div>
-        <div class="form-field"><label class="ff-label">Activité *</label><input type="text" name="activite" class="ff-input" placeholder="Ex: Vente de bijoux" required></div>
-        <div class="form-field"><label class="ff-label">Canal principal *</label>
-          <select name="canal" class="ff-input" required>
-            <option value="">-- Choisir --</option>
-            <option value="Boutique physique">Boutique physique</option>
-            <option value="En ligne">En ligne</option>
-            <option value="Les deux">Les deux</option>
-          </select>
-        </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span></span>Identité client</div>
+    <div class="field-group">
+      <label class="field-label">Prénom *</label>
+      <input id="f-prenom" class="field-input" type="text" placeholder="Ex: Fatima">
+    </div>
+    <div class="field-row">
+      <div class="field-group" style="margin-bottom:0;">
+        <label class="field-label">Secteur</label>
+        <input id="f-secteur" class="field-input" type="text" placeholder="Ex: E-commerce">
       </div>
-      <div class="form-block">
-        <div class="fb-title">2. Organisation actuelle</div>
-        <div class="form-field"><label class="ff-label">Comment gères-tu ton agenda ?</label>
-          <select name="agenda" class="ff-input">
-            <option value="Téléphone">Téléphone (calendrier)</option>
-            <option value="Agenda papier">Agenda papier</option>
-            <option value="Rien">Rien / Mémoire</option>
-          </select>
-        </div>
-        <div class="form-field"><label class="ff-label">Comment suis-tu tes ventes ?</label>
-          <select name="suivi_ventes" class="ff-input">
-            <option value="Tableur">Tableur (Excel/Sheets)</option>
-            <option value="Mémoire">Mémoire</option>
-            <option value="Rien">Rien du tout</option>
-          </select>
-        </div>
-        <div class="form-field"><label class="ff-label">As-tu des assistantes ?</label><input type="text" name="assistantes" class="ff-input" placeholder="Ex: Oui, 2 personnes"></div>
+      <div class="field-group" style="margin-bottom:0;">
+        <label class="field-label">Pays</label>
+        <select id="f-pays" class="field-input">
+          <option value="CI">Côte d'Ivoire</option>
+          <option value="SN">Sénégal</option>
+          <option value="CM">Cameroun</option>
+          <option value="FR">France</option>
+          <option value="BJ">Bénin</option>
+          <option value="TG">Togo</option>
+          <option value="ML">Mali</option>
+          <option value="BF">Burkina Faso</option>
+          <option value="GA">Gabon</option>
+          <option value="Autre">Autre</option>
+        </select>
       </div>
-      <div class="form-block">
-        <div class="fb-title">3. Points douloureux</div>
-        <div class="form-field"><label class="ff-label">Ce qui te prend le plus de temps inutilement ?</label><input type="text" name="perte_temps" class="ff-input" placeholder="Ex: Chercher les infos clients"></div>
-        <div class="form-field"><label class="ff-label">Ce que tu oublies régulièrement ?</label><input type="text" name="oublis" class="ff-input" placeholder="Ex: Relancer les impayés"></div>
-        <div class="form-field"><label class="ff-label">Ce qui te stresse le plus ?</label><input type="text" name="stress" class="ff-input" placeholder="Ex: Savoir où j'en suis financièrement"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span></span>Profil & Objectifs</div>
+    <div class="field-group">
+      <label class="field-label">Ce qu'il/elle vend</label>
+      <input id="f-produit" class="field-input" type="text" placeholder="Ex: Cosmétiques naturels en ligne">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Son rêve / Désir profond</label>
+      <textarea id="f-reve" class="field-input" placeholder="Ex: Quitter son emploi, vivre de son business, toucher 500k FCFA/mois..."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Ses blocages actuels</label>
+      <textarea id="f-blocages" class="field-input" placeholder="Ex: Pas de temps, ne sait pas marketer, peu de ventes..."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Email client</label>
+      <input id="f-email" class="field-input" type="email" placeholder="Ex: fatima@gmail.com">
+    </div>
+    <div class="field-group">
+      <label class="field-label">WhatsApp client</label>
+      <input id="f-whatsapp" class="field-input" type="tel" placeholder="Ex: +225 07 XX XX XX">
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span></span>Modules activés</div>
+    <div class="toggle-group" id="modules-group">
+      <button class="toggle-btn active" data-module="Marketing & Ventes">📣 Marketing</button>
+      <button class="toggle-btn active" data-module="Gestion du temps">⏱ Temps</button>
+      <button class="toggle-btn" data-module="Finance & Comptabilité">💰 Finance</button>
+      <button class="toggle-btn" data-module="Mindset & Motivation">🔥 Mindset</button>
+      <button class="toggle-btn" data-module="Réseaux sociaux">📱 Réseaux</button>
+      <button class="toggle-btn" data-module="Prospection clients">🎯 Prospection</button>
+      <button class="toggle-btn" data-module="E-commerce">🛒 E-commerce</button>
+      <button class="toggle-btn" data-module="Service client">💬 Service client</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span></span>Personnalité de l'assistant</div>
+    <div class="field-group">
+      <label class="field-label">Ton de l'assistant</label>
+      <select id="f-ton" class="field-input">
+        <option value="Coach bienveillant et direct">🤝 Coach bienveillant et direct</option>
+        <option value="Expert technique et précis">🧠 Expert technique et précis</option>
+        <option value="Motivateur énergique">⚡ Motivateur énergique</option>
+        <option value="Mentor patient et pédagogique">📚 Mentor patient et pédagogique</option>
+        <option value="Partenaire business pragmatique">💼 Partenaire business pragmatique</option>
+      </select>
+    </div>
+    <div class="field-group" style="margin-bottom:0;">
+      <label class="field-label">Langue principale</label>
+      <select id="f-langue" class="field-input">
+        <option value="Français">🇫🇷 Français</option>
+        <option value="Français et Nouchi">🇨🇮 Français et Nouchi</option>
+        <option value="Anglais">🇬🇧 Anglais</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="px mb16">
+    <button class="btn btn-primary" id="btn-analyser" onclick="analyserProspect()">
+      🔍 Analyser le prospect
+    </button>
+  </div>
+
+  <!-- RÉSULTAT ANALYSE -->
+  <div id="analyse-result" class="card" style="display:none;border-color:var(--or);">
+    <div class="card-title"><span></span>Analyse Claude</div>
+    <div id="analyse-content" style="font-size:13px;line-height:1.7;color:var(--txt2);"></div>
+    <div class="score-bar-container">
+      <div class="score-bar-label">
+        <span>Score potentiel</span>
+        <span id="score-val">—/10</span>
       </div>
-      <div class="form-block">
-        <div class="fb-title">4. Finances</div>
-        <div class="form-field"><label class="ff-label">Connais-tu ton CA mensuel ?</label>
-          <select name="ca_connaissance" class="ff-input">
-            <option value="Oui précisément">Oui, précisément</option>
-            <option value="Approximativement">Approximativement</option>
-            <option value="Non">Non</option>
-          </select>
-        </div>
-        <div class="form-field"><label class="ff-label">Objectif financier (si défini)</label><input type="text" name="objectif_finance" class="ff-input" placeholder="Ex: 500 000 FCFA/mois"></div>
+      <div class="score-bar-track">
+        <div class="score-bar-fill" id="score-fill" style="width:0%;"></div>
       </div>
-      <div class="form-block">
-        <div class="fb-title">5. Digital & réseaux</div>
-        <div class="form-field"><label class="ff-label">Vends-tu sur les réseaux ?</label><input type="text" name="reseaux" class="ff-input" placeholder="Ex: Facebook, Instagram"></div>
-        <div class="form-field"><label class="ff-label">Utilises-tu WhatsApp Business ?</label>
-          <select name="whatsapp" class="ff-input">
-            <option value="Oui">Oui</option>
-            <option value="Non">Non</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-block">
-        <div class="fb-title">6. Motivation</div>
-        <div class="form-field"><label class="ff-label">Niveau d'urgence perçu (1-5)</label>
-          <select name="urgence" class="ff-input" required>
-            <option value="1">1 - Pas urgent</option>
-            <option value="2">2 - Peut attendre</option>
-            <option value="3">3 - Important</option>
-            <option value="4">4 - Urgent</option>
-            <option value="5">5 - Critique</option>
-          </select>
-        </div>
-        <div class="form-field"><label class="ff-label">Ce que tu veux changer EN PREMIER ?</label><input type="text" name="priorite" class="ff-input" placeholder="Ex: Suivre mes finances"></div>
-      </div>
-      <button type="submit" class="btn-primary">Analyser le prospect</button>
-    </form>
+    </div>
+  </div>
+
+  <div class="px mb16">
+    <button class="btn btn-primary" id="btn-generer" onclick="genererSysteme()" style="display:none;">
+      ⬡ Générer le Système Client
+    </button>
+  </div>
+
+  <!-- RÉSULTAT GÉNÉRATION -->
+  <div id="generation-result" class="result-box" style="margin:0 20px 16px;">
+    <div class="result-title">✅ Système créé avec succès</div>
+    <div style="font-size:13px;color:var(--txt2);margin-bottom:12px;">
+      Envoie ce lien à ton client sur WhatsApp :
+    </div>
+    <div class="link-copy-box">
+      <span id="client-link-text">—</span>
+      <button class="copy-btn" onclick="copierLien()">Copier</button>
+    </div>
+    <div style="margin-top:12px;font-size:12px;color:var(--txt2);">
+      ID client : <span id="client-id-text" style="color:var(--or);font-family:monospace;"></span>
+    </div>
+    <div style="margin-top:16px;display:flex;gap:8px;">
+      <button class="btn btn-outline btn-sm" onclick="ouvrirWhatsApp()">📲 Envoyer WhatsApp</button>
+      <button class="btn btn-ghost btn-sm" onclick="nouveauClient()">+ Nouveau</button>
+    </div>
+  </div>
+
+  <div id="generation-error" class="result-box error" style="margin:0 20px 16px;">
+    <div class="result-title">⚠️ Erreur</div>
+    <div id="error-msg" style="font-size:13px;color:var(--txt2);"></div>
   </div>
 </div>
 
-<!-- MODAL RÉSULTAT -->
-<div class="modal" id="modalResultat">
-  <div class="modal-content">
-    <div class="mc-header">
-      <div class="mc-title">✅ Résultat</div>
-      <button class="mc-close" onclick="fermerResultat()">×</button>
+<!-- ═══════════════════════════════════════════
+     SCREEN 3 — CLIENTS
+════════════════════════════════════════════ -->
+<div id="screen-clients" class="screen">
+  <div class="header">
+    <div class="h-brand">
+      <button onclick="goScreen('screen-home')" style="background:none;border:none;color:var(--txt2);font-size:20px;cursor:pointer;padding:0 8px 0 0;">←</button>
+      <div>
+        <div class="h-title">Clients Actifs</div>
+        <div class="h-sub">Attractor Assists</div>
+      </div>
     </div>
-    <div id="resultatBody"></div>
+    <button class="btn btn-primary btn-sm" onclick="chargerClients()" style="padding:8px 14px;font-size:12px;">↻ Sync</button>
+  </div>
 
-    <!-- Spinner pendant génération -->
-    <div class="spinner" id="spinner">
-      <div class="spin-ring"></div>
-      <div class="spin-text">Création de l'assistant...</div>
-    </div>
-
-    <!-- ✅ Lien client généré -->
-    <div class="lien-client-box" id="lienClientBox" style="display:none">
-      <div class="lcb-label">✅ Assistant créé — Lien client</div>
-      <div class="lcb-id" id="lienClientId"></div>
-      <div class="lcb-url" id="lienClientUrl"></div>
-      <button class="btn-copy" onclick="copierLien()">📋 Copier le lien</button>
-      <button class="btn-wa" onclick="envoyerWhatsApp()">📲 Envoyer sur WhatsApp</button>
-    </div>
-
-    <button class="btn-primary" id="btnGenerer" onclick="genererSysteme()">Générer Système Client</button>
-    <button class="btn-secondary" onclick="fermerResultat()">Fermer</button>
+  <div id="clients-loading" class="empty-state" style="padding:30px 20px;">
+    <div style="font-size:13px;color:var(--txt2);">Chargement en cours...</div>
+  </div>
+  <div id="clients-list"></div>
+  <div id="clients-empty" class="empty-state" style="display:none;">
+    <div class="empty-icon">👥</div>
+    <div class="empty-text">Aucun client assistant pour l'instant.<br>Créez votre premier profil.</div>
+    <button class="btn btn-primary btn-sm" style="margin-top:16px;display:inline-block;" onclick="goScreen('screen-nouveau')">+ Nouveau client</button>
   </div>
 </div>
 
-<div class="nav">
-  <button class="nav-item active" onclick="switchScreen('dashboard')"><div class="ni-icon">🏠</div><div class="ni-label">Accueil</div></button>
-  <button class="nav-item" onclick="ouvrirAudit()"><div class="ni-icon">➕</div><div class="ni-label">Nouveau</div></button>
-  <button class="nav-item"><div class="ni-icon">📊</div><div class="ni-label">Historique</div></button>
+<!-- ═══════════════════════════════════════════
+     SCREEN 4 — BROADCAST
+════════════════════════════════════════════ -->
+<div id="screen-broadcast" class="screen">
+  <div class="header">
+    <div class="h-brand">
+      <button onclick="goScreen('screen-home')" style="background:none;border:none;color:var(--txt2);font-size:20px;cursor:pointer;padding:0 8px 0 0;">←</button>
+      <div>
+        <div class="h-title">Broadcast</div>
+        <div class="h-sub">Message à tous les clients</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span></span>Composer un broadcast</div>
+    <div class="field-group">
+      <label class="field-label">Titre du message</label>
+      <input id="bc-titre" class="field-input" type="text" placeholder="Ex: Conseil de la semaine — Marketing">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Contenu</label>
+      <textarea id="bc-contenu" class="field-input" style="min-height:120px;" placeholder="Ton message sera envoyé à tous tes clients assistants..."></textarea>
+    </div>
+    <div class="field-group" style="margin-bottom:0;">
+      <label class="field-label">Catégorie</label>
+      <select id="bc-categorie" class="field-input">
+        <option value="Conseil">💡 Conseil business</option>
+        <option value="Motivation">🔥 Motivation</option>
+        <option value="Promotion">🎁 Offre spéciale</option>
+        <option value="Alerte">⚠️ Alerte importante</option>
+        <option value="Formation">📚 Formation</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="px mb8">
+    <div class="broadcast-preview" id="bc-preview">Le message s'affichera ici à la prévisualisation...</div>
+  </div>
+
+  <div class="px gap8 mb16">
+    <button class="btn btn-outline" onclick="previewBroadcast()">👁 Prévisualiser</button>
+    <button class="btn btn-primary" id="btn-broadcast" onclick="envoyerBroadcast()">📢 Envoyer à tous les clients</button>
+  </div>
+
+  <div id="broadcast-result" class="result-box" style="margin:0 20px 16px;display:none;">
+    <div class="result-title">✅ Broadcast envoyé</div>
+    <div id="broadcast-result-msg" style="font-size:13px;color:var(--txt2);"></div>
+  </div>
 </div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="nav-item active" onclick="navTo('screen-home',this)">
+    <div class="nav-icon">⬡</div>
+    <div class="nav-label">Accueil</div>
+  </div>
+  <div class="nav-item" onclick="navTo('screen-nouveau',this)">
+    <div class="nav-icon">➕</div>
+    <div class="nav-label">Nouveau</div>
+  </div>
+  <div class="nav-item" onclick="navTo('screen-clients',this);chargerClients()">
+    <div class="nav-icon">👥</div>
+    <div class="nav-label">Clients</div>
+  </div>
+  <div class="nav-item" onclick="navTo('screen-broadcast',this)">
+    <div class="nav-icon">📢</div>
+    <div class="nav-label">Broadcast</div>
+  </div>
+</nav>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
 
 <script>
 // ══════════════════════════════════════════════
-// CONFIG
+// CONFIGURATION — À METTRE À JOUR
 // ══════════════════════════════════════════════
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzYF6P3s_0-U7Q8Q2ZK1ibENtjhuT64bPV_B2HOZ4_nTxdOPTgP5FW1HodMtOFD_RbXpA/exec';
-const BASE_URL = 'https://fibonacciwinner.netlify.app/assistant-client.html';
-
-let currentData = null;
-let lienGenere  = '';
+const CONFIG = {
+  // URL de déploiement du Apps Script SYSTEME ATTRACTOR UNIVERSEL
+  APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbxnsvcXaQERlcRKnwXzs0fMW34n68aMOB8IVmhtZZ256tNJMVRWcCjT3uJ82DjixlbJow/exec',
+  // URL de base du site client
+  CLIENT_BASE_URL: 'https://fibonacciwinner.netlify.app/assistant-client.html',
+  // Clé Claude API (utilisée via Apps Script uniquement — ne jamais mettre ici)
+  // CLAUDE_KEY est dans Apps Script côté serveur
+};
 
 // ══════════════════════════════════════════════
 // NAVIGATION
 // ══════════════════════════════════════════════
-function switchScreen(name) {
+function goScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById('screen-' + name).classList.add('active');
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
 }
 
-function ouvrirAudit()   { document.getElementById('modalAudit').classList.add('show'); }
-function fermerAudit()   { document.getElementById('modalAudit').classList.remove('show'); }
-function fermerResultat(){ document.getElementById('modalResultat').classList.remove('show'); resetResultat(); }
-
-function resetResultat() {
-  document.getElementById('lienClientBox').style.display = 'none';
-  document.getElementById('btnGenerer').style.display    = 'block';
-  document.getElementById('spinner').classList.remove('show');
-  lienGenere = '';
+function navTo(screenId, el) {
+  goScreen(screenId);
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  el.classList.add('active');
 }
 
-function showToast(msg) {
-  const t = document.createElement('div');
-  t.className = 'toast';
+// ══════════════════════════════════════════════
+// DATE
+// ══════════════════════════════════════════════
+function setDate() {
+  const d = new Date();
+  const opts = {weekday:'short',day:'numeric',month:'short'};
+  document.getElementById('home-date').textContent = d.toLocaleDateString('fr-FR', opts);
+}
+setDate();
+
+// ══════════════════════════════════════════════
+// MODULES TOGGLE
+// ══════════════════════════════════════════════
+document.querySelectorAll('.toggle-btn').forEach(btn => {
+  btn.addEventListener('click', () => btn.classList.toggle('active'));
+});
+
+function getModulesActifs() {
+  const actifs = [];
+  document.querySelectorAll('.toggle-btn.active').forEach(b => actifs.push(b.dataset.module));
+  return actifs;
+}
+
+// ══════════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════════
+function showToast(msg, type='success') {
+  const t = document.getElementById('toast');
   t.textContent = msg;
-  document.body.appendChild(t);
-  setTimeout(() => t.remove(), 3000);
+  t.className = 'toast show ' + type;
+  setTimeout(() => t.className = 'toast', 2500);
 }
 
 // ══════════════════════════════════════════════
-// ANALYSE AUDIT
+// ANALYSER LE PROSPECT (via Claude API → Apps Script)
 // ══════════════════════════════════════════════
-function soumettreAudit(event) {
-  event.preventDefault();
-  const fd = new FormData(document.getElementById('auditForm'));
+async function analyserProspect() {
+  const prenom = document.getElementById('f-prenom').value.trim();
+  const secteur = document.getElementById('f-secteur').value.trim();
+  const produit = document.getElementById('f-produit').value.trim();
+  const reve = document.getElementById('f-reve').value.trim();
+  const blocages = document.getElementById('f-blocages').value.trim();
+  const modules = getModulesActifs();
 
-  currentData = {
-    prenom          : fd.get('prenom'),
-    nom             : fd.get('nom'),
-    email           : fd.get('email'),
-    activite        : fd.get('activite'),
-    canal           : fd.get('canal'),
-    agenda          : fd.get('agenda'),
-    suivi_ventes    : fd.get('suivi_ventes'),
-    assistantes     : fd.get('assistantes'),
-    perte_temps     : fd.get('perte_temps'),
-    oublis          : fd.get('oublis'),
-    stress          : fd.get('stress'),
-    ca_connaissance : fd.get('ca_connaissance'),
-    objectif_finance: fd.get('objectif_finance'),
-    reseaux         : fd.get('reseaux'),
-    whatsapp        : fd.get('whatsapp'),
-    urgence         : fd.get('urgence'),
-    priorite        : fd.get('priorite'),
-    timestamp       : Date.now()
-  };
-
-  // Analyse automatique
-  const failles = [];
-  const modules = [];
-
-  if (currentData.agenda === 'Rien') failles.push('Aucun système de gestion du temps');
-  if (currentData.suivi_ventes === 'Rien' || currentData.suivi_ventes === 'Mémoire') failles.push('Suivi des ventes inexistant');
-  if (currentData.ca_connaissance === 'Non') failles.push('CA mensuel inconnu');
-  if (currentData.oublis) failles.push('Oublis réguliers : ' + currentData.oublis);
-
-  if (currentData.agenda === 'Rien' || currentData.perte_temps) modules.push('AGENDA & TÂCHES');
-  if (currentData.ca_connaissance !== 'Oui précisément') modules.push('TABLEAU DE BORD FINANCES');
-  if (currentData.oublis || currentData.stress) modules.push('SUIVI CLIENTS & RELANCES');
-  if (currentData.assistantes) modules.push('GESTION ASSISTANTES');
-  if (currentData.reseaux) modules.push('CONTENU RÉSEAUX SOCIAUX');
-
-  const nbMod  = modules.length;
-  const urgence = parseInt(currentData.urgence);
-  let formule = nbMod <= 2 && urgence < 4 ? 'STARTER IA (250 €)' : nbMod <= 4 || urgence >= 4 ? 'PRO IA (450 €)' : 'PREMIUM IA (800 €)';
-
-  currentData.analyse = { failles, modules, formule };
-
-  // Générer le prompt modules
-  const promptParts = [];
-  if (modules.includes('AGENDA & TÂCHES'))           promptParts.push('### MODULE AGENDA & TÂCHES\nTu aides à organiser les journées, RDV et tâches. Tu rappelles ce qui est urgent.');
-  if (modules.includes('TABLEAU DE BORD FINANCES'))  promptParts.push('### MODULE FINANCES\nTu permets de suivre le CA, les paiements et les objectifs. Tu alertes sur les impayés.');
-  if (modules.includes('SUIVI CLIENTS & RELANCES'))  promptParts.push('### MODULE CLIENTS & RELANCES\nTu aides à ne plus oublier les relances, à suivre les prospects et à convertir.');
-  if (modules.includes('GESTION ASSISTANTES'))       promptParts.push('### MODULE ASSISTANTES\nTu aides à déléguer les tâches, suivre l\'avancement et coordonner l\'équipe.');
-  if (modules.includes('CONTENU RÉSEAUX SOCIAUX'))   promptParts.push('### MODULE RÉSEAUX SOCIAUX\nTu aides à créer du contenu, planifier les publications et engager l\'audience.');
-  currentData.promptModules = promptParts.join('\n\n');
-
-  fermerAudit();
-  document.getElementById('auditForm').reset();
-
-  // Afficher résultat
-  let html = '<div style="margin-bottom:14px;font-size:15px;font-weight:700;">' + currentData.prenom + ' ' + currentData.nom + '</div>';
-  html += '<div style="margin-bottom:10px;font-size:13px;color:var(--txt2);">' + currentData.activite + ' · ' + currentData.canal + '</div>';
-
-  if (failles.length > 0) {
-    html += '<div style="margin-bottom:8px;font-size:12px;font-weight:700;color:var(--red);">🔴 Failles</div>';
-    html += '<ul style="margin:0 0 14px 16px;font-size:12px;line-height:1.7;color:var(--txt2);">';
-    failles.forEach(f => html += '<li>' + f + '</li>');
-    html += '</ul>';
+  if (!prenom || !reve) {
+    showToast('Remplis au moins le prénom et le rêve', 'error');
+    return;
   }
 
-  html += '<div style="margin-bottom:8px;font-size:12px;font-weight:700;color:var(--or);">📦 Modules</div>';
-  html += '<ul style="margin:0 0 14px 16px;font-size:12px;line-height:1.7;color:var(--txt2);">';
-  modules.forEach(m => html += '<li>' + m + '</li>');
-  html += '</ul>';
-
-  html += '<div style="margin-bottom:10px;font-size:12px;"><strong>⚡ Priorité :</strong> <span style="color:var(--txt2)">' + currentData.priorite + '</span></div>';
-  html += '<div style="background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.2);padding:12px;border-radius:10px;margin-bottom:4px;">';
-  html += '<strong style="color:var(--or);font-size:15px;">💰 ' + formule + '</strong></div>';
-
-  document.getElementById('resultatBody').innerHTML = html;
-  document.getElementById('modalResultat').classList.add('show');
-  showToast('✅ Analyse terminée');
-}
-
-// ══════════════════════════════════════════════
-// ✅ GÉNÉRER SYSTÈME CLIENT — VERSION CORRIGÉE
-// ══════════════════════════════════════════════
-async function genererSysteme() {
-  if (!currentData) { showToast('Aucun prospect'); return; }
-
-  // Générer ID unique
-  const now     = new Date();
-  const dateStr = now.getFullYear().toString() +
-                  String(now.getMonth()+1).padStart(2,'0') +
-                  String(now.getDate()).padStart(2,'0');
-  const rand    = Math.random().toString(36).substr(2,5).toUpperCase();
-  const id      = 'AA-' + currentData.prenom.replace(/\s+/g,'') + '-' + rand;
-
-  // UI — spinner
-  document.getElementById('btnGenerer').style.display = 'none';
-  document.getElementById('spinner').classList.add('show');
-
-  const payload = {
-    action      : 'createAssistant',
-    id          : id,
-    prenom      : currentData.prenom,
-    activite    : currentData.activite,
-    modules     : currentData.analyse.modules.join('|'),
-    priorite    : currentData.priorite,
-    objectif    : currentData.objectif_finance || '',
-    promptModules: currentData.promptModules,
-    url         : BASE_URL + '?id=' + id
-  };
+  const btn = document.getElementById('btn-analyser');
+  btn.innerHTML = '<span class="loading-spinner"></span>Analyse en cours...';
+  btn.disabled = true;
 
   try {
-    // ✅ Envoyer au Apps Script — créer dans onglet ASSISTANTS
-    await fetch(APPS_SCRIPT_URL, {
-  method : 'POST',
-  mode   : 'no-cors',
-  headers: { 'Content-Type': 'text/plain' },
-  body   : JSON.stringify(payload)
-});
-const data = { success: true };
+    const payload = {
+      action: 'analyserProspect',
+      prenom, secteur, produit, reve, blocages, modules
+    };
 
-    if (!data.success) throw new Error(data.error || 'Erreur serveur');
+    const resp = await fetch(CONFIG.APPS_SCRIPT_URL, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(payload)
+    });
+    const data = await resp.json();
 
-    // ✅ Générer le lien client
-    lienGenere = BASE_URL + '?id=' + id;
-
-    document.getElementById('spinner').classList.remove('show');
-    document.getElementById('lienClientId').textContent  = 'ID : ' + id;
-    document.getElementById('lienClientUrl').textContent = lienGenere;
-    document.getElementById('lienClientBox').style.display = 'block';
-
-    showToast('✅ Assistant créé pour ' + currentData.prenom);
-
-  } catch(err) {
-    document.getElementById('spinner').classList.remove('show');
-    document.getElementById('btnGenerer').style.display = 'block';
-    showToast('❌ Erreur : ' + err.message);
-    console.error(err);
+    if (data.success) {
+      const ar = document.getElementById('analyse-result');
+      ar.style.display = 'block';
+      document.getElementById('analyse-content').innerHTML = data.analyse.replace(/\n/g,'<br>');
+      const score = data.score || 7;
+      document.getElementById('score-val').textContent = score + '/10';
+      document.getElementById('score-fill').style.width = (score*10) + '%';
+      document.getElementById('btn-generer').style.display = 'block';
+      ar.scrollIntoView({behavior:'smooth',block:'start'});
+    } else {
+      showToast(data.error || 'Erreur analyse', 'error');
+    }
+  } catch(e) {
+    console.error(e);
+    // Mode dégradé — afficher bouton quand même
+    document.getElementById('analyse-result').style.display = 'block';
+    document.getElementById('analyse-content').innerHTML = '⚠️ Analyse impossible (réseau). Tu peux quand même générer le système client.';
+    document.getElementById('score-val').textContent = '—';
+    document.getElementById('score-fill').style.width = '0%';
+    document.getElementById('btn-generer').style.display = 'block';
   }
+
+  btn.innerHTML = '🔍 Analyser le prospect';
+  btn.disabled = false;
 }
 
 // ══════════════════════════════════════════════
-// COPIER & ENVOYER LE LIEN
+// GÉNÉRER SYSTÈME CLIENT — CORRECTION PRINCIPALE
+// ══════════════════════════════════════════════
+async function genererSysteme() {
+  // 1. Récupérer les données du formulaire
+  const prenom = document.getElementById('f-prenom').value.trim();
+  const secteur = document.getElementById('f-secteur').value.trim();
+  const pays = document.getElementById('f-pays').value;
+  const produit = document.getElementById('f-produit').value.trim();
+  const reve = document.getElementById('f-reve').value.trim();
+  const blocages = document.getElementById('f-blocages').value.trim();
+  const email = document.getElementById('f-email').value.trim();
+  const whatsapp = document.getElementById('f-whatsapp').value.trim();
+  const ton = document.getElementById('f-ton').value;
+  const langue = document.getElementById('f-langue').value;
+  const modules = getModulesActifs();
+
+  if (!prenom) {
+    showToast('Le prénom est obligatoire', 'error');
+    return;
+  }
+  if (!reve) {
+    showToast('Le rêve du client est obligatoire', 'error');
+    return;
+  }
+
+  // 2. Générer l'ID unique
+  const timestamp = Date.now().toString().slice(-5);
+  const prenomSlug = prenom.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,'-');
+  const clientId = `AA-${prenomSlug}-${timestamp}`;
+
+  // 3. Construire le profil complet
+  const profil = {
+    id: clientId,
+    prenom,
+    secteur,
+    pays,
+    produit,
+    reve,
+    blocages,
+    email,
+    whatsapp,
+    ton,
+    langue,
+    modules,
+    dateCreation: new Date().toISOString(),
+    statut: 'Actif'
+  };
+
+  // 4. UI — chargement
+  const btn = document.getElementById('btn-generer');
+  btn.innerHTML = '<span class="loading-spinner"></span>Création en cours...';
+  btn.disabled = true;
+
+  // Cacher les résultats précédents
+  document.getElementById('generation-result').classList.remove('visible');
+  document.getElementById('generation-result').style.display = 'none';
+  document.getElementById('generation-error').classList.remove('visible');
+  document.getElementById('generation-error').style.display = 'none';
+
+  try {
+    // 5. Envoyer vers Apps Script → onglet ASSISTANTS
+    const payload = {
+      action: 'creerAssistant',
+      profil: profil
+    };
+
+    const resp = await fetch(CONFIG.APPS_SCRIPT_URL, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(payload)
+    });
+    const data = await resp.json();
+
+    if (!data.success) {
+      throw new Error(data.error || 'Erreur Apps Script');
+    }
+
+    // 6. Construire le lien client
+    const lienClient = `${CONFIG.CLIENT_BASE_URL}?id=${clientId}`;
+
+    // 7. Afficher le résultat
+    document.getElementById('client-link-text').textContent = lienClient;
+    document.getElementById('client-id-text').textContent = clientId;
+    window._lienClient = lienClient;
+    window._whatsappClient = whatsapp;
+    window._prenomClient = prenom;
+
+    const resultBox = document.getElementById('generation-result');
+    resultBox.style.display = 'block';
+    resultBox.classList.add('visible');
+    resultBox.scrollIntoView({behavior:'smooth',block:'start'});
+
+    showToast('✅ Système créé — ' + clientId);
+
+    // Mettre à jour les stats
+    chargerStats();
+
+  } catch(e) {
+    console.error('Erreur génération:', e);
+    const errBox = document.getElementById('generation-error');
+    document.getElementById('error-msg').textContent = e.message || 'Impossible de joindre le serveur. Vérifie ta connexion.';
+    errBox.style.display = 'block';
+    errBox.classList.add('visible');
+    errBox.scrollIntoView({behavior:'smooth',block:'start'});
+    showToast('Erreur — ' + e.message, 'error');
+  }
+
+  btn.innerHTML = '⬡ Générer le Système Client';
+  btn.disabled = false;
+}
+
+// ══════════════════════════════════════════════
+// COPIER LE LIEN
 // ══════════════════════════════════════════════
 function copierLien() {
-  if (!lienGenere) return;
-  navigator.clipboard.writeText(lienGenere)
-    .then(() => showToast('✅ Lien copié !'))
-    .catch(() => {
-      // Fallback pour mobile
-      const ta = document.createElement('textarea');
-      ta.value = lienGenere;
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand('copy');
-      document.body.removeChild(ta);
-      showToast('✅ Lien copié !');
-    });
-}
-
-function envoyerWhatsApp() {
-  if (!lienGenere || !currentData) return;
-  const msg = encodeURIComponent(
-    'Bonjour ' + currentData.prenom + ' 👋\n\n' +
-    'Ton assistant personnel Attractor Assists est prêt !\n\n' +
-    '📲 Ouvre ce lien sur ton téléphone :\n' + lienGenere + '\n\n' +
-    'Ensuite clique sur "Ajouter à l\'écran d\'accueil" pour l\'installer comme une vraie app.\n\n' +
-    'Je reste disponible si tu as des questions 🙏\n— Mac Arthur'
-  );
-  window.open('https://wa.me/?text=' + msg, '_blank');
-}
-
-// ══════════════════════════════════════════════
-// HEURE
-// ══════════════════════════════════════════════
-const h = new Date().getHours();
-document.getElementById('timeLabel').textContent = h < 12 ? 'Bonjour' : h < 18 ? 'Bon après-midi' : 'Bonsoir';
-
-// ══════════════════════════════════════════════
-// FIBONACCI DASHBOARD
-// ══════════════════════════════════════════════
-const PLAN = [
-  {mois:'M0',clients:0,phrase:'Préparer le terrain'},
-  {mois:'M1',clients:1,phrase:'Décrocher le 1er client réseau'},
-  {mois:'M2',clients:3,phrase:'3 clients, 1 témoignage capturé'},
-  {mois:'M3',clients:5,phrase:'Preuve sociale solide'},
-  {mois:'M4',clients:8,phrase:'Premiers inconnus convertis'},
-  {mois:'M5',clients:12,phrase:'Pub activée, démos afterwork'},
-  {mois:'M6',clients:16,phrase:'10 récurrents = base stable'},
-  {mois:'M7',clients:20,phrase:'Bouche-à-oreille actif'},
-  {mois:'M8',clients:25,phrase:'Programme ambassadeurs live'},
-  {mois:'M9',clients:30,phrase:'18 récurrents = 1 440 € fixes'},
-  {mois:'M10',clients:35,phrase:'Récurrent couvre charges'},
-  {mois:'M11',clients:40,phrase:'Pipeline rempli, scaling'},
-  {mois:'M12',clients:28,phrase:'10 000 € — Embauche possible'}
-];
-
-let moisCourant   = parseInt(localStorage.getItem('moisActuel') || '0');
-let clientsActuels = parseInt(localStorage.getItem('clientsActuels') || '0');
-
-function afficherFibonacci() {
-  const container = document.getElementById('fibMois');
-  container.innerHTML = '';
-  PLAN.forEach((m, idx) => {
-    const div = document.createElement('div');
-    div.className = 'fc-m' + (idx < moisCourant ? ' done' : idx === moisCourant ? ' current' : '');
-    div.innerHTML = '<div class="fcm-label">' + m.mois + '</div><div class="fcm-val">' + m.clients + '</div>';
-    container.appendChild(div);
-  });
-  const objectifClients = PLAN[moisCourant].clients;
-  document.getElementById('fibBar').style.width = Math.round((moisCourant / 12) * 100) + '%';
-  document.getElementById('moisActuel').textContent    = PLAN[moisCourant].mois;
-  document.getElementById('phraseDrive').textContent   = PLAN[moisCourant].phrase;
-  document.getElementById('clientsAcquis').textContent = clientsActuels;
-  document.getElementById('clientsObjectif').textContent = objectifClients;
-}
-
-function ajouterClient() {
-  const obj = PLAN[moisCourant].clients;
-  if (clientsActuels >= obj && moisCourant < 12) {
-    if (confirm('Objectif ' + obj + ' clients atteint ! Passer au mois suivant ?')) {
-      moisCourant++;
-      localStorage.setItem('moisActuel', moisCourant);
-      afficherFibonacci();
-      showToast('✅ Passage à ' + PLAN[moisCourant].mois);
-    }
-  } else if (moisCourant >= 12) {
-    alert('🎉 Objectif 28 clients atteint ! 10 000 € validé. Félicitations Mac Arthur.');
+  const lien = window._lienClient;
+  if (!lien) return;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(lien).then(() => showToast('Lien copié !'));
   } else {
-    clientsActuels++;
-    localStorage.setItem('clientsActuels', clientsActuels);
-    afficherFibonacci();
-    showToast('✅ Client #' + clientsActuels + ' enregistré');
+    const el = document.createElement('textarea');
+    el.value = lien;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    showToast('Lien copié !');
   }
 }
 
-afficherFibonacci();
+function ouvrirWhatsApp() {
+  const lien = window._lienClient;
+  const tel = window._whatsappClient || '';
+  const prenom = window._prenomClient || 'ton client';
+  const msg = encodeURIComponent(`Bonjour ${prenom} 👋\n\nTon assistant personnel est prêt ! Il est configuré spécialement pour toi.\n\n🔗 Accède ici : ${lien}\n\nInstalle-le sur ton téléphone pour l'avoir toujours disponible. N'hésite pas si tu as des questions 🙏`);
+  const url = tel ? `https://wa.me/${tel.replace(/\D/g,'')}?text=${msg}` : `https://wa.me/?text=${msg}`;
+  window.open(url, '_blank');
+}
+
+function nouveauClient() {
+  document.getElementById('f-prenom').value = '';
+  document.getElementById('f-secteur').value = '';
+  document.getElementById('f-produit').value = '';
+  document.getElementById('f-reve').value = '';
+  document.getElementById('f-blocages').value = '';
+  document.getElementById('f-email').value = '';
+  document.getElementById('f-whatsapp').value = '';
+  document.getElementById('analyse-result').style.display = 'none';
+  document.getElementById('btn-generer').style.display = 'none';
+  document.getElementById('generation-result').style.display = 'none';
+  document.getElementById('generation-error').style.display = 'none';
+  window.scrollTo(0,0);
+  showToast('Formulaire réinitialisé');
+}
+
+// ══════════════════════════════════════════════
+// CHARGER LES CLIENTS (onglet ASSISTANTS)
+// ══════════════════════════════════════════════
+async function chargerClients() {
+  document.getElementById('clients-loading').style.display = 'block';
+  document.getElementById('clients-list').innerHTML = '';
+  document.getElementById('clients-empty').style.display = 'none';
+
+  try {
+    const resp = await fetch(`${CONFIG.APPS_SCRIPT_URL}?action=listerAssistants`);
+    const data = await resp.json();
+
+    document.getElementById('clients-loading').style.display = 'none';
+
+    if (!data.clients || data.clients.length === 0) {
+      document.getElementById('clients-empty').style.display = 'block';
+      return;
+    }
+
+    const list = document.getElementById('clients-list');
+    data.clients.forEach(c => {
+      const initiale = (c.prenom || '?')[0].toUpperCase();
+      const el = document.createElement('div');
+      el.className = 'client-item';
+      el.innerHTML = `
+        <div class="client-left">
+          <div class="client-avatar">${initiale}</div>
+          <div>
+            <div class="client-name">${c.prenom || '—'}</div>
+            <div class="client-meta">${c.secteur || ''} · ${c.pays || ''}</div>
+          </div>
+        </div>
+        <div class="client-right">
+          <span class="badge badge-green">${c.statut || 'Actif'}</span>
+          <span style="font-size:11px;color:var(--txt3);">${c.id || ''}</span>
+        </div>
+      `;
+      el.onclick = () => voirClient(c);
+      list.appendChild(el);
+    });
+
+    document.getElementById('stat-clients').textContent = data.clients.length;
+
+  } catch(e) {
+    document.getElementById('clients-loading').style.display = 'none';
+    document.getElementById('clients-list').innerHTML = `<div class="empty-state"><div class="empty-icon">⚠️</div><div class="empty-text">Impossible de charger les clients.<br>${e.message}</div></div>`;
+  }
+}
+
+function voirClient(c) {
+  const lien = `${CONFIG.CLIENT_BASE_URL}?id=${c.id}`;
+  const msg = `Client : ${c.prenom}\nID : ${c.id}\n\nLien assistant :\n${lien}`;
+  alert(msg);
+}
+
+// ══════════════════════════════════════════════
+// BROADCAST
+// ══════════════════════════════════════════════
+function previewBroadcast() {
+  const titre = document.getElementById('bc-titre').value.trim() || 'Message sans titre';
+  const contenu = document.getElementById('bc-contenu').value.trim() || '...';
+  const cat = document.getElementById('bc-categorie').value;
+  document.getElementById('bc-preview').innerHTML = `<strong>${cat} — ${titre}</strong><br><br>${contenu}`;
+}
+
+async function envoyerBroadcast() {
+  const titre = document.getElementById('bc-titre').value.trim();
+  const contenu = document.getElementById('bc-contenu').value.trim();
+  const categorie = document.getElementById('bc-categorie').value;
+
+  if (!titre || !contenu) {
+    showToast('Titre et contenu requis', 'error');
+    return;
+  }
+
+  const btn = document.getElementById('btn-broadcast');
+  btn.innerHTML = '<span class="loading-spinner"></span>Envoi en cours...';
+  btn.disabled = true;
+
+  try {
+    const resp = await fetch(CONFIG.APPS_SCRIPT_URL, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        action: 'envoyerBroadcast',
+        titre, contenu, categorie,
+        date: new Date().toISOString()
+      })
+    });
+    const data = await resp.json();
+
+    const rb = document.getElementById('broadcast-result');
+    rb.style.display = 'block';
+    document.getElementById('broadcast-result-msg').textContent =
+      data.success ? `Message envoyé à ${data.nbClients || '?'} client(s).` : (data.error || 'Erreur envoi');
+    showToast(data.success ? '✅ Broadcast envoyé !' : 'Erreur', data.success ? 'success' : 'error');
+
+    if (data.success) {
+      document.getElementById('stat-broadcast').textContent = (parseInt(document.getElementById('stat-broadcast').textContent)||0)+1;
+    }
+  } catch(e) {
+    showToast('Erreur réseau', 'error');
+  }
+
+  btn.innerHTML = '📢 Envoyer à tous les clients';
+  btn.disabled = false;
+}
+
+// ══════════════════════════════════════════════
+// STATS ACCUEIL
+// ══════════════════════════════════════════════
+async function chargerStats() {
+  try {
+    const resp = await fetch(`${CONFIG.APPS_SCRIPT_URL}?action=getStats`);
+    const data = await resp.json();
+    if (data.clients !== undefined) document.getElementById('stat-clients').textContent = data.clients;
+    if (data.conversations !== undefined) document.getElementById('stat-conv').textContent = data.conversations;
+    if (data.broadcasts !== undefined) document.getElementById('stat-broadcast').textContent = data.broadcasts;
+  } catch(e) {
+    // Silencieux
+  }
+}
+chargerStats();
 </script>
 </body>
 </html>
