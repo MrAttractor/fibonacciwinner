@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attractor Assists — Assistant IA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            padding: 30px 0;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            color: #d4af37;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #8892ab;
+            font-size: 14px;
+        }
+
+        .chat-container {
+            background: rgba(22, 33, 62, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px;
+            min-height: 400px;
+            max-height: 600px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            border: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        .message {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .avatar.assistant {
+            background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);
+            color: #1a1a2e;
+        }
+
+        .avatar.user {
+            background: linear-gradient(135deg, #16213e 0%, #1a1a2e 100%);
+            border: 2px solid #d4af37;
+            color: #d4af37;
+        }
+
+        .message-content {
+            flex: 1;
+            background: rgba(26, 26, 46, 0.6);
+            padding: 15px 20px;
+            border-radius: 15px;
+            line-height: 1.6;
+        }
+
+        .message.user .message-content {
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .buttons-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);
+            color: #1a1a2e;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(212, 175, 55, 0.4);
+        }
+
+        .btn.secondary {
+            background: rgba(212, 175, 55, 0.1);
+            color: #d4af37;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .input-container {
+            position: relative;
+            margin-top: 15px;
+        }
+
+        .text-input {
+            width: 100%;
+            background: rgba(26, 26, 46, 0.6);
+            border: 2px solid rgba(212, 175, 55, 0.2);
+            color: #ffffff;
+            padding: 15px 20px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .text-input:focus {
+            outline: none;
+            border-color: #d4af37;
+            background: rgba(26, 26, 46, 0.8);
+        }
+
+        .text-input::placeholder {
+            color: #8892ab;
+        }
+
+        .loading {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .loading span {
+            width: 12px;
+            height: 12px;
+            background: #d4af37;
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+
+        .loading span:nth-child(1) { animation-delay: -0.32s; }
+        .loading span:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .success-message {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #22c55e;
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 24px; }
+            .chat-container { padding: 15px; max-height: 500px; }
+            .message-content { padding: 12px 15px; font-size: 14px; }
+            .btn { padding: 12px 20px; font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Attractor Assists</h1>
+            <p>Méthode ATTRACTOR • Mac Arthur Kouassi</p>
+        </div>
+
+        <div class="chat-container" id="chatContainer"></div>
+    </div>
+
+    <script>
+        // ============================================
+        // CONFIGURATION
+        // ============================================
+        const CONFIG = {
+            MASTER_SHEET_ID: '1zhk_-DvR7cs4QmVK9ftsL-XETr1qjsW9RUfNr1bCe9c',
+            APPS_SCRIPT_URL: 'https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec',
+            STORAGE_KEY: 'attractor_conversations',
+            CURRENT_CONVERSATION_KEY: 'attractor_current_conversation'
+        };
+
+        // ============================================
+        // ÉTAT DE L'APPLICATION
+        // ============================================
+        let appState = {
+            conversationId: null,
+            clientName: '',
+            currentStep: 0,
+            formData: {
+                acceptedCGV: false,
+                activity: '',
+                activityValidated: false
+            },
+            messages: []
+        };
+
+        // ============================================
+        // GESTION DU STORAGE
+        // ============================================
+        function generateConversationId() {
+            return `conv-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        }
+
+        function saveState() {
+            try {
+                // Sauvegarder l'état actuel
+                localStorage.setItem(CONFIG.CURRENT_CONVERSATION_KEY, JSON.stringify(appState));
+                
+                // Sauvegarder dans l'historique des conversations
+                const conversations = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY) || '{}');
+                conversations[appState.conversationId] = {
+                    conversationId: appState.conversationId,
+                    clientName: appState.clientName,
+                    messages: appState.messages,
+                    createdAt: appState.createdAt || new Date().toISOString(),
+                    lastMessageAt: new Date().toISOString()
+                };
+                localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(conversations));
+                
+                console.log('✅ État sauvegardé:', appState);
+            } catch (error) {
+                console.error('❌ Erreur sauvegarde:', error);
+            }
+        }
+
+        function loadState() {
+            try {
+                const saved = localStorage.getItem(CONFIG.CURRENT_CONVERSATION_KEY);
+                if (saved) {
+                    appState = JSON.parse(saved);
+                    console.log('✅ État chargé:', appState);
+                    return true;
+                }
+            } catch (error) {
+                console.error('❌ Erreur chargement:', error);
+            }
+            return false;
+        }
+
+        // ============================================
+        // GESTION DES MESSAGES
+        // ============================================
+        function addMessage(role, content, options = {}) {
+            const message = {
+                role,
+                content,
+                timestamp: new Date().toISOString(),
+                ...options
+            };
+            
+            appState.messages.push(message);
+            renderMessage(message);
+            saveState();
+            
+            // Scroll automatique
+            const container = document.getElementById('chatContainer');
+            setTimeout(() => {
+                container.scrollTop = container.scrollHeight;
+            }, 100);
+        }
+
+        function renderMessage(message) {
+            const container = document.getElementById('chatContainer');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${message.role}`;
+            
+            const avatar = document.createElement('div');
+            avatar.className = `avatar ${message.role}`;
+            avatar.textContent = message.role === 'assistant' ? 'A' : appState.clientName.charAt(0) || 'K';
+            
+            const content = document.createElement('div');
+            content.className = 'message-content';
+            content.innerHTML = message.content;
+            
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(content);
+            
+            // Ajouter les boutons si présents
+            if (message.buttons) {
+                const buttonsContainer = document.createElement('div');
+                buttonsContainer.className = 'buttons-container';
+                
+                message.buttons.forEach(btn => {
+                    const button = document.createElement('button');
+                    button.className = `btn ${btn.secondary ? 'secondary' : ''}`;
+                    button.textContent = btn.text;
+                    button.onclick = () => btn.action();
+                    buttonsContainer.appendChild(button);
+                });
+                
+                content.appendChild(buttonsContainer);
+            }
+            
+            // Ajouter l'input si présent
+            if (message.input) {
+                const inputContainer = document.createElement('div');
+                inputContainer.className = 'input-container';
+                
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.className = 'text-input';
+                input.placeholder = message.input.placeholder;
+                input.id = message.input.id;
+                
+                input.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' && input.value.trim()) {
+                        message.input.onSubmit(input.value.trim());
+                    }
+                });
+                
+                inputContainer.appendChild(input);
+                content.appendChild(inputContainer);
+                
+                // Focus automatique
+                setTimeout(() => input.focus(), 100);
+            }
+            
+            container.appendChild(messageDiv);
+        }
+
+        function showLoading() {
+            const container = document.getElementById('chatContainer');
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'loading';
+            loadingDiv.id = 'loading';
+            loadingDiv.innerHTML = '<span></span><span></span><span></span>';
+            container.appendChild(loadingDiv);
+        }
+
+        function hideLoading() {
+            const loading = document.getElementById('loading');
+            if (loading) loading.remove();
+        }
+
+        // ============================================
+        // LOGIQUE FORMULAIRE
+        // ============================================
+        function startConversation() {
+            // Initialiser ou restaurer la conversation
+            if (!loadState()) {
+                appState.conversationId = generateConversationId();
+                appState.createdAt = new Date().toISOString();
+                appState.currentStep = 0;
+                saveState();
+            }
+            
+            // Afficher les messages existants
+            appState.messages.forEach(msg => renderMessage(msg));
+            
+            // Si pas de messages, démarrer le formulaire
+            if (appState.messages.length === 0) {
+                showCGVStep();
+            } else {
+                // Reprendre là où on était
+                resumeConversation();
+            }
+        }
+
+        function resumeConversation() {
+            // Logique pour reprendre la conversation
+            if (appState.currentStep === 0 && !appState.formData.acceptedCGV) {
+                showCGVStep();
+            } else if (appState.currentStep === 1 && !appState.formData.activity) {
+                showActivityStep();
+            } else if (appState.currentStep === 2 && !appState.formData.activityValidated) {
+                showReformulationStep();
+            } else {
+                // Conversation terminée, mode chat normal
+                showChatMode();
+            }
+        }
+
+        function showCGVStep() {
+            addMessage('assistant', `
+                <p><strong>Bienvenue sur Attractor Assists !</strong></p>
+                <p>Avant de commencer, merci d'accepter nos conditions d'utilisation :</p>
+                <ul style="margin: 15px 0; padding-left: 20px;">
+                    <li>Vos données sont sécurisées et confidentielles</li>
+                    <li>L'assistant est un outil d'aide, pas de remplacement</li>
+                    <li>Mac Arthur reste le seul décisionnaire final</li>
+                </ul>
+            `, {
+                buttons: [{
+                    text: "J'accepte",
+                    action: () => handleCGVAccepted()
+                }]
+            });
+        }
+
+        function handleCGVAccepted() {
+            appState.formData.acceptedCGV = true;
+            appState.currentStep = 1; // ✅ FIX BUG 1: Avancer explicitement
+            saveState();
+            
+            addMessage('user', "J'accepte");
+            
+            setTimeout(() => {
+                addMessage('assistant', "Parfait ! Maintenant, aide-moi à te connaître.");
+                setTimeout(() => showActivityStep(), 500);
+            }, 300);
+        }
+
+        function showActivityStep() {
+            addMessage('assistant', `
+                <p><strong>Quelle est ton activité exactement ?</strong></p>
+                <p style="margin-top: 10px; color: #8892ab; font-size: 14px;">(Exemple : Restaurant, Coach, E-commerce, Consultant, etc.)</p>
+            `, {
+                input: {
+                    id: 'activityInput',
+                    placeholder: 'Ex : Je tiens un restaurant',
+                    onSubmit: (value) => handleActivitySubmitted(value)
+                }
+            });
+        }
+
+        function handleActivitySubmitted(activity) {
+            appState.formData.activity = activity;
+            appState.currentStep = 2; // ✅ FIX BUG 1: Avancer explicitement
+            saveState();
+            
+            addMessage('user', activity);
+            
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                showReformulationStep();
+            }, 1000);
+        }
+
+        function showReformulationStep() {
+            const reformulation = generateReformulation(appState.formData.activity);
+            
+            addMessage('assistant', `
+                <p><strong>Si je résume bien :</strong></p>
+                <ul style="margin: 15px 0; padding-left: 20px;">
+                    <li><strong>Tu es dans :</strong> ${reformulation.sector}</li>
+                    <li><strong>Structure :</strong> ${reformulation.structure}</li>
+                    <li><strong>Problème :</strong> ${reformulation.problem}</li>
+                </ul>
+                <p style="margin-top: 15px;"><strong>C'est bien ça ?</strong></p>
+            `, {
+                buttons: [
+                    {
+                        text: "✅ Oui",
+                        action: () => handleReformulationValidated(true)
+                    },
+                    {
+                        text: "✏️ Non, je précise",
+                        secondary: true,
+                        action: () => handleReformulationValidated(false)
+                    }
+                ]
+            });
+        }
+
+        function handleReformulationValidated(isValid) {
+            if (isValid) {
+                appState.formData.activityValidated = true;
+                appState.currentStep = 3; // ✅ FIX BUG 1: Avancer explicitement
+                appState.clientName = extractClientName(appState.formData.activity);
+                saveState();
+                
+                addMessage('user', "✅ Oui");
+                
+                // Envoi au MasterSheet
+                sendToMasterSheet();
+            } else {
+                addMessage('user', "✏️ Non, je précise");
+                appState.currentStep = 1; // Retour à l'étape activité
+                saveState();
+                setTimeout(() => showActivityStep(), 500);
+            }
+        }
+
+        function generateReformulation(activity) {
+            // Logique simple de reformulation
+            const lowerActivity = activity.toLowerCase();
+            
+            let sector = "Inconnu";
+            let structure = "Entrepreneur solo";
+            let problem = "Organisation générale";
+            
+            if (lowerActivity.includes('restaurant') || lowerActivity.includes('food')) {
+                sector = "Restauration / Food";
+                problem = "Gestion commandes et production";
+            } else if (lowerActivity.includes('coach') || lowerActivity.includes('consulting')) {
+                sector = "Services / Consulting";
+                problem = "Prospection et organisation";
+            } else if (lowerActivity.includes('e-commerce') || lowerActivity.includes('boutique')) {
+                sector = "E-commerce";
+                problem = "Gestion stock et commandes";
+            }
+            
+            return { sector, structure, problem };
+        }
+
+        function extractClientName(activity) {
+            // Extraction simple du prénom si présent
+            const match = activity.match(/je suis ([A-Z][a-zàâäéèêëïîôùûü]+)/i);
+            return match ? match[1] : "Client";
+        }
+
+        function sendToMasterSheet() {
+            showLoading();
+            
+            const payload = {
+                conversationId: appState.conversationId,
+                clientName: appState.clientName,
+                activity: appState.formData.activity,
+                timestamp: new Date().toISOString()
+            };
+            
+            // ✅ FIX BUG 5: Gestion d'erreur
+            fetch(CONFIG.APPS_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(() => {
+                hideLoading();
+                showSuccessMessage();
+                setTimeout(() => showChatMode(), 2000);
+            })
+            .catch(error => {
+                hideLoading();
+                console.error('❌ Erreur envoi:', error);
+                showErrorMessage();
+                setTimeout(() => showChatMode(), 3000);
+            });
+        }
+
+        function showSuccessMessage() {
+            const container = document.getElementById('chatContainer');
+            const successDiv = document.createElement('div');
+            successDiv.className = 'success-message';
+            successDiv.textContent = '✅ Profil enregistré avec succès !';
+            container.appendChild(successDiv);
+            
+            setTimeout(() => successDiv.remove(), 2000);
+        }
+
+        function showErrorMessage() {
+            const container = document.getElementById('chatContainer');
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.innerHTML = '⚠️ Erreur d\'enregistrement. Tes données sont sauvegardées localement.';
+            container.appendChild(errorDiv);
+            
+            setTimeout(() => errorDiv.remove(), 3000);
+        }
+
+        function showChatMode() {
+            addMessage('assistant', `
+                <p><strong>Parfait ${appState.clientName} ! Ton profil est enregistré.</strong></p>
+                <p style="margin-top: 15px;">Je suis maintenant prêt à t'accompagner. Que veux-tu faire en premier ?</p>
+            `);
+        }
+
+        // ============================================
+        // INITIALISATION
+        // ============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            startConversation();
+        });
+    </script>
+</body>
+</html>
